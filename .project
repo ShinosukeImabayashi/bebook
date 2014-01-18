@@ -3,6 +3,9 @@
 	<name>ebooktest002</name>
 	<comment></comment>
 	<projects>
+		<project>_PhotoView</project>
+		<project>_UnivasalImageLoaderMaster</project>
+		<project>_ViewPagerIndicator</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -18,11 +18,18 @@ package com.example.ebooktest002;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.sample.R;
 */
+import uk.co.senab.photoview.PhotoViewAttacher;
+import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+
+
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -49,7 +56,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public class ImagePagerActivity extends Activity {
+public class ImagePagerActivity extends BaseActivity {
 
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -62,27 +69,33 @@ public class ImagePagerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// ウインドウ全画面化＆タイトルバー非表示化
+		//       getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		//       requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        // layout xml を当該アクティビティのビューに結びつける
         setContentView(R.layout.ac_image_pager);
 
+        // 画像リソースの下準備
 		Bundle bundle = getIntent().getExtras();
 		assert bundle != null;
 		//String[] imageUrls = bundle.getStringArray(Extra.IMAGES);
 		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
 		String[] imageUrls = {
-				"http://aug.2chan.net/may/b/src/1389993310950.jpg",
+				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
 				"http://www.imabaya.com/testimage/water/IMGP0583.jpg",
-				"http://svb.2chan.net/may/b/src/1389976905326.gif",
+				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
 				"http://www.imabaya.com/testimage/water/IMGP1508.jpg",
+				"http://www.imabaya.com/testimage/niji/32777694.jpg",
 		};
 		int pagerPosition = 0;
 
+		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
 		if (savedInstanceState != null) {
 			pagerPosition = savedInstanceState.getInt(STATE_POSITION);
 		}
 
+		// universalimageloader の DisplayImageOptions 設定値初期設定
 		options = new DisplayImageOptions.Builder()
 			.showImageForEmptyUri(R.drawable.ic_empty)
 			.showImageOnFail(R.drawable.ic_error)
@@ -95,6 +108,7 @@ public class ImagePagerActivity extends Activity {
 			.displayer(new FadeInBitmapDisplayer(300))
 			.build();
 
+		// 表示領域と 画像とをアダプターで関連付ける
 		pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(new ImagePagerAdapter(imageUrls));
 		pager.setCurrentItem(pagerPosition);
@@ -126,7 +140,44 @@ public class ImagePagerActivity extends Activity {
 			return images.length;
 		}
 
-		@Override
+
+	    private PhotoViewAttacher mAttacher;
+	    private Matrix mCurrentDisplayMatrix = null;
+	    private class PhotoTapListener implements OnPhotoTapListener {
+
+	        @Override
+	        public void onPhotoTap(View view, float x, float y) {
+	            float xPercentage = x * 100f;
+	            float yPercentage = y * 100f;
+
+	            //showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage));
+	        }
+	    }
+
+	    private void showToast(CharSequence text) {
+	        //if (null != mCurrentToast) {
+	        //    mCurrentToast.cancel();
+	        //}
+
+	        //mCurrentToast = Toast.makeText(SimpleSampleActivity.this, text, Toast.LENGTH_SHORT);
+	        //mCurrentToast.show();
+	    }
+
+	    private class MatrixChangeListener implements OnMatrixChangedListener {
+
+	        @Override
+	        public void onMatrixChanged(RectF rect) {
+	            //mCurrMatrixTv.setText(rect.toString());
+	        }
+	    }
+
+
+
+
+
+
+
+	    @Override
 		public Object instantiateItem(ViewGroup view, int position) {
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
@@ -134,6 +185,27 @@ public class ImagePagerActivity extends Activity {
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
 
+
+
+		    // imageLoader で画像の読み込み処理を行う
+			imageLoader.loadImage(images[position], options, new SimpleImageLoadingListener() {
+		        @Override
+		        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+		        	ImageView imageView = (ImageView)findViewById(R.id.image);
+		        	imageView.setImageBitmap(loadedImage);
+
+			        // The MAGIC happens here!
+			        mAttacher = new PhotoViewAttacher(imageView);
+
+			        // Lets attach some listeners, not required though!
+			     //// mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
+			     // mAttacher.setOnPhotoTapListener(new PhotoTapListener());
+		        }
+		    });
+
+
+/*
+			// imageLoader で画像の読み込み処理と表示処理を一括して行う
 			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
@@ -170,6 +242,9 @@ public class ImagePagerActivity extends Activity {
 					spinner.setVisibility(View.GONE);
 				}
 			});
+*/
+
+
 
 			view.addView(imageLayout, 0);
 			return imageLayout;
