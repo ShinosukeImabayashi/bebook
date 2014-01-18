@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="src" path="/_UnivasalImageLoaderMaster"/>
+	<classpathentry exported="true" kind="lib" path="K:/_Android/_ライブラリ/Android-Universal-Image-Loader-master/sample/libs/universal-image-loader-1.9.2-SNAPSHOT-with-sources.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/_PhotoView"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/_ViewPagerIndicator"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/UnivasalImageLoderMasterSample"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
