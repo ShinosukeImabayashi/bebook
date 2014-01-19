@@ -44,6 +44,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView.ScaleType;
+import android.util.Log;
 
 import com.example.ebooktest002.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -75,6 +77,7 @@ public class ImagePagerActivity extends BaseActivity {
 
         // layout xml を当該アクティビティのビューに結びつける
         setContentView(R.layout.ac_image_pager);
+        //Toast.makeText(ImagePagerActivity.this, "start", Toast.LENGTH_SHORT).show();
 
         // 画像リソースの下準備
 		Bundle bundle = getIntent().getExtras();
@@ -149,8 +152,8 @@ public class ImagePagerActivity extends BaseActivity {
 	        public void onPhotoTap(View view, float x, float y) {
 	            float xPercentage = x * 100f;
 	            float yPercentage = y * 100f;
+	            Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
 
-	            //showToast(String.format(PHOTO_TAP_TOAST_STRING, xPercentage, yPercentage));
 	        }
 	    }
 
@@ -168,6 +171,7 @@ public class ImagePagerActivity extends BaseActivity {
 	        @Override
 	        public void onMatrixChanged(RectF rect) {
 	            //mCurrMatrixTv.setText(rect.toString());
+	        	Toast.makeText(ImagePagerActivity.this, "onMatrixChanged" , Toast.LENGTH_SHORT).show();
 	        }
 	    }
 
@@ -184,29 +188,20 @@ public class ImagePagerActivity extends BaseActivity {
 			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
+			//■ 得られた lodedImage は PhotoViewAttacher に渡して表示させる。
+			mAttacher = new PhotoViewAttacher(imageView);
+			mAttacher.setScaleType(ScaleType.CENTER_CROP);
+			mAttacher.setOnPhotoTapListener(new PhotoTapListener());	// タップイベントのリスナー設定
 
 
+			setTitle("ページ：" + position+ "-" + pager.getCurrentItem());
+			Log.i("ページ：" + position + "-" + pager.getCurrentItem(), "INFO");
 
-		    // imageLoader で画像の読み込み処理を行う
-			imageLoader.loadImage(images[position], options, new SimpleImageLoadingListener() {
-		        @Override
-		        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-		        	ImageView imageView = (ImageView)findViewById(R.id.image);
-		        	imageView.setImageBitmap(loadedImage);
+			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
-			        // The MAGIC happens here!
-			        mAttacher = new PhotoViewAttacher(imageView);
-
-			        // Lets attach some listeners, not required though!
-			     //// mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
-			     // mAttacher.setOnPhotoTapListener(new PhotoTapListener());
-		        }
-		    });
-
-
-/*
 			// imageLoader で画像の読み込み処理と表示処理を一括して行う
 			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
+
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					spinner.setVisibility(View.VISIBLE);
@@ -240,13 +235,24 @@ public class ImagePagerActivity extends BaseActivity {
 				@Override
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 					spinner.setVisibility(View.GONE);
+
+					Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+
+			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+					// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+					ImageView imageView = (ImageView)findViewById(R.id.image);
+					mAttacher = new PhotoViewAttacher(imageView);
+					mAttacher.setScaleType(ScaleType.FIT_CENTER);
+
 				}
+
 			});
-*/
 
 
 
 			view.addView(imageLayout, 0);
+
 			return imageLayout;
 		}
 
@@ -265,25 +271,6 @@ public class ImagePagerActivity extends BaseActivity {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
