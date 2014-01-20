@@ -20,32 +20,26 @@ import uk.co.senab.photoview.sample.R;
 */
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
- 
+
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView.ScaleType;
 import android.util.Log;
 
 import com.example.ebooktest002.Constants.Extra;
@@ -71,7 +65,7 @@ public class ImagePagerActivity extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.i("ImagePagerActivity - onCreate", "INFO");
 		// ウインドウ全画面化＆タイトルバー非表示化
 		//       getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//       requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -86,6 +80,8 @@ public class ImagePagerActivity extends BaseActivity {
 		//String[] imageUrls = bundle.getStringArray(Extra.IMAGES);
 		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
 		String[] imageUrls = {
+				"http://www.imabaya.com/testimage/noimage.jpg",
+				"http://www.imabaya.com/testimage/noimage.jpg",
 				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
 				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
 				"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
@@ -126,11 +122,13 @@ public class ImagePagerActivity extends BaseActivity {
 		pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(new ImagePagerAdapter(imageUrls));
 		pager.setCurrentItem(pagerPosition);
+
 	}
 
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		Log.i("ImagePagerActivity - onSaveInstanceState", "INFO");
 		outState.putInt(STATE_POSITION, pager.getCurrentItem());
 	}
 
@@ -141,13 +139,17 @@ public class ImagePagerActivity extends BaseActivity {
 
 	    private PhotoViewAttacher mAttacher;
 
+	    public boolean onLoadingStartedduplicateCheck = false;
+
 		ImagePagerAdapter(String[] images) {
+			Log.i("ImagePagerAdapter - ImagePagerAdapter", "INFO");
 			this.images = images;
 			inflater = getLayoutInflater();
 		}
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
+			Log.i("ImagePagerAdapter - destroyItem p=" +position, "INFO");
 			container.removeView((View) object);
 		}
 
@@ -181,12 +183,13 @@ public class ImagePagerActivity extends BaseActivity {
 	    @Override
 	    // 各ページ生成時のタイミングで呼び出される
 		public Object instantiateItem(ViewGroup view, int position) {
+			Log.i("ImagePagerAdapter - instantiateItem p=" +position, "INFO");
 	    	//レイアウトファイル item_pager_image をインスタンス化する
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
-			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
+			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-
+			imageView.setBackgroundColor(Color.BLACK);
 
 			//■ 得られた imageView は PhotoViewAttacher を通して表示させるようにする
 			mAttacher = new PhotoViewAttacher(imageView);
@@ -194,6 +197,8 @@ public class ImagePagerActivity extends BaseActivity {
 
 
 
+
+			// position は 0 から、pager.getCurrentItem() は 0 からカウントスタート
 			setTitle("ページ：" + position+ "-" + pager.getCurrentItem());
 			Log.i("ページ：" + position + "-" + pager.getCurrentItem(), "INFO");
 
@@ -205,6 +210,16 @@ public class ImagePagerActivity extends BaseActivity {
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					spinner.setVisibility(View.VISIBLE);
+
+					if (pager.getCurrentItem() ==0) {
+						if (onLoadingStartedduplicateCheck == false) {
+							onLoadingStartedduplicateCheck = true;
+
+						} else {
+
+						}
+					}
+					Log.i("imageLoader - onLoadingStarted p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
 				}
 
 				@Override
@@ -234,18 +249,31 @@ public class ImagePagerActivity extends BaseActivity {
 
 				@Override
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() , "INFO");
 					spinner.setVisibility(View.GONE);
 
-					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+					if (pager.getCurrentItem() == 0) {
 
-			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
-					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
-					// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
-					ImageView imageView = (ImageView)findViewById(R.id.image);
-					mAttacher = new PhotoViewAttacher(imageView);
-					mAttacher.setScaleType(ScaleType.FIT_CENTER);
-					mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+					} else {
 
+						///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+
+				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+						ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+						if (imageView != null) {	// imageView の取得がたまに失敗することがある
+							mAttacher = new PhotoViewAttacher(imageView);
+
+							if(pager.getCurrentItem() == 0) {
+								//setTitle("最初！");
+							}
+
+							//mAttacher.setScaleType(ScaleType.FIT_CENTER);
+							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+						}
+
+					}
 				}
 
 			});
@@ -271,6 +299,24 @@ public class ImagePagerActivity extends BaseActivity {
 			return null;
 		}
 	}
+
+
+	  @Override
+	  public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if(keyCode==KeyEvent.KEYCODE_BACK){
+	    	this.onDestroy();
+	        return super.onKeyDown(keyCode, event);
+	    }
+	    return super.onKeyDown(keyCode, event);
+	  }
+
+	  public synchronized void sleep(long msec)	// 指定ミリ秒の間、完全スリープ  
+	    {
+	    	try
+	    	{
+	    		wait(msec);
+	    	}catch(InterruptedException e){}
+	    }
 }
 
 
