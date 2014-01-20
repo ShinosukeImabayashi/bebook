@@ -21,8 +21,8 @@ import uk.co.senab.photoview.sample.R;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
-
-
+import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
+ 
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +36,7 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -86,10 +87,19 @@ public class ImagePagerActivity extends BaseActivity {
 		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
 		String[] imageUrls = {
 				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
-				"http://www.imabaya.com/testimage/water/IMGP0583.jpg",
 				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
-				"http://www.imabaya.com/testimage/water/IMGP1508.jpg",
+				"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
 				"http://www.imabaya.com/testimage/niji/32777694.jpg",
+				"http://www.imabaya.com/testimage/niji/tumblr_mzcbmpiPO71sb8y8jo1_500.jpg",
+				"http://www.imabaya.com/testimage/niji/33687665_p3-horz.jpg",
+				"http://www.imabaya.com/testimage/niji/1387682467421.jpg",
+				"http://www.imabaya.com/testimage/niji/1386472153102.png",
+				"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
+				"http://www.imabaya.com/testimage/niji/1386063445429.jpg",
+				"http://www.imabaya.com/testimage/niji/1385438040214.jpg",
+				"http://www.imabaya.com/testimage/niji/1385430383037.jpg",
+				"http://www.imabaya.com/testimage/niji/1385418265951.jpg",
+				"http://www.imabaya.com/testimage/niji/1310131s.jpg",
 		};
 		int pagerPosition = 0;
 
@@ -105,10 +115,11 @@ public class ImagePagerActivity extends BaseActivity {
 			.resetViewBeforeLoading(true)
 			.cacheInMemory(true)
 			.cacheOnDisc(true)
-			.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+			.imageScaleType(ImageScaleType.NONE) // 画面サイズに合わせた画像の拡大縮小処理は PhotoView 側に任せる
+			//.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // Open DL の最大 Bitmap サイズが 2048*2048。元画像が範囲内でも、ここで画像自体を拡大縮小処理すると、上限値オーバーになることが有る。（極端に縦長 or 横長の場合）
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.considerExifParams(true)
-			.displayer(new FadeInBitmapDisplayer(300))
+			.displayer(new FadeInBitmapDisplayer(3000))	// ３秒掛けてゆっくりフェードインアニメーション表示を行うと雰囲気良い
 			.build();
 
 		// 表示領域と 画像とをアダプターで関連付ける
@@ -128,6 +139,8 @@ public class ImagePagerActivity extends BaseActivity {
 		private String[] images;
 		private LayoutInflater inflater;
 
+	    private PhotoViewAttacher mAttacher;
+
 		ImagePagerAdapter(String[] images) {
 			this.images = images;
 			inflater = getLayoutInflater();
@@ -144,30 +157,19 @@ public class ImagePagerActivity extends BaseActivity {
 		}
 
 
-	    private PhotoViewAttacher mAttacher;
-	    private Matrix mCurrentDisplayMatrix = null;
-	    private class PhotoTapListener implements OnPhotoTapListener {
 
+	    private class ViewTapListener implements OnViewTapListener {
 	        @Override
-	        public void onPhotoTap(View view, float x, float y) {
+	        public void onViewTap(View view, float x, float y) {
 	            float xPercentage = x * 100f;
 	            float yPercentage = y * 100f;
-	            Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
-
+	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
+	            pager.arrowScroll(View.FOCUS_RIGHT);
+				Log.i("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + pager.getCurrentItem(), "INFO");
 	        }
 	    }
 
-	    private void showToast(CharSequence text) {
-	        //if (null != mCurrentToast) {
-	        //    mCurrentToast.cancel();
-	        //}
-
-	        //mCurrentToast = Toast.makeText(SimpleSampleActivity.this, text, Toast.LENGTH_SHORT);
-	        //mCurrentToast.show();
-	    }
-
 	    private class MatrixChangeListener implements OnMatrixChangedListener {
-
 	        @Override
 	        public void onMatrixChanged(RectF rect) {
 	            //mCurrMatrixTv.setText(rect.toString());
@@ -176,22 +178,20 @@ public class ImagePagerActivity extends BaseActivity {
 	    }
 
 
-
-
-
-
-
 	    @Override
+	    // 各ページ生成時のタイミングで呼び出される
 		public Object instantiateItem(ViewGroup view, int position) {
+	    	//レイアウトファイル item_pager_image をインスタンス化する
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
 			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
-			//■ 得られた lodedImage は PhotoViewAttacher に渡して表示させる。
+
+			//■ 得られた imageView は PhotoViewAttacher を通して表示させるようにする
 			mAttacher = new PhotoViewAttacher(imageView);
-			mAttacher.setScaleType(ScaleType.CENTER_CROP);
-			mAttacher.setOnPhotoTapListener(new PhotoTapListener());	// タップイベントのリスナー設定
+			//mAttacher.setScaleType(ScaleType.CENTER_CROP);
+
 
 
 			setTitle("ページ：" + position+ "-" + pager.getCurrentItem());
@@ -236,7 +236,7 @@ public class ImagePagerActivity extends BaseActivity {
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 					spinner.setVisibility(View.GONE);
 
-					Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
 			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
 					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
@@ -244,6 +244,7 @@ public class ImagePagerActivity extends BaseActivity {
 					ImageView imageView = (ImageView)findViewById(R.id.image);
 					mAttacher = new PhotoViewAttacher(imageView);
 					mAttacher.setScaleType(ScaleType.FIT_CENTER);
+					mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
 
 				}
 
