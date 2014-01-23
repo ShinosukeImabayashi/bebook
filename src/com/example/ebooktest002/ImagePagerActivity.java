@@ -22,6 +22,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
+
+
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,11 +38,14 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.util.Log;
+
 
 import com.example.ebooktest002.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -63,6 +68,9 @@ public class ImagePagerActivity extends BaseActivity {
 
 	ViewPager pager;
 
+	UILApplication uap;
+	String[] imageUrls;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.i("ImagePagerActivity - onCreate", "INFO");
@@ -79,24 +87,11 @@ public class ImagePagerActivity extends BaseActivity {
 		assert bundle != null;
 		//String[] imageUrls = bundle.getStringArray(Extra.IMAGES);
 		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
-		String[] imageUrls = {
-				"http://www.imabaya.com/testimage/noimage.jpg",
-				"http://www.imabaya.com/testimage/noimage.jpg",
-				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
-				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
-				"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
-				"http://www.imabaya.com/testimage/niji/32777694.jpg",
-				"http://www.imabaya.com/testimage/niji/tumblr_mzcbmpiPO71sb8y8jo1_500.jpg",
-				"http://www.imabaya.com/testimage/niji/33687665_p3-horz.jpg",
-				"http://www.imabaya.com/testimage/niji/1387682467421.jpg",
-				"http://www.imabaya.com/testimage/niji/1386472153102.png",
-				"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
-				"http://www.imabaya.com/testimage/niji/1386063445429.jpg",
-				"http://www.imabaya.com/testimage/niji/1385438040214.jpg",
-				"http://www.imabaya.com/testimage/niji/1385430383037.jpg",
-				"http://www.imabaya.com/testimage/niji/1385418265951.jpg",
-				"http://www.imabaya.com/testimage/niji/1310131s.jpg",
-		};
+
+		// 設定情報関連
+		uap = (UILApplication) this.getApplication();
+		uap.ebookconst.getBookXmlData();
+		imageUrls = uap.ebookconst.getImageUrls();
 		int pagerPosition = 0;
 
 		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
@@ -111,8 +106,8 @@ public class ImagePagerActivity extends BaseActivity {
 			.resetViewBeforeLoading(true)
 			.cacheInMemory(true)
 			.cacheOnDisc(true)
-			.imageScaleType(ImageScaleType.NONE) // 画面サイズに合わせた画像の拡大縮小処理は PhotoView 側に任せる
-			//.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // Open DL の最大 Bitmap サイズが 2048*2048。元画像が範囲内でも、ここで画像自体を拡大縮小処理すると、上限値オーバーになることが有る。（極端に縦長 or 横長の場合）
+			///.imageScaleType(ImageScaleType.NONE) // 画面サイズに合わせた画像の拡大縮小処理は PhotoView 側に任せる
+			.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // Open DL の最大 Bitmap サイズが 2048*2048。元画像が範囲内でも、ここで画像自体を拡大縮小処理すると、上限値オーバーになることが有る。（極端に縦長 or 横長の場合）
 			.bitmapConfig(Bitmap.Config.RGB_565)
 			.considerExifParams(true)
 			.displayer(new FadeInBitmapDisplayer(3000))	// ３秒掛けてゆっくりフェードインアニメーション表示を行うと雰囲気良い
@@ -136,48 +131,8 @@ public class ImagePagerActivity extends BaseActivity {
 
 		private String[] images;
 		private LayoutInflater inflater;
-
 	    private PhotoViewAttacher mAttacher;
-
 	    public boolean onLoadingStartedduplicateCheck = false;
-
-		ImagePagerAdapter(String[] images) {
-			Log.i("ImagePagerAdapter - ImagePagerAdapter", "INFO");
-			this.images = images;
-			inflater = getLayoutInflater();
-		}
-
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			Log.i("ImagePagerAdapter - destroyItem p=" +position, "INFO");
-			container.removeView((View) object);
-		}
-
-		@Override
-		public int getCount() {
-			return images.length;
-		}
-
-
-
-	    private class ViewTapListener implements OnViewTapListener {
-	        @Override
-	        public void onViewTap(View view, float x, float y) {
-	            float xPercentage = x * 100f;
-	            float yPercentage = y * 100f;
-	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
-	            pager.arrowScroll(View.FOCUS_RIGHT);
-				Log.i("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + pager.getCurrentItem(), "INFO");
-	        }
-	    }
-
-	    private class MatrixChangeListener implements OnMatrixChangedListener {
-	        @Override
-	        public void onMatrixChanged(RectF rect) {
-	            //mCurrMatrixTv.setText(rect.toString());
-	        	Toast.makeText(ImagePagerActivity.this, "onMatrixChanged" , Toast.LENGTH_SHORT).show();
-	        }
-	    }
 
 
 	    @Override
@@ -191,11 +146,14 @@ public class ImagePagerActivity extends BaseActivity {
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 			imageView.setBackgroundColor(Color.BLACK);
 
+/*
 			//■ 得られた imageView は PhotoViewAttacher を通して表示させるようにする
 			mAttacher = new PhotoViewAttacher(imageView);
 			//mAttacher.setScaleType(ScaleType.CENTER_CROP);
-
-
+			mAttacher.setScaleType(ScaleType.FIT_CENTER);
+			mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+			mAttacher.setOnLongClickListener(new LongClickListener());
+*/
 
 
 			// position は 0 から、pager.getCurrentItem() は 0 からカウントスタート
@@ -219,7 +177,7 @@ public class ImagePagerActivity extends BaseActivity {
 
 						}
 					}
-					Log.i("imageLoader - onLoadingStarted p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
+					Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
 				}
 
 				@Override
@@ -252,29 +210,26 @@ public class ImagePagerActivity extends BaseActivity {
 					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() , "INFO");
 					spinner.setVisibility(View.GONE);
 
-					if (pager.getCurrentItem() == 0) {
+					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
-					} else {
+			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+					// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+					ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+					if (imageView != null) {	// imageView の取得がたまに失敗することがある
+						mAttacher = new PhotoViewAttacher(imageView);
 
-						///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
-
-				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
-						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
-						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
-						ImageView imageView = (ImageView)findViewById(R.id.pageimage);
-						if (imageView != null) {	// imageView の取得がたまに失敗することがある
-							mAttacher = new PhotoViewAttacher(imageView);
-
-							if(pager.getCurrentItem() == 0) {
-								//setTitle("最初！");
-							}
-
-							//mAttacher.setScaleType(ScaleType.FIT_CENTER);
-							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+						if(pager.getCurrentItem() == 0) {
+							setTitle("最初！");
 						}
 
+						mAttacher.setScaleType(ScaleType.FIT_CENTER);
+						mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+						mAttacher.setOnLongClickListener(new LongClickListener());
 					}
+
 				}
+
 
 			});
 
@@ -298,6 +253,56 @@ public class ImagePagerActivity extends BaseActivity {
 		public Parcelable saveState() {
 			return null;
 		}
+
+		ImagePagerAdapter(String[] images) {
+			Log.i("ImagePagerAdapter - ImagePagerAdapter", "INFO");
+			this.images = images;
+			inflater = getLayoutInflater();
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			Log.i("ImagePagerAdapter - destroyItem p=" +position, "INFO");
+			container.removeView((View) object);
+		}
+
+		@Override
+		public int getCount() {
+			return images.length;
+		}
+
+	    private class ViewTapListener implements OnViewTapListener {
+	        @Override
+	        public void onViewTap(View view, float x, float y) {
+	            float xPercentage = x * 100f;
+	            float yPercentage = y * 100f;
+	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
+	            pager.arrowScroll(View.FOCUS_RIGHT);
+				Log.i("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + pager.getCurrentItem(), "INFO");
+	        }
+	    }
+
+	    private class LongClickListener implements OnLongClickListener {
+
+			@Override
+			public boolean onLongClick(View view) {
+	            pager.arrowScroll(View.FOCUS_RIGHT);
+				Log.i("onLongClick page:" + pager.getCurrentItem(), "INFO");
+
+	            return true;
+			}
+	    }
+
+
+	    private class MatrixChangeListener implements OnMatrixChangedListener {
+	        @Override
+	        public void onMatrixChanged(RectF rect) {
+	            //mCurrMatrixTv.setText(rect.toString());
+	        	Toast.makeText(ImagePagerActivity.this, "onMatrixChanged" , Toast.LENGTH_SHORT).show();
+	        }
+	    }
+	
+
 	}
 
 
@@ -310,13 +315,15 @@ public class ImagePagerActivity extends BaseActivity {
 	    return super.onKeyDown(keyCode, event);
 	  }
 
-	  public synchronized void sleep(long msec)	// 指定ミリ秒の間、完全スリープ  
-	    {
+	  public synchronized void sleep(long msec) {	// 指定ミリ秒の間、完全スリープ
 	    	try
 	    	{
 	    		wait(msec);
 	    	}catch(InterruptedException e){}
 	    }
+
+
+
 }
 
 

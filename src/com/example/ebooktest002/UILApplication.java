@@ -18,6 +18,7 @@ package com.example.ebooktest002;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -31,6 +32,9 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
 public class UILApplication extends Application {
+
+	EbookConst ebookconst;
+
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@SuppressWarnings("unused")
 	@Override
@@ -42,6 +46,8 @@ public class UILApplication extends Application {
 
 		super.onCreate();
 
+		ebookconst = new EbookConst();
+
 		initImageLoader(getApplicationContext());
 	}
 
@@ -51,8 +57,10 @@ public class UILApplication extends Application {
 		//  ImageLoaderConfiguration.createDefault(this);
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				.denyCacheImageMultipleSizesInMemory()
+				//.threadPoolSize(1)
+				.threadPriority(Thread.MAX_PRIORITY)
+				//.denyCacheImageMultipleSizesInMemory()
+				.discCacheFileCount(100)
 				.discCacheFileNameGenerator(new Md5FileNameGenerator())
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				.writeDebugLogs() // Remove for release app

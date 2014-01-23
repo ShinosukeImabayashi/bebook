@@ -15,8 +15,8 @@
  *******************************************************************************/
 package com.example.ebooktest002;
 
-import com.nostra13.example.universalimageloader.R;
-import com.nostra13.example.universalimageloader.R.drawable;
+import com.example.ebooktest002.R;
+
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)

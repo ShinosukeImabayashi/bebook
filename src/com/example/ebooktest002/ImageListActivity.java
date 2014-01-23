@@ -3,6 +3,7 @@ package com.example.ebooktest002;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.Settings.Global;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -32,23 +33,8 @@ import java.util.List;
 public class ImageListActivity extends AbsListViewBaseActivity {
 
 	DisplayImageOptions options;
-
-	String[] imageUrls = {
-			"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
-			"http://www.imabaya.com/testimage/niji/1380943878613.gif",
-			"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
-			"http://www.imabaya.com/testimage/niji/32777694.jpg",
-			"http://www.imabaya.com/testimage/niji/tumblr_mzcbmpiPO71sb8y8jo1_500.jpg",
-			"http://www.imabaya.com/testimage/niji/33687665_p3-horz.jpg",
-			"http://www.imabaya.com/testimage/niji/1387682467421.jpg",
-			"http://www.imabaya.com/testimage/niji/1386472153102.png",
-			"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
-			"http://www.imabaya.com/testimage/niji/1386063445429.jpg",
-			"http://www.imabaya.com/testimage/niji/1385438040214.jpg",
-			"http://www.imabaya.com/testimage/niji/1385430383037.jpg",
-			"http://www.imabaya.com/testimage/niji/1385418265951.jpg",
-			"http://www.imabaya.com/testimage/niji/1310131s.jpg",
-	};
+	UILApplication uap;
+	String[] imageUrls;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +44,11 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		//Bundle bundle = getIntent().getExtras();
 		//imageUrls = bundle.getStringArray(Extra.IMAGES);
 
-
+		// 設定情報関連
+		uap = (UILApplication) this.getApplication();
+		uap.ebookconst.getBookXmlData();
+		imageUrls = uap.ebookconst.getImageUrls();
+		uap.ebookconst.getImageUrls2();
 
 		options = new DisplayImageOptions.Builder()
 			.showImageOnLoading(R.drawable.ic_stub)
