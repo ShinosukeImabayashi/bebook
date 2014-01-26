@@ -52,6 +52,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
@@ -163,21 +164,14 @@ public class ImagePagerActivity extends BaseActivity {
 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
 			// imageLoader で画像の読み込み処理と表示処理を一括して行う
-			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
+			imageLoader.loadImage(images[position], new ImageLoadingListener() {
 
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					spinner.setVisibility(View.VISIBLE);
-
-					if (pager.getCurrentItem() ==0) {
-						if (onLoadingStartedduplicateCheck == false) {
-							onLoadingStartedduplicateCheck = true;
-
-						} else {
-
-						}
-					}
 					Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
+
+
 				}
 
 				@Override
@@ -207,29 +201,42 @@ public class ImagePagerActivity extends BaseActivity {
 
 				@Override
 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() , "INFO");
+					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
 					spinner.setVisibility(View.GONE);
 
 					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
-			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
-					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
-					// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
-					ImageView imageView = (ImageView)findViewById(R.id.pageimage);
-					if (imageView != null) {	// imageView の取得がたまに失敗することがある
-						mAttacher = new PhotoViewAttacher(imageView);
-
-						if(pager.getCurrentItem() == 0) {
-							setTitle("最初！");
+					if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == true) {
+						return;
+					} else {
+						onLoadingStartedduplicateCheck = true;
+						
+				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+						ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+	
+						
+						if (imageView != null) {	// imageView の取得がたまに失敗することがある
+							imageView.setImageBitmap(loadedImage);
+							mAttacher = new PhotoViewAttacher(imageView);
+							
+	
+							if(pager.getCurrentItem() == 0) {
+								setTitle("最初！");
+							}
+	
+							mAttacher.setScaleType(ScaleType.FIT_CENTER);
+							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+							mAttacher.setOnLongClickListener(new LongClickListener());
 						}
-
-						mAttacher.setScaleType(ScaleType.FIT_CENTER);
-						mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
-						mAttacher.setOnLongClickListener(new LongClickListener());
 					}
 
 				}
-
+				@Override
+				public void onLoadingCancelled(String imageUri, View view) {
+					
+				}
 
 			});
 
@@ -301,7 +308,7 @@ public class ImagePagerActivity extends BaseActivity {
 	        	Toast.makeText(ImagePagerActivity.this, "onMatrixChanged" , Toast.LENGTH_SHORT).show();
 	        }
 	    }
-	
+
 
 	}
 

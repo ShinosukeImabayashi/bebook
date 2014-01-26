@@ -27,7 +27,7 @@ public class EbookConst {
 		Uri.Builder builder = new Uri.Builder();
 		AsyncHttpRequest task = new AsyncHttpRequest("http://techbooster.org/?feed=rss2");
 		task.execute(builder);
-		
+
 
 
 		return true;
@@ -39,10 +39,13 @@ public class EbookConst {
 	public String[] getImageUrls () {
 		Log.i("EbookConst - getImageUrls ", "INFO");
 		String[] imageUrls = {
-
+				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
 				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
 				"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
-				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
+
+
+				//"http://www.imabaya.com/testimage/water/SDIM9409.jpg",
+				//"http://www.imabaya.com/testimage/water/IMGP9381.jpg",
 
 				"http://www.imabaya.com/testimage/noimage.jpg",
 				"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
