@@ -33,24 +33,26 @@ public final class R {
         public static final int tumb00=0x7f020009;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000d;
-        public static final int btn_end=0x7f08000b;
-        public static final int btn_next=0x7f08000a;
-        public static final int btn_prev=0x7f080009;
-        public static final int btn_start=0x7f080008;
+        public static final int action_settings=0x7f08000f;
+        public static final int btn_end=0x7f08000d;
+        public static final int btn_next=0x7f08000c;
+        public static final int btn_prev=0x7f08000b;
+        public static final int btn_start=0x7f08000a;
         public static final int imageView1=0x7f080001;
-        public static final int img_scroll=0x7f08000c;
-        public static final int item_clear_disc_cache=0x7f08000f;
-        public static final int item_clear_memory_cache=0x7f08000e;
-        public static final int item_pause_on_fling=0x7f080011;
-        public static final int item_pause_on_scroll=0x7f080010;
+        public static final int img_scroll=0x7f08000e;
+        public static final int item_clear_disc_cache=0x7f080011;
+        public static final int item_clear_memory_cache=0x7f080010;
+        public static final int item_pause_on_fling=0x7f080013;
+        public static final int item_pause_on_scroll=0x7f080012;
         public static final int listimage=0x7f080003;
         public static final int loading=0x7f080006;
+        public static final int pageSeekBar=0x7f080007;
         public static final int pageimage=0x7f080005;
         public static final int pager=0x7f080000;
+        public static final int startReadButton=0x7f080008;
         public static final int text=0x7f080004;
         public static final int textView1=0x7f080002;
-        public static final int viewpager=0x7f080007;
+        public static final int viewpager=0x7f080009;
     }
     public static final class layout {
         public static final int ac_image_list=0x7f030000;
@@ -100,17 +102,6 @@ public final class R {
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
-
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    
- API 11 theme customizations can go here. 
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 

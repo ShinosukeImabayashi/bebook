@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings.Global;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
@@ -43,6 +45,10 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		//Bundle bundle = getIntent().getExtras();
 		//imageUrls = bundle.getStringArray(Extra.IMAGES);
+
+
+
+
 
 		// 設定情報関連
 		uap = (UILApplication) this.getApplication();

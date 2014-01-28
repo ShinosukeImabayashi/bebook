@@ -16,6 +16,7 @@
 package com.example.ebooktest002;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,7 +25,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity {
 
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 

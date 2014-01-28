@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2013 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.example.ebooktest002;
 /*
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -24,15 +10,12 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 
 
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -40,9 +23,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 import android.util.Log;
 
@@ -56,10 +42,11 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-/**
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- */
-public class ImagePagerActivity extends BaseActivity {
+
+
+
+
+public class ImagePagerActivity extends BaseActivity  {
 
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -71,6 +58,8 @@ public class ImagePagerActivity extends BaseActivity {
 
 	UILApplication uap;
 	String[] imageUrls;
+
+
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -143,9 +132,46 @@ public class ImagePagerActivity extends BaseActivity {
 	    	//レイアウトファイル item_pager_image をインスタンス化する
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
-			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
+			final ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 			imageView.setBackgroundColor(Color.BLACK);
+
+			final ImageButton startReadButton = (ImageButton) imageLayout.findViewById(R.id.startReadButton);
+			if (pager.getCurrentItem() == 0) {
+				//startReadButton.setVisibility(View.VISIBLE);
+			}
+
+
+
+
+			final SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
+			pageSeekBar.setMax(this.getCount() -1);
+			pageSeekBar.setProgress(position +1);
+			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+	            // トラッキング開始時に呼び出されます
+	            @Override
+	            public void onStartTrackingTouch(SeekBar pageSeekBar) {
+	                Log.v("onStartTrackingTouch()",
+	                    String.valueOf(pageSeekBar.getProgress()));
+	            }
+	            // トラッキング中に呼び出されます
+	            @Override
+	            public void onProgressChanged(SeekBar pageSeekBar, int progress, boolean fromTouch) {
+	                Log.v("onProgressChanged()",
+	                    String.valueOf(progress) + ", " + String.valueOf(fromTouch));
+	            }
+	            // トラッキング終了時に呼び出されます
+	            @Override
+	            public void onStopTrackingTouch(SeekBar pageSeekBar) {
+	                Log.v("onStopTrackingTouch()",
+	                    String.valueOf(pageSeekBar.getProgress()));
+
+	                // pager.setCurrentItem(pageSeekBar.getProgress());  うまく動かない
+
+	            }
+	        });
+
+
 
 /*
 			//■ 得られた imageView は PhotoViewAttacher を通して表示させるようにする
@@ -163,7 +189,7 @@ public class ImagePagerActivity extends BaseActivity {
 
 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
-			// imageLoader で画像の読み込み処理と表示処理を一括して行う
+			// imageLoader で画像の読み込み処理を行う
 			imageLoader.loadImage(images[position], new ImageLoadingListener() {
 
 				@Override
@@ -204,38 +230,43 @@ public class ImagePagerActivity extends BaseActivity {
 					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
 					spinner.setVisibility(View.GONE);
 
+					pageSeekBar.setProgress(pager.getCurrentItem());
+
 					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
-					if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == true) {
+					if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == false) {
+
 						return;
 					} else {
 						onLoadingStartedduplicateCheck = true;
-						
+
 				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
 						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
 						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
-						ImageView imageView = (ImageView)findViewById(R.id.pageimage);
-	
-						
+
+						//ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+
+
 						if (imageView != null) {	// imageView の取得がたまに失敗することがある
 							imageView.setImageBitmap(loadedImage);
 							mAttacher = new PhotoViewAttacher(imageView);
-							
-	
+
+
 							if(pager.getCurrentItem() == 0) {
 								setTitle("最初！");
 							}
-	
+
 							mAttacher.setScaleType(ScaleType.FIT_CENTER);
 							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
 							mAttacher.setOnLongClickListener(new LongClickListener());
 						}
+
 					}
 
 				}
 				@Override
 				public void onLoadingCancelled(String imageUri, View view) {
-					
+
 				}
 
 			});
