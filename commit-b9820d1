@@ -1,0 +1,167 @@
+commit b9820d16e65a69fdc3293de8ea87e5a1c16cccb7
+Author: ume <umeoka@gmail.com>
+Date:   Mon Jan 27 05:14:22 2014 +0900
+
+    20140126 stable
+    displayImage から loadImage に変更。
+    １つ目の画像だけうまく表示されない。
+
+diff --git a/bin/classes.dex b/bin/classes.dex
+index d6d16ff..c9219b5 100644
+Binary files a/bin/classes.dex and b/bin/classes.dex differ
+diff --git a/bin/classes/com/example/ebooktest002/EbookConst.class b/bin/classes/com/example/ebooktest002/EbookConst.class
+index 50b77c7..6907032 100644
+Binary files a/bin/classes/com/example/ebooktest002/EbookConst.class and b/bin/classes/com/example/ebooktest002/EbookConst.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$1.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$1.class
+index 1c92e27..7534c6c 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$1.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$1.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$LongClickListener.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$LongClickListener.class
+index cbabbcf..9fc474a 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$LongClickListener.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$LongClickListener.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$MatrixChangeListener.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$MatrixChangeListener.class
+index 96a66a6..8bf6742 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$MatrixChangeListener.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$MatrixChangeListener.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$ViewTapListener.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$ViewTapListener.class
+index f287bd0..148be62 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$ViewTapListener.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter$ViewTapListener.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter.class
+index a4a432c..02dc541 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity$ImagePagerAdapter.class differ
+diff --git a/bin/classes/com/example/ebooktest002/ImagePagerActivity.class b/bin/classes/com/example/ebooktest002/ImagePagerActivity.class
+index c0f0075..e4dbb12 100644
+Binary files a/bin/classes/com/example/ebooktest002/ImagePagerActivity.class and b/bin/classes/com/example/ebooktest002/ImagePagerActivity.class differ
+diff --git a/bin/ebooktest002.apk b/bin/ebooktest002.apk
+index 6618b25..548937b 100644
+Binary files a/bin/ebooktest002.apk and b/bin/ebooktest002.apk differ
+diff --git a/src/com/example/ebooktest002/EbookConst.java b/src/com/example/ebooktest002/EbookConst.java
+index aa24710..3ac58cb 100644
+--- a/src/com/example/ebooktest002/EbookConst.java
++++ b/src/com/example/ebooktest002/EbookConst.java
+@@ -27,7 +27,7 @@ public class EbookConst {
+ 		Uri.Builder builder = new Uri.Builder();
+ 		AsyncHttpRequest task = new AsyncHttpRequest("http://techbooster.org/?feed=rss2");
+ 		task.execute(builder);
+-		
++
+ 
+ 
+ 		return true;
+@@ -39,10 +39,13 @@ public class EbookConst {
+ 	public String[] getImageUrls () {
+ 		Log.i("EbookConst - getImageUrls ", "INFO");
+ 		String[] imageUrls = {
+-
++				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
+ 				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
+ 				"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
+-				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
++
++
++				//"http://www.imabaya.com/testimage/water/SDIM9409.jpg",
++				//"http://www.imabaya.com/testimage/water/IMGP9381.jpg",
+ 
+ 				"http://www.imabaya.com/testimage/noimage.jpg",
+ 				"http://www.imabaya.com/testimage/niji/capture-20131203-155301.png",
+diff --git a/src/com/example/ebooktest002/ImagePagerActivity.java b/src/com/example/ebooktest002/ImagePagerActivity.java
+index 4007ffe..3bcc4fb 100644
+--- a/src/com/example/ebooktest002/ImagePagerActivity.java
++++ b/src/com/example/ebooktest002/ImagePagerActivity.java
+@@ -52,6 +52,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
+ import com.nostra13.universalimageloader.core.ImageLoader;
+ import com.nostra13.universalimageloader.core.assist.FailReason;
+ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
++import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+ 
+@@ -163,21 +164,14 @@ public class ImagePagerActivity extends BaseActivity {
+ 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
+ 
+ 			// imageLoader で画像の読み込み処理と表示処理を一括して行う
+-			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
++			imageLoader.loadImage(images[position], new ImageLoadingListener() {
+ 
+ 				@Override
+ 				public void onLoadingStarted(String imageUri, View view) {
+ 					spinner.setVisibility(View.VISIBLE);
++					Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
+ 
+-					if (pager.getCurrentItem() ==0) {
+-						if (onLoadingStartedduplicateCheck == false) {
+-							onLoadingStartedduplicateCheck = true;
+-
+-						} else {
+ 
+-						}
+-					}
+-					Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
+ 				}
+ 
+ 				@Override
+@@ -207,29 +201,42 @@ public class ImagePagerActivity extends BaseActivity {
+ 
+ 				@Override
+ 				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+-					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() , "INFO");
++					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
+ 					spinner.setVisibility(View.GONE);
+ 
+ 					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+ 
+-			        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+-					// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+-					// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+-					ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+-					if (imageView != null) {	// imageView の取得がたまに失敗することがある
+-						mAttacher = new PhotoViewAttacher(imageView);
+-
+-						if(pager.getCurrentItem() == 0) {
+-							setTitle("最初！");
++					if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == true) {
++						return;
++					} else {
++						onLoadingStartedduplicateCheck = true;
++						
++				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
++						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
++						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
++						ImageView imageView = (ImageView)findViewById(R.id.pageimage);
++	
++						
++						if (imageView != null) {	// imageView の取得がたまに失敗することがある
++							imageView.setImageBitmap(loadedImage);
++							mAttacher = new PhotoViewAttacher(imageView);
++							
++	
++							if(pager.getCurrentItem() == 0) {
++								setTitle("最初！");
++							}
++	
++							mAttacher.setScaleType(ScaleType.FIT_CENTER);
++							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
++							mAttacher.setOnLongClickListener(new LongClickListener());
+ 						}
+-
+-						mAttacher.setScaleType(ScaleType.FIT_CENTER);
+-						mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+-						mAttacher.setOnLongClickListener(new LongClickListener());
+ 					}
+ 
+ 				}
+-
++				@Override
++				public void onLoadingCancelled(String imageUri, View view) {
++					
++				}
+ 
+ 			});
+ 
+@@ -301,7 +308,7 @@ public class ImagePagerActivity extends BaseActivity {
+ 	        	Toast.makeText(ImagePagerActivity.this, "onMatrixChanged" , Toast.LENGTH_SHORT).show();
+ 	        }
+ 	    }
+-	
++
+ 
+ 	}
+ 

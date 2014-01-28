@@ -82,7 +82,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		uap = (UILApplication) this.getApplication();
 		uap.ebookconst.getBookXmlData();
 		imageUrls = uap.ebookconst.getImageUrls();
-		int pagerPosition = 0;
+		int pagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
 
 		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
 		if (savedInstanceState != null) {
@@ -184,93 +184,101 @@ public class ImagePagerActivity extends BaseActivity  {
 
 
 			// position は 0 から、pager.getCurrentItem() は 0 からカウントスタート
-			setTitle("ページ：" + position+ "-" + pager.getCurrentItem());
-			Log.i("ページ：" + position + "-" + pager.getCurrentItem(), "INFO");
+			setTitle("instantiateItem position：" + position+ "-pager.currentitem:" + pager.getCurrentItem());
+			Log.i("instantiateItem position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 
 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
-			// imageLoader で画像の読み込み処理を行う
-			imageLoader.loadImage(images[position], new ImageLoadingListener() {
-
-				@Override
-				public void onLoadingStarted(String imageUri, View view) {
-					spinner.setVisibility(View.VISIBLE);
-					Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
+			if (position == 0 || position == 1) {
+					startReadButton.setVisibility(View.VISIBLE);
+					pager.setCurrentItem(2);
+					Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
+			} else {
 
 
-				}
+				// imageLoader で画像の読み込み処理を行う
+				imageLoader.loadImage(images[position], new ImageLoadingListener() {
 
-				@Override
-				public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-					String message = null;
-					switch (failReason.getType()) {
-						case IO_ERROR:
-							message = "Input/Output error";
-							break;
-						case DECODING_ERROR:
-							message = "Image can't be decoded";
-							break;
-						case NETWORK_DENIED:
-							message = "Downloads are denied";
-							break;
-						case OUT_OF_MEMORY:
-							message = "Out Of Memory error";
-							break;
-						case UNKNOWN:
-							message = "Unknown error";
-							break;
+					@Override
+					public void onLoadingStarted(String imageUri, View view) {
+						spinner.setVisibility(View.VISIBLE);
+						Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
+
+
 					}
-					Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
 
-					spinner.setVisibility(View.GONE);
-				}
+					@Override
+					public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+						String message = null;
+						switch (failReason.getType()) {
+							case IO_ERROR:
+								message = "Input/Output error";
+								break;
+							case DECODING_ERROR:
+								message = "Image can't be decoded";
+								break;
+							case NETWORK_DENIED:
+								message = "Downloads are denied";
+								break;
+							case OUT_OF_MEMORY:
+								message = "Out Of Memory error";
+								break;
+							case UNKNOWN:
+								message = "Unknown error";
+								break;
+						}
+						Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
 
-				@Override
-				public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-					Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
-					spinner.setVisibility(View.GONE);
+						spinner.setVisibility(View.GONE);
+					}
 
-					pageSeekBar.setProgress(pager.getCurrentItem());
+					@Override
+					public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+						Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
+						spinner.setVisibility(View.GONE);
 
-					///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
+						pageSeekBar.setProgress(pager.getCurrentItem());
 
-					if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == false) {
+						///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
-						return;
-					} else {
-						onLoadingStartedduplicateCheck = true;
+						if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == false) {
 
-				        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
-						// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
-						// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
+							return;
+						} else {
+							onLoadingStartedduplicateCheck = true;
 
-						//ImageView imageView = (ImageView)findViewById(R.id.pageimage);
+					        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
+							// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+							// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
 
-
-						if (imageView != null) {	// imageView の取得がたまに失敗することがある
-							imageView.setImageBitmap(loadedImage);
-							mAttacher = new PhotoViewAttacher(imageView);
+							//ImageView imageView = (ImageView)findViewById(R.id.pageimage);
 
 
-							if(pager.getCurrentItem() == 0) {
-								setTitle("最初！");
+							if (imageView != null) {	// imageView の取得がたまに失敗することがある
+								imageView.setImageBitmap(loadedImage);
+
+								mAttacher = new PhotoViewAttacher(imageView);
+								mAttacher.setScaleType(ScaleType.FIT_CENTER);
+								mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
+								mAttacher.setOnLongClickListener(new LongClickListener());
+
+
+								if(pager.getCurrentItem() == 0) {
+									setTitle("最初！");
+								}
+
 							}
 
-							mAttacher.setScaleType(ScaleType.FIT_CENTER);
-							mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
-							mAttacher.setOnLongClickListener(new LongClickListener());
 						}
 
 					}
+					@Override
+					public void onLoadingCancelled(String imageUri, View view) {
 
-				}
-				@Override
-				public void onLoadingCancelled(String imageUri, View view) {
+					}
 
-				}
-
-			});
-
+				});
+			}
 
 
 			view.addView(imageLayout, 0);

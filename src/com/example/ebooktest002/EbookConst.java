@@ -39,7 +39,8 @@ public class EbookConst {
 	public String[] getImageUrls () {
 		Log.i("EbookConst - getImageUrls ", "INFO");
 		String[] imageUrls = {
-
+				"",
+				"",
 				"http://www.imabaya.com/testimage/niji/1380943878613.gif",
 				"http://www.imabaya.com/testimage/niji/tumblr_mzamkp9o601qzlc8oo1_500.jpg",
 				"http://www.imabaya.com/testimage/niji/1386118585036.jpg",
