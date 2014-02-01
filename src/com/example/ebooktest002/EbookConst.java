@@ -25,7 +25,7 @@ public class EbookConst {
 
 
 		Uri.Builder builder = new Uri.Builder();
-		AsyncHttpRequest task = new AsyncHttpRequest("http://techbooster.org/?feed=rss2");
+		AsyncHttpRequest task = new AsyncHttpRequest("http://www.imabaya.com/ebooktest/ebookconst.xml");
 		task.execute(builder);
 
 
