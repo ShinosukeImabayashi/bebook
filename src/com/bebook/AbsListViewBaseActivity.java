@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 
-import com.bebook.R;
+
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 

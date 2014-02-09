@@ -12,10 +12,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.bebook.UILApplication"
+        android:name=".UILApplication"
          android:hardwareAccelerated="false"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_web"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
        <!--OpenGL で20482048 以上の画像呼び込みが仕様エラーになるので、ハードウェアアクセラレータを切る-->

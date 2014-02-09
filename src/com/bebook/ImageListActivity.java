@@ -29,7 +29,8 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 	DisplayImageOptions options;
 	UILApplication uap;
-	String[] imageUrls;
+	String[] mCoverImageUrls;
+	String[] mCoverText;
 
 
 	@Override
@@ -43,18 +44,17 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		// 設定情報関連
 		uap = (UILApplication) this.getApplication();
-		//imageUrls = uap.ebookconst.getImageUrls();
+		//mCoverImageUrls = uap.ebookconst.getImageUrls();
 
 		// 書籍情報オブジェクトの取得
 		BookList booklist = uap.getBooklist();
 
 		// 表紙画像 URL リストの取得
-		imageUrls = booklist.getBookCoverImageUrl();
-		
-		
-		
-		
-		
+		mCoverImageUrls = booklist.getBookCoverImageUrl();
+
+		// 表紙タイトルリストの取得
+		mCoverText = booklist.getBookCoverText();
+
 
 		options = new DisplayImageOptions.Builder()
 			.showImageOnLoading(R.drawable.ic_stub)
@@ -69,7 +69,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		listView = (ListView) findViewById(android.R.id.list);
 		((ListView) listView).setAdapter(new ItemAdapter());
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {// 書籍閲覧画面への遷移
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				startImagePagerActivity(position);
@@ -83,9 +83,10 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		super.onBackPressed();
 	}
 
+	// 書籍閲覧画面への遷移
 	private void startImagePagerActivity(int position) {
 		Intent intent = new Intent(this, ImagePagerActivity.class);
-		//intent.putExtra(Extra.IMAGES, imageUrls);
+		//intent.putExtra(Extra.IMAGES, mCoverImageUrls);
 		intent.putExtra(Extra.IMAGE_POSITION, position);
 		startActivity(intent);
 	}
@@ -101,7 +102,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		@Override
 		public int getCount() {
-			return imageUrls.length;
+			return mCoverImageUrls.length;
 		}
 
 		@Override
@@ -128,9 +129,11 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 				holder = (ViewHolder) view.getTag();
 			}
 
-			holder.text.setText("Item " + (position + 1));
+			// 表紙タイトルの表示
+			holder.text.setText(mCoverText[position]);
 
-			imageLoader.displayImage(imageUrls[position], holder.image, options, animateFirstListener);
+			// 表紙画像の表示
+			imageLoader.displayImage(mCoverImageUrls[position], holder.image, options, animateFirstListener);
 
 			return view;
 		}

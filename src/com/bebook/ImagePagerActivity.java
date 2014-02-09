@@ -5,6 +5,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
+
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 import android.util.Log;
 
+import com.bebook.Constants.Extra;
 import com.bebook.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -34,6 +36,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 
 
@@ -69,11 +72,23 @@ public class ImagePagerActivity extends BaseActivity  {
 		Bundle bundle = getIntent().getExtras();
 		assert bundle != null;
 		//String[] imageUrls = bundle.getStringArray(Extra.IMAGES);
-		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
+		int mSelectListPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
 
 		// 設定情報関連
 		uap = (UILApplication) this.getApplication();
-		imageUrls = uap.ebookconst.getImageUrls();
+		///imageUrls = uap.ebookconst.getImageUrls();
+
+		// 書籍情報オブジェクトの取得
+		BookList booklist = uap.getBooklist();
+
+		// 書籍画像 URL リストの取得
+		imageUrls = booklist.getBookImageUrl(mSelectListPosition);
+
+
+
+
+
+
 		int pagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
 
 		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
@@ -183,13 +198,15 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			if (position == 0 || position == 1) {
 					startReadButton.setVisibility(View.VISIBLE);
+					position = 2;
 					pager.setCurrentItem(2);
+
 					Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 			} else {
 
 
 				// imageLoader で画像の読み込み処理を行う
-				imageLoader.loadImage(images[position], new ImageLoadingListener() {
+				imageLoader.loadImage(images[position], options, new ImageLoadingListener() {
 
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {

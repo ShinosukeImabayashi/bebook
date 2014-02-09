@@ -65,14 +65,14 @@ public class UILApplication extends Application {
 		//  ImageLoaderConfiguration.createDefault(this);
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-				//.threadPoolSize(1)
-				.threadPriority(Thread.MAX_PRIORITY)
-				//.denyCacheImageMultipleSizesInMemory()
-				.discCacheFileCount(100)
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.writeDebugLogs() // Remove for release app
-				.build();
+		//.threadPoolSize(1)
+		.threadPriority(Thread.MAX_PRIORITY)
+		//.denyCacheImageMultipleSizesInMemory()
+		.discCacheFileCount(100)
+		.discCacheFileNameGenerator(new Md5FileNameGenerator())
+		.tasksProcessingOrder(QueueProcessingType.LIFO)
+		.writeDebugLogs() // Remove for release app
+		.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
 	}

@@ -3,6 +3,7 @@ package com.bebook;
 import java.util.Map;
 
 import com.bebook.Constants.Extra;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 import android.content.Intent;
@@ -28,11 +29,17 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.start);
 
+			// キャッシュクリア
+			ImageLoader imageLoader = ImageLoader.getInstance();
+			//imageLoader.clearMemoryCache();
+			//imageLoader.clearDiscCache();
+
+
 			// 設定情報関連
 			uap = (UILApplication) this.getApplication();
 			///uap.ebookconst.getImageUrls2();
 			startBookListLoadData("http://www.imabaya.com/ebooktest/ebookconst.xml");
-			startBookPublisherLoadData("http://www.imabaya.com/ebooktest/ebookconst.xml");
+
 
 			startbutton = (Button) findViewById(R.id.button1);
 			startbutton.setOnClickListener(this);
@@ -53,23 +60,12 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 			// BookList.xml 設定ファイル呼び出し
 			Bundle args1 = new Bundle();
 			args1.putString("url", url);
-			getSupportLoaderManager().initLoader(1, args1, this);    // onCreateLoaderが呼ばれます
+			getSupportLoaderManager().initLoader(0, args1, this);    // onCreateLoaderが呼ばれます
 
 
 
 	    }
 
-		// Loaderの初期化から起動までを行います
-		public void startBookPublisherLoadData(String url) {
-
-	        // 複数のLoaderを同時に動かす場合は、第一引数を一意のIDにしてやる必要があります。
-
-			// Publisher.xml 設定ファイル呼び出し
-			Bundle args2 = new Bundle();
-			args2.putString("url", url);
-			getSupportLoaderManager().initLoader(2, args2, this);    // onCreateLoaderが呼ばれます
-
-	    }
 
 
 
@@ -79,10 +75,10 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 
 	        // 非同期で処理を実行するLoaderを生成します.
 	        // ここを切り替えてあげるだけで様々な非同期処理に対応できます.
-	        if (id == 1) {
+	        if (id == 0) {
 	            String url = args.getString("url");
 	            return new BookList(this, url);
-	        } 
+	        }
             return null;
 	    }
 
