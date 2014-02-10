@@ -55,7 +55,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		// 表紙タイトルリストの取得
 		mCoverText = booklist.getBookCoverText();
 
-
+		// リスト形式での画像表示に伴う設定項目
 		options = new DisplayImageOptions.Builder()
 			.showImageOnLoading(R.drawable.ic_stub)
 			.showImageForEmptyUri(R.drawable.ic_empty)
@@ -66,9 +66,11 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 			.displayer(new RoundedBitmapDisplayer(20))
 			.build();
 
-
+		// リストビューにアダプタを設定
 		listView = (ListView) findViewById(android.R.id.list);
 		((ListView) listView).setAdapter(new ItemAdapter());
+
+		// リストのいずれかのアイテムがタップされたときの挙動
 		listView.setOnItemClickListener(new OnItemClickListener() {// 書籍閲覧画面への遷移
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -87,10 +89,14 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 	private void startImagePagerActivity(int position) {
 		Intent intent = new Intent(this, ImagePagerActivity.class);
 		//intent.putExtra(Extra.IMAGES, mCoverImageUrls);
-		intent.putExtra(Extra.IMAGE_POSITION, position);
+		intent.putExtra(Extra.IMAGE_POSITION, position);		// 何番目の書籍が選ばれたかを指定
 		startActivity(intent);
 	}
 
+
+
+
+	// 表紙リスト表示用のアダプタ
 	class ItemAdapter extends BaseAdapter {
 
 		private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
@@ -115,6 +121,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 			return position;
 		}
 
+		// 画面表示の管理
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = convertView;
@@ -139,6 +146,8 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		}
 	}
 
+
+	// アニメーション処理の管轄
 	private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
 
 		static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());

@@ -36,8 +36,6 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-
 
 
 
@@ -84,11 +82,17 @@ public class ImagePagerActivity extends BaseActivity  {
 		// 書籍画像 URL リストの取得
 		imageUrls = booklist.getBookImageUrl(mSelectListPosition);
 
+		// リストの先頭に空文字列を２アイテム挿入しておく
+		String[] templist = new String[imageUrls.length + 2];
+		templist[0] = "";
+		templist[1] = "";
+		for (int i=0; i <imageUrls.length;  i++ ) {
+			templist[i + 2] = imageUrls[i].toString();
+		}
+		imageUrls = templist;
 
 
-
-
-
+		// 初期ページ数設定
 		int pagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
 
 		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
@@ -124,6 +128,8 @@ public class ImagePagerActivity extends BaseActivity  {
 		outState.putInt(STATE_POSITION, pager.getCurrentItem());
 	}
 
+
+	// 画像の表示管理全般
 	private class ImagePagerAdapter extends PagerAdapter {
 
 		private String[] images;
@@ -136,11 +142,12 @@ public class ImagePagerActivity extends BaseActivity  {
 	    // 各ページ生成時のタイミングで呼び出される
 		public Object instantiateItem(ViewGroup view, int position) {
 			Log.i("ImagePagerAdapter - instantiateItem p=" +position, "INFO");
+
 	    	//レイアウトファイル item_pager_image をインスタンス化する
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
 			final ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
-			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);		// 読み込み中にアニメーション表示する
 			imageView.setBackgroundColor(Color.BLACK);
 
 			final ImageButton startReadButton = (ImageButton) imageLayout.findViewById(R.id.startReadButton);
@@ -148,9 +155,8 @@ public class ImagePagerActivity extends BaseActivity  {
 				//startReadButton.setVisibility(View.VISIBLE);
 			}
 
-
-
-
+			// シークバー
+			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
 			pageSeekBar.setMax(this.getCount() -1);
 			pageSeekBar.setProgress(position +1);
@@ -172,12 +178,10 @@ public class ImagePagerActivity extends BaseActivity  {
 	            public void onStopTrackingTouch(SeekBar pageSeekBar) {
 	                Log.v("onStopTrackingTouch()",
 	                    String.valueOf(pageSeekBar.getProgress()));
-
-	                // pager.setCurrentItem(pageSeekBar.getProgress());  うまく動かない
+	                // pager.setCurrentItem(pageSeekBar.getProgress());  ページをすっ飛ばす操作がうまく動かない
 
 	            }
 	        });
-
 
 
 /*
@@ -188,7 +192,6 @@ public class ImagePagerActivity extends BaseActivity  {
 			mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
 			mAttacher.setOnLongClickListener(new LongClickListener());
 */
-
 
 			// position は 0 から、pager.getCurrentItem() は 0 からカウントスタート
 			setTitle("instantiateItem position：" + position+ "-pager.currentitem:" + pager.getCurrentItem());
@@ -204,16 +207,14 @@ public class ImagePagerActivity extends BaseActivity  {
 					Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 			} else {
 
-
 				// imageLoader で画像の読み込み処理を行う
 				imageLoader.loadImage(images[position], options, new ImageLoadingListener() {
 
+					// 画像ロード中は読み込み中表示を出す
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
 						spinner.setVisibility(View.VISIBLE);
 						Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
-
-
 					}
 
 					@Override
@@ -241,6 +242,7 @@ public class ImagePagerActivity extends BaseActivity  {
 						spinner.setVisibility(View.GONE);
 					}
 
+					// 画像読み込み完了時
 					@Override
 					public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 						Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
@@ -251,7 +253,6 @@ public class ImagePagerActivity extends BaseActivity  {
 						///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
 						if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == false) {
-
 							return;
 						} else {
 							onLoadingStartedduplicateCheck = true;
@@ -262,25 +263,20 @@ public class ImagePagerActivity extends BaseActivity  {
 
 							//ImageView imageView = (ImageView)findViewById(R.id.pageimage);
 
-
 							if (imageView != null) {	// imageView の取得がたまに失敗することがある
 								imageView.setImageBitmap(loadedImage);
 
 								mAttacher = new PhotoViewAttacher(imageView);
-								mAttacher.setScaleType(ScaleType.FIT_CENTER);
+								mAttacher.setScaleType(ScaleType.FIT_CENTER);	// 画像をセンターでフィットさせる
 								mAttacher.setOnViewTapListener(new ViewTapListener());	// タップイベントのリスナー設定
-								mAttacher.setOnLongClickListener(new LongClickListener());
-
-
-								if(pager.getCurrentItem() == 0) {
-									setTitle("最初！");
-								}
-
+								mAttacher.setOnLongClickListener(new LongClickListener());	// ロングクリックイベントのリスナー設定
 							}
 
 						}
 
 					}
+
+					// 読み込みキャンセル時
 					@Override
 					public void onLoadingCancelled(String imageUri, View view) {
 
@@ -326,22 +322,24 @@ public class ImagePagerActivity extends BaseActivity  {
 			return images.length;
 		}
 
+		// 画面タップ時のアクション
 	    private class ViewTapListener implements OnViewTapListener {
 	        @Override
 	        public void onViewTap(View view, float x, float y) {
 	            float xPercentage = x * 100f;
 	            float yPercentage = y * 100f;
 	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
-	            pager.arrowScroll(View.FOCUS_RIGHT);
+	            pager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
 				Log.i("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + pager.getCurrentItem(), "INFO");
 	        }
 	    }
 
+	    // 画面ロングタップ時のアクション
 	    private class LongClickListener implements OnLongClickListener {
 
 			@Override
 			public boolean onLongClick(View view) {
-	            pager.arrowScroll(View.FOCUS_RIGHT);
+	            pager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
 				Log.i("onLongClick page:" + pager.getCurrentItem(), "INFO");
 
 	            return true;
@@ -363,6 +361,7 @@ public class ImagePagerActivity extends BaseActivity  {
 
 	  @Override
 	  public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 // バックキーが押されたときの挙動
 	    if(keyCode==KeyEvent.KEYCODE_BACK){
 	    	this.onDestroy();
 	        return super.onKeyDown(keyCode, event);

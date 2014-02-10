@@ -20,33 +20,18 @@ public class BookList extends AsyncTaskLoader <BookList> {
    	// 全書籍データを管理
 	private Map bookListData= new HashMap ();
 
-
+	// 書籍 id リスト
 	private ArrayList <String> mBookIdList;
 
+	// 書籍データ xml ファイル url
 	private String xmlurl;
-
 
 
 	public BookList(Context context, String url) {
 			super(context);
 			xmlurl = url;
-
 		}
 
-
-
-
-
-
-	public void setBookListData () {
-
-	}
-
-
-	// 取得したデータの受け渡し
-	public  String getBookName (int bookid) {
-		return "bookname";
-	}
 
 
 	// 書籍表紙画像データ取得
@@ -61,8 +46,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	            Object o = it.next();
 	            if (o != null) {
 	        		Log.d("getBookCoverImageUrl", o.toString() + "---" + ((Map) bookListData.get(o)).get("coverimageurl"));
-	            	mCoverImageList.add((String) ((Map) bookListData.get(o)).get("coverimageurl"));
-	            	mBookIdList.add((String) ((Map) bookListData.get(o)).get("id"));
+	            	mCoverImageList.add((String) ((Map) bookListData.get(o)).get("coverimageurl"));	// 表紙画像 url のリストを格納
+	            	mBookIdList.add((String) ((Map) bookListData.get(o)).get("id"));	// bookid のリストを格納
 	            }
 	        }
 	    } catch (Exception  e) {
@@ -72,6 +57,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 		return mCoverImageList.toArray(new String[mCoverImageList.size()]);
 	}
+
+
 
 	// 書籍表紙タイトルデータ取得
 	public String[] getBookCoverText() {
@@ -83,6 +70,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	            Object o = it.next();
 	            if (o != null) {
 	        		Log.d("getBookCoverText", o.toString() + "---" + ((Map) bookListData.get(o)).get("coverimageurl"));
+
+	        		// 書籍の一覧画面に表示する各書籍ごとのタイトルテキストを生成
 	        		mCoverTextList.add(
 	            			(String) ((Map) bookListData.get(o)).get("name")
 	            			+ " - " + (String) ((Map) bookListData.get(o)).get("covertext")
@@ -99,6 +88,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		return mCoverTextList.toArray(new String[mCoverTextList.size()]);
 	}
 
+
+
 	// 書籍データ取得
 	public String[] getBookImageUrl (int listnum) {
 
@@ -107,33 +98,12 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 		String bookid = mBookIdList.get(listnum);
 		try {
-			getBookImageUrl = (ArrayList<String>) ((Map) bookListData.get(bookid)).get("contentsUrl");
-			getBookImageUrl2  = new ArrayList <String>(getBookImageUrl) ;
+			getBookImageUrl = (ArrayList<String>) ((Map) bookListData.get(bookid)).get("contentsUrl");	// 書籍の内容画像データの url リストを取得
+			getBookImageUrl2  = new ArrayList <String>(getBookImageUrl) ;	// 内容画像データは追記修正するので、コピーを作ってそちらを利用する
 	    } catch (Exception  e) {
 	        Log.e("getBookCoverImageUrl", "error");
 	    	e.printStackTrace();
 	    }
-
-		/*
-		try {
-	        Iterator it = bookListData.keySet().iterator();
-	        while (it.hasNext()) {
-	            Object o = it.next();
-	            if (o != null) {
-	        		Log.d("getBookImageUrl", o.toString() + "---" + ((Map) bookListData.get(o)).get("contentsUrl").toString());
-	        		getBookImageUrl = (ArrayList<String>) ((Map) bookListData.get(o)).get("contentsUrl");
-	        		getBookImageUrl2  = new ArrayList <String>(getBookImageUrl) ;
-	            }
-	        }
-	    } catch (Exception  e) {
-	        Log.e("getBookCoverImageUrl", "error");
-	    	e.printStackTrace();
-	    }
-	    */
-
-		// リストの先頭に空文字列を２アイテム挿入しておく
-		getBookImageUrl2.add(0, "");
-		getBookImageUrl2.add(0, "");
 
 		return getBookImageUrl2.toArray(new String[getBookImageUrl2.size()]);
 	}
@@ -155,17 +125,17 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		try{
 		    XmlPullParser xmlPullParser = Xml.newPullParser();
 
-		    URLConnection connection = new URL(xmlurl).openConnection();
+		    URLConnection connection = new URL(xmlurl).openConnection();	//指定した url から設定 xml ファイルを取得
 
 		    xmlPullParser.setInput(connection.getInputStream(), "UTF-8");
 
 		    int eventType;
 		    while ( (eventType = xmlPullParser.getEventType()) != XmlPullParser.END_DOCUMENT) {
 
-
-		            if(eventType == XmlPullParser.START_DOCUMENT) {
-			            Log.d("0 XmlPullParserSampleUrl", "start");
-		            } else if(eventType == XmlPullParser.START_TAG) {
+		    		// 読み込んだ xml データに対して、開きタグ・閉じタグ・内容のそれぞれに応じてデータ再まとめ処理を実施
+		    		if (eventType == XmlPullParser.START_DOCUMENT) {	// 一番最初のみ
+		    			Log.d("0 XmlPullParserSampleUrl", "start");
+		    		} else if (eventType == XmlPullParser.START_TAG) {
 		            	String tag = xmlPullParser.getName();
 			            if (tag != null) {
 			            	xmlPullParser.next();
@@ -173,7 +143,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 			            	//Log.d("21 XmlPullParserSampleUrl", "-" + eventType + "-" + tag + "-"  +  xmlPullParser.getText() + "-");
 
 
-			            	if (tag.equals("book")) {
+			            	if (tag.equals("book")) {	// book 単位での大処理
 			            		// 書籍データを bookList に挿入
 				            	bookData.put("contentsUrl", contentsUrl);
 				            	bookData.put("contentsText", contentsText);
@@ -182,7 +152,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 			            		// 次の書籍データに移る準備
 			            		bookData = new HashMap();
 
-			            	}	else if (tag.equals("contents")) {
+			            	}	else if (tag.equals("contents")) {	// book 内の contents 処理のスタート
 				            	contentsUrl = new ArrayList <String>();
 				            	contentsText = new ArrayList <String>();
 			            	}	else if (tag.equals("iurl")) {
@@ -190,7 +160,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 			            	}	else if (tag.equals("itext")) {
 			            		contentsText.add(xmlPullParser.getText());
 			            	} else {
-			            		bookData.put(tag,  xmlPullParser.getText());
+			            		bookData.put(tag,  xmlPullParser.getText());	// 特殊処理必要なタグ以外のデータはここで拾っておく
 			            	}
 
 			            	//Log.d("22 XmlPullParserSampleUrl", "" + bookData.toString());
@@ -217,7 +187,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		bookListData.put(bookData.get("id"),  bookData);
 
 
-		// 書籍データ取得
+		// 書籍データ取得（プログラム参考用）
 		try {
 	        Iterator it = bookListData.keySet().iterator();
 	        while (it.hasNext()) {
@@ -245,20 +215,6 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	protected void onStartLoading() {
 	    forceLoad();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

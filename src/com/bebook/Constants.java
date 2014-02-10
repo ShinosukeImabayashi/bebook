@@ -3,9 +3,7 @@ package com.bebook;
 import com.bebook.R;
 
 
-/**
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- */
+
 public final class Constants {
 
 	public static final String[] IMAGES = new String[] {
@@ -30,7 +28,7 @@ public final class Constants {
 	}
 
 	public static class Extra {
-		public static final String IMAGES = "com.example.ebooktest002.Constants.IMAGES";
-		public static final String IMAGE_POSITION = "com.example.ebooktest002.Constants.IMAGE_POSITION";
+		public static final String IMAGES = "com.bebook.Constants.IMAGES";
+		public static final String IMAGE_POSITION = "com.bebook.Constants.IMAGE_POSITION";
 	}
 }
