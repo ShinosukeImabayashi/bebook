@@ -151,6 +151,8 @@ public class ImagePagerActivity extends BaseActivity  {
 			imageView.setBackgroundColor(Color.BLACK);
 
 			final ImageButton startReadButton = (ImageButton) imageLayout.findViewById(R.id.startReadButton);
+			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
+
 			if (pager.getCurrentItem() == 0) {
 				//startReadButton.setVisibility(View.VISIBLE);
 			}
@@ -158,7 +160,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			// シークバー
 			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
-			pageSeekBar.setMax(this.getCount() -1);
+			pageSeekBar.setMax(this.getCount());
 			pageSeekBar.setProgress(position +1);
 			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 	            // トラッキング開始時に呼び出されます
@@ -178,7 +180,7 @@ public class ImagePagerActivity extends BaseActivity  {
 	            public void onStopTrackingTouch(SeekBar pageSeekBar) {
 	                Log.v("onStopTrackingTouch()",
 	                    String.valueOf(pageSeekBar.getProgress()));
-	                // pager.setCurrentItem(pageSeekBar.getProgress());  ページをすっ飛ばす操作がうまく動かない
+	                 pager.setCurrentItem(pageSeekBar.getProgress()); 
 
 	            }
 	        });
@@ -199,12 +201,14 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
-			if (position == 0 || position == 1) {
-					startReadButton.setVisibility(View.VISIBLE);
-					position = 2;
-					pager.setCurrentItem(2);
-
-					Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
+			if (position == 0) {
+				Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
+				pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
+					//position = 2;
+					//pager.setCurrentItem(2);
+			} else if (position == 1) {
+				startReadButton.setVisibility(View.VISIBLE);
+				Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 			} else {
 
 				// imageLoader で画像の読み込み処理を行う
