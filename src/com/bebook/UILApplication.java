@@ -31,7 +31,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class UILApplication extends Application {
 
 	EbookConst ebookconst;
-	private BookList booklist;
+	private BookList  booklist;
 
 	// 書籍データ管理オブジェクトのセット
 	public void setBooklist(BookList sbooklist) {
@@ -39,7 +39,7 @@ public class UILApplication extends Application {
 	}
 
 	// 書籍データ管理オブジェクトの取得
-	public BookList getBooklist() {
+	public BookList getBooklist() { 
 		return booklist;
 	}
 

@@ -17,6 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+
         android:visibility="gone" />
 
     <SeekBar
@@ -24,7 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:progressDrawable="@drawable/swipe_background"
         android:visibility="gone"  />
+        <!-- progressDrawable で 背景バーのスタイル設定 -->
 
     <ImageButton
         android:id="@+id/startReadButton"
@@ -33,6 +36,8 @@
         android:layout_gravity="center_vertical|center"
         android:src="@drawable/ic_stub"
         android:visibility= "gone"  />
+
+
 
 
     <ImageButton
@@ -46,5 +51,16 @@
 
 
 
+    <TextView
+        android:id="@+id/book_summary_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
+        android:includeFontPadding = "true"
+        android:ems="20"
+        android:visibility= "gone"  />
 
 </FrameLayout>

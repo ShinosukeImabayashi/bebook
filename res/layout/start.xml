@@ -28,14 +28,6 @@
         android:adjustViewBounds="false"
         android:src="@drawable/tumb00" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView1"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="71dp"
-        android:text="リストへ" />
+
 
 </RelativeLayout>

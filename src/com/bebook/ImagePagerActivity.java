@@ -1,6 +1,8 @@
 
 package com.bebook;
 
+import java.lang.reflect.Method;
+
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
@@ -19,12 +21,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
 
@@ -51,7 +58,9 @@ public class ImagePagerActivity extends BaseActivity  {
 	ViewPager pager;
 
 	UILApplication uap;
-	String[] imageUrls;
+	String[] imageUrls;	// 書籍の画像 URL リスト
+	String bookPublicationText;	// 書籍の奥付けテキスト
+
 
 
 
@@ -59,8 +68,8 @@ public class ImagePagerActivity extends BaseActivity  {
 		super.onCreate(savedInstanceState);
 		Log.i("ImagePagerActivity - onCreate", "INFO");
 		// ウインドウ全画面化＆タイトルバー非表示化
-		//       getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		//       requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // layout xml を当該アクティビティのビューに結びつける
         setContentView(R.layout.ac_image_pager);
@@ -74,7 +83,6 @@ public class ImagePagerActivity extends BaseActivity  {
 
 		// 設定情報関連
 		uap = (UILApplication) this.getApplication();
-		///imageUrls = uap.ebookconst.getImageUrls();
 
 		// 書籍情報オブジェクトの取得
 		BookList booklist = uap.getBooklist();
@@ -82,13 +90,17 @@ public class ImagePagerActivity extends BaseActivity  {
 		// 書籍画像 URL リストの取得
 		imageUrls = booklist.getBookImageUrl(mSelectListPosition);
 
-		// リストの先頭に空文字列を２アイテム挿入しておく
-		String[] templist = new String[imageUrls.length + 2];
+		// 書籍の奥付けテキストの取得
+		bookPublicationText  = booklist.getBookPublicationText(mSelectListPosition);
+
+		// リストの先頭に空文字列を２アイテム、末尾に１アイテム挿入しておく
+		String[] templist = new String[imageUrls.length + 3];
 		templist[0] = "";
 		templist[1] = "";
 		for (int i=0; i <imageUrls.length;  i++ ) {
 			templist[i + 2] = imageUrls[i].toString();
 		}
+		templist[imageUrls.length + 2] = "";
 		imageUrls = templist;
 
 
@@ -137,6 +149,8 @@ public class ImagePagerActivity extends BaseActivity  {
 	    private PhotoViewAttacher mAttacher;
 	    public boolean onLoadingStartedduplicateCheck = false;
 
+	    private boolean ViewPageSeekBarFlag = false;
+
 
 	    @Override
 	    // 各ページ生成時のタイミングで呼び出される
@@ -153,35 +167,35 @@ public class ImagePagerActivity extends BaseActivity  {
 			final ImageButton startReadButton = (ImageButton) imageLayout.findViewById(R.id.startReadButton);
 			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
 
-			if (pager.getCurrentItem() == 0) {
-				//startReadButton.setVisibility(View.VISIBLE);
-			}
+			final TextView  bookSummaryInfo = (TextView)  imageLayout.findViewById(R.id.book_summary_info);
 
 			// シークバー
 			// どこまで読み込み中かを表示する
-			final SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
-			pageSeekBar.setMax(this.getCount());
-			pageSeekBar.setProgress(position +1);
+			final SeekBar pageSeekBar;
+			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
+			pageSeekBar.setMax(this.getCount()-1);
+
+
+
 			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-	            // トラッキング開始時に呼び出されます
+	            // トラッキング開始時
 	            @Override
 	            public void onStartTrackingTouch(SeekBar pageSeekBar) {
 	                Log.v("onStartTrackingTouch()",
 	                    String.valueOf(pageSeekBar.getProgress()));
 	            }
-	            // トラッキング中に呼び出されます
+	            // トラッキング中
 	            @Override
 	            public void onProgressChanged(SeekBar pageSeekBar, int progress, boolean fromTouch) {
 	                Log.v("onProgressChanged()",
 	                    String.valueOf(progress) + ", " + String.valueOf(fromTouch));
 	            }
-	            // トラッキング終了時に呼び出されます
+	            // トラッキング終了時
 	            @Override
 	            public void onStopTrackingTouch(SeekBar pageSeekBar) {
 	                Log.v("onStopTrackingTouch()",
-	                    String.valueOf(pageSeekBar.getProgress()));
-	                 pager.setCurrentItem(pageSeekBar.getProgress()); 
-
+	                String.valueOf(pageSeekBar.getProgress()));
+	                 pager.setCurrentItem(pageSeekBar.getProgress());
 	            }
 	        });
 
@@ -201,13 +215,20 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
 
-			if (position == 0) {
+			if (position == 0) {	// -2 ページ目
 				Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 				pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
 					//position = 2;
 					//pager.setCurrentItem(2);
-			} else if (position == 1) {
-				startReadButton.setVisibility(View.VISIBLE);
+			} else if (position == 1) {	// -1 ページ目
+				// 書籍奥付け情報の表示
+				bookSummaryInfo.setText(bookPublicationText);
+				bookSummaryInfo.setVisibility(View.VISIBLE);
+				Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
+			} else if (position == this.getCount()-1) {	// 最終ページの後
+				// 書籍奥付け情報の表示
+				bookSummaryInfo.setText(bookPublicationText);
+				bookSummaryInfo.setVisibility(View.VISIBLE);
 				Log.i("no load! position：" + position + "-pager.currentitem:" + pager.getCurrentItem(), "INFO");
 			} else {
 
@@ -218,6 +239,7 @@ public class ImagePagerActivity extends BaseActivity  {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
 						spinner.setVisibility(View.VISIBLE);
+						pageSeekBar.setVisibility(View.GONE);
 						Log.i("imageLoader - onLoadingStarted pager=" +pager.getCurrentItem() + onLoadingStartedduplicateCheck, "INFO");
 					}
 
@@ -251,9 +273,7 @@ public class ImagePagerActivity extends BaseActivity  {
 					public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 						Log.i("imageLoader - onLoadingComplete p=" +pager.getCurrentItem() + " " + onLoadingStartedduplicateCheck, "INFO");
 						spinner.setVisibility(View.GONE);
-
-						pageSeekBar.setProgress(pager.getCurrentItem());
-
+						///pageSeekBar.setProgress(pager.getCurrentItem());
 						///Toast.makeText(ImagePagerActivity.this, "ページ： " + pager.getCurrentItem() , Toast.LENGTH_SHORT).show();
 
 						if (pager.getCurrentItem() ==0 && onLoadingStartedduplicateCheck == false) {
@@ -262,7 +282,7 @@ public class ImagePagerActivity extends BaseActivity  {
 							onLoadingStartedduplicateCheck = true;
 
 					        // PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
-							// 本当は instantiateItem 呼び出し直下で指定したいのだけど、そこで指定しても上手く反映がされなかったため苦肉の策でここに
+							// instantiateItem 呼び出し直下で指定しても上手く反映がされない
 							// 画像サイズが大きすぎる（1MByte 以上～）と、処理が追いつかなくて上手く行ったりいかなかったりする
 
 							//ImageView imageView = (ImageView)findViewById(R.id.pageimage);
@@ -328,12 +348,42 @@ public class ImagePagerActivity extends BaseActivity  {
 
 		// 画面タップ時のアクション
 	    private class ViewTapListener implements OnViewTapListener {
+	    	int onCenterTouchFlag = 0;
+
 	        @Override
 	        public void onViewTap(View view, float x, float y) {
-	            float xPercentage = x * 100f;
-	            float yPercentage = y * 100f;
-	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " " + yPercentage, Toast.LENGTH_SHORT).show();
-	            pager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+	            // Viewサイズを取得する
+				float viewWidth = view.getWidth();
+				float viewHeight = view.getHeight();
+	        	int xPercentage = (int) ((x / viewWidth) * 100);
+	        	int yPercentage = (int) ((y / viewHeight) * 100);
+	            //Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " - " + yPercentage, Toast.LENGTH_SHORT).show();
+
+	        	ViewGroup parent = (ViewGroup) view.getParent();	// 引数で得られるのは PhotoView の view なので、その親の view を取得
+	        	View imageLayout = inflater.inflate(R.layout.item_pager_image, parent, true);	// 第三パラメータの attachToRoot は、ここでは true 必須
+	        	SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
+
+
+	        	// 画面縦に 1/3 ずつでクリック範囲を区切る
+	            if (xPercentage <33) {
+		            pager.arrowScroll(View.FOCUS_LEFT);	// 前のページへ遷移させる
+	            } else if (xPercentage <66) {
+
+	            	if (onCenterTouchFlag == 0) {
+	            		onCenterTouchFlag = 1;
+	            		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	            		pageSeekBar.setProgress(pager.getCurrentItem());
+	            		pageSeekBar.setVisibility(View.VISIBLE);
+	            	} else {
+	            		onCenterTouchFlag = 0;
+	            		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	            		pageSeekBar.setVisibility(View.GONE);
+	            	}
+	    			//pageSeekBar.setVisibility(View.VISIBLE);
+
+	            } else {
+		            pager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+	            }
 				Log.i("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + pager.getCurrentItem(), "INFO");
 	        }
 	    }

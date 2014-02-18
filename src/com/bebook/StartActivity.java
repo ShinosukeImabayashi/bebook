@@ -2,7 +2,6 @@ package com.bebook;
 
 import java.util.Map;
 
-import com.bebook.Constants.Extra;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
@@ -17,7 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 
-public class StartActivity extends FragmentActivity implements OnClickListener, LoaderCallbacks<BookList> {
+public class StartActivity extends FragmentActivity implements LoaderCallbacks<BookList> {
 
 	UILApplication uap;
 
@@ -38,21 +37,8 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 			// 設定情報関連
 			uap = (UILApplication) this.getApplication();
 			///uap.ebookconst.getImageUrls2();
-			startBookListLoadData("http://www.imabaya.com/ebooktest/ebookconst.xml");
-
-
-			startbutton = (Button) findViewById(R.id.button1);
-			startbutton.setOnClickListener(this);
+			startBookListLoadData("http://www.imabaya.com/ebooktest/ebookconst.xml");	// ネット越しに設定情報 xml ファイルを読み込み
 		}
-
-		@Override
-		public void onClick(View v) {
-			Intent intent = new Intent(this, ImageListActivity.class);
-			startActivity(intent);
-
-		}
-
-
 
 		// Loaderの初期化
 		public void startBookListLoadData(String url) {
@@ -61,9 +47,7 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 			Bundle args1 = new Bundle();
 			args1.putString("url", url);
 			getSupportLoaderManager().initLoader(0, args1, this);    // onCreateLoaderが呼ばれる
-
 	    }
-
 
 	    @Override
 	    public Loader <BookList> onCreateLoader(int id, Bundle args) {
@@ -90,11 +74,13 @@ public class StartActivity extends FragmentActivity implements OnClickListener, 
 	        // 次の表紙リスト一覧画面へ遷移
 			Intent intent = new Intent(this, ImageListActivity.class);
 			startActivity(intent);
+			// このアクティビティは任務を終えて終了。バックキーで戻らないようにしておく。
+			finish();
 	    }
 
 	    @Override
 	    public void onLoaderReset(Loader <BookList> arg0) {
-	        Log.d("StartActivity BookList - onLoaderReset", "onLoaderReset");
+	        Log.e("StartActivity BookList - onLoaderReset", "onLoaderReset");
 	    }
 
 
