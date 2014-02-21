@@ -31,22 +31,24 @@ public final class R {
         public static final int tumb00=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000b;
-        public static final int book_summary_info=0x7f080008;
-        public static final int imageView1=0x7f08000a;
-        public static final int item_clear_disc_cache=0x7f08000d;
-        public static final int item_clear_memory_cache=0x7f08000c;
-        public static final int item_pause_on_fling=0x7f08000f;
-        public static final int item_pause_on_scroll=0x7f08000e;
+        public static final int action_settings=0x7f08000d;
+        public static final int book_summary_info=0x7f08000a;
+        public static final int book_summary_info_scrollparent=0x7f080009;
+        public static final int header_info=0x7f080006;
+        public static final int imageView1=0x7f08000c;
+        public static final int item_clear_disc_cache=0x7f08000f;
+        public static final int item_clear_memory_cache=0x7f08000e;
+        public static final int item_pause_on_fling=0x7f080011;
+        public static final int item_pause_on_scroll=0x7f080010;
         public static final int listimage=0x7f080001;
         public static final int loading=0x7f080004;
         public static final int pageSeekBar=0x7f080005;
-        public static final int page_right_swipe_guide_image=0x7f080007;
+        public static final int page_right_swipe_guide_image=0x7f080008;
         public static final int pageimage=0x7f080003;
         public static final int pager=0x7f080000;
-        public static final int startReadButton=0x7f080006;
+        public static final int startReadButton=0x7f080007;
         public static final int text=0x7f080002;
-        public static final int textView1=0x7f080009;
+        public static final int textView1=0x7f08000b;
     }
     public static final class layout {
         public static final int ac_image_list=0x7f030000;

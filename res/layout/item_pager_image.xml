@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:padding="0dip" >
 
+
     <ImageView
         android:id="@+id/pageimage"
         android:layout_width="fill_parent"
@@ -17,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         android:visibility="gone" />
 
     <SeekBar
@@ -29,6 +29,21 @@
         android:visibility="gone"  />
         <!-- progressDrawable で 背景バーのスタイル設定 -->
 
+
+    <TextView
+	        android:id="@+id/header_info"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="top"
+	        android:maxLines="1"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:layout_margin="10dip"
+	        android:textColor="#EEEEFF"
+	        android:textStyle="bold"
+	        android:background="#33000000"
+	        android:includeFontPadding = "true"
+	        android:visibility="gone"  />
+
     <ImageButton
         android:id="@+id/startReadButton"
         android:layout_width="wrap_content"
@@ -36,9 +51,6 @@
         android:layout_gravity="center_vertical|center"
         android:src="@drawable/ic_stub"
         android:visibility= "gone"  />
-
-
-
 
     <ImageButton
         android:id="@+id/page_right_swipe_guide_image"
@@ -50,17 +62,26 @@
         android:visibility= "gone"  />
 
 
-
-    <TextView
-        android:id="@+id/book_summary_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#FFFFFFFF"
-        android:textStyle="bold"
-        android:includeFontPadding = "true"
-        android:ems="20"
-        android:visibility= "gone"  />
+	<ScrollView
+	    android:id="@+id/book_summary_info_scrollparent"
+	     android:layout_width ="fill_parent"
+	     android:layout_height="fill_parent"
+	     android:visibility= "gone"
+	     >
+		<TextView
+	        android:id="@+id/book_summary_info"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dip"
+	        android:layout_gravity="center_vertical|center"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="#CCCCFF"
+	        android:textStyle="bold"
+	        android:includeFontPadding = "true"
+	        android:autoLink = "all"
+	        android:textColorLink="#3333FF"
+	        android:ems="30"
+	        android:visibility= "gone"  />
+	</ScrollView>
 
 </FrameLayout>

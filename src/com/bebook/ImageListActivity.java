@@ -3,19 +3,16 @@ package com.bebook;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-
 
 import com.bebook.R;
 import com.bebook.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
@@ -27,8 +24,8 @@ import java.util.List;
 
 public class ImageListActivity extends AbsListViewBaseActivity {
 
-	DisplayImageOptions options;
-	UILApplication uap;
+	DisplayImageOptions mDisplayImageOptions;
+	UILApplication mUap;
 	String[] mCoverImageUrls;
 	String[] mCoverText;
 
@@ -38,16 +35,11 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ac_image_list);
 
-		//Bundle bundle = getIntent().getExtras();
-		//imageUrls = bundle.getStringArray(Extra.IMAGES);
-
-
 		// 設定情報関連
-		uap = (UILApplication) this.getApplication();
-		//mCoverImageUrls = uap.ebookconst.getImageUrls();
+		mUap = (UILApplication) this.getApplication();
 
 		// 書籍情報オブジェクトの取得
-		BookList booklist = uap.getBooklist();
+		BookList booklist = mUap.getBooklist();
 
 		// 表紙画像 URL リストの取得
 		mCoverImageUrls = booklist.getBookCoverImageUrl("id", "asc");
@@ -56,15 +48,15 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		mCoverText = booklist.getBookCoverText();
 
 		// リスト形式での画像表示に伴う設定項目
-		options = new DisplayImageOptions.Builder()
-			.showImageOnLoading(R.drawable.ic_stub)
-			.showImageForEmptyUri(R.drawable.ic_empty)
-			.showImageOnFail(R.drawable.ic_error)
-			.cacheInMemory(true)
-			.cacheOnDisc(true)
-			.considerExifParams(true)
-			.displayer(new RoundedBitmapDisplayer(20))
-			.build();
+		mDisplayImageOptions = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.ic_stub)
+		.showImageForEmptyUri(R.drawable.ic_empty)
+		.showImageOnFail(R.drawable.ic_error)
+		.cacheInMemory(true)
+		.cacheOnDisc(true)
+		.considerExifParams(true)
+		.displayer(new RoundedBitmapDisplayer(20))
+		.build();
 
 		// リストビューにアダプタを設定
 		listView = (ListView) findViewById(android.R.id.list);
@@ -140,7 +132,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 			holder.text.setText(mCoverText[position]);
 
 			// 表紙画像の表示
-			imageLoader.displayImage(mCoverImageUrls[position], holder.image, options, animateFirstListener);
+			imageLoader.displayImage(mCoverImageUrls[position], holder.image, mDisplayImageOptions, animateFirstListener);
 
 			return view;
 		}

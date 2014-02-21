@@ -2,7 +2,6 @@ package com.bebook;
 
 
 
-import android.net.Uri;
 import android.util.Log;
 
 
@@ -16,9 +15,9 @@ public class EbookConst {
 	public  boolean getImageUrls2() {
 
 
-		Uri.Builder builder = new Uri.Builder();
-		AsyncHttpRequest task = new AsyncHttpRequest("http://www.imabaya.com/ebooktest/ebookconst.xml");
-		task.execute(builder);
+		//Uri.Builder builder = new Uri.Builder();
+		//AsyncHttpRequest task = new AsyncHttpRequest("http://www.imabaya.com/ebooktest/ebookconst.xml");
+		//task.execute(builder);
 
 
 

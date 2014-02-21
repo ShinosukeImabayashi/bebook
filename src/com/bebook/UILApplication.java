@@ -30,7 +30,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class UILApplication extends Application {
 
-	EbookConst ebookconst;
+	// 書籍情報の統括管理オブジェクト
 	private BookList  booklist;
 
 	// 書籍データ管理オブジェクトのセット
@@ -39,7 +39,7 @@ public class UILApplication extends Application {
 	}
 
 	// 書籍データ管理オブジェクトの取得
-	public BookList getBooklist() { 
+	public BookList getBooklist() {
 		return booklist;
 	}
 
@@ -55,8 +55,6 @@ public class UILApplication extends Application {
 
 		super.onCreate();
 
-		// アプリを通してデータを維持する const オブジェクト作成
-		ebookconst = new EbookConst();
 
 		// UnivasalImageLoader の初期化処理
 		initImageLoader(getApplicationContext());
