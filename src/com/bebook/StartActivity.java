@@ -1,7 +1,5 @@
 package com.bebook;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,7 +7,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-//import com.nostra13.universalimageloader.core.ImageLoader;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class StartActivity extends FragmentActivity implements LoaderCallbacks<BookList> {
 
@@ -74,6 +73,17 @@ public class StartActivity extends FragmentActivity implements LoaderCallbacks<B
 		Log.e("StartActivity BookList - onLoaderReset", "onLoaderReset");
 	}
 
-
+	  @Override
+	  public void onStart() {
+		Log.v("StartActivity:onStart", "INFO");
+	    super.onStart();
+	    EasyTracker.getInstance(this).activityStart(this);
+	  }
+	  @Override
+	  public void onStop() {
+		Log.v("StartActivity:onStop", "INFO");
+	    super.onStop();
+	    EasyTracker.getInstance(this).activityStop(this);
+	  }
 }
 

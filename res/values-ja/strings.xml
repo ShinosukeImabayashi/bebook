@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name">あさつき</string>
+
+   <!-- introduce -->
+   <string name="introduce_wish_text">この本はいかがでしたか？  気に入って頂けたなら応援をお願いします！</string>
+   <string name="introduce_by_email">この本をメール友達に勧める</string>
+   <string name="introduce_by_googleplay">Google play でレビューする</string>
+   <string name="introduce_by_twitter">twitter でつぶやく</string>
+   <string name="introduce_by_facebook">facebook でイイネ！する</string>
+   <string name="introduce_by_Line">Line で共有する</string>
+   <string name="introduce_by_googleplus">google+ で共有する</string>
+
+</resources>

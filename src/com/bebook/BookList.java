@@ -161,7 +161,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 						"updatedate : " +  (String) mBookListData.get(bookid).get("updatedate") + "<BR>";
 
 		String publicationText =
-				"■著作者情報<BR>" +
+				"<BR>■著作者情報<BR>" +
 						"name : " + mAuthorData.get("name") + "<BR>" +
 						"url : " + mAuthorData.get("url") + "<BR>" +
 						"mail : " + mAuthorData.get("mail") + "<BR>" +

@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">bebook</string>
+    <string name="app_name">asatsuki book reader</string>
     <string name="action_settings">Settings</string>
-    <string name="start_announce">start_announce!</string>
+    <string name="start_announce">now inisializing</string>
+
+   <!-- introduce -->
+   <string name="introduce_wish_text">この本はいかがでしたか？  気に入って頂けたなら応援をお願いします！</string>
+   <string name="introduce_by_email">この本をメール友達に勧める</string>
+   <string name="introduce_by_googleplay">Google play でレビューする</string>
+   <string name="introduce_by_twitter">twitter でつぶやく</string>
+   <string name="introduce_by_facebook">facebook でイイネ！する</string>
+   <string name="introduce_by_Line">Line で共有する</string>
+   <string name="introduce_by_googleplus">google+ で共有する</string>
 
 
     <!-- Activity titles -->
     <string name="ac_name_image_list">Image List Example</string>
-    <string name="ac_name_image_grid">Image Grid Example</string>
     <string name="ac_name_image_pager">Image Pager Example</string>
-    <string name="ac_name_image_gallery">Image Gallery Example</string>
     <!-- Labels -->
-    <string name="label_activity_examples">Activity Examples</string>
     <string name="menu_item_clear_memory_cache">Clear memory cache</string>
     <string name="menu_item_clear_disc_cache">Clear disc cache</string>
     <string name="menu_item_pause_on_scroll">Pause on scroll</string>
     <string name="menu_item_pause_on_fling">Pause on fling</string>
-    <string name="button_image_list">ListView</string>
-    <string name="button_image_grid">GridView</string>
-    <string name="button_image_pager">ViewPager</string>
-    <string name="button_image_gallery">Gallery</string>
     <!-- Content descriptions -->
     <string name="descr_image">Image</string>
 

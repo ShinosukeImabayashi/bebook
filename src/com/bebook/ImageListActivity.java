@@ -1,5 +1,6 @@
 package com.bebook;
 
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -84,9 +86,6 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		intent.putExtra(Extra.IMAGE_POSITION, position);		// 何番目の書籍が選ばれたかを指定
 		startActivity(intent);
 	}
-
-
-
 
 	// 表紙リスト表示用のアダプタ
 	class ItemAdapter extends BaseAdapter {
