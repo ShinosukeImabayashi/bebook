@@ -177,7 +177,7 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			// アナウンス系
 			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
-
+			final ImageButton pageLeftSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_left_swipe_guide_image);
 
 			// 書籍奥付け表示領域
 			final TextView  bookSummaryInfo = (TextView)  imageLayout.findViewById(R.id.book_summary_info);
@@ -186,31 +186,31 @@ public class ImagePagerActivity extends BaseActivity  {
 			// 書籍情報レビューお願い領域
 			final ScrollView introduceScrollParent =  (ScrollView)  imageLayout.findViewById(R.id.introduce);
 			final TextView  introduceWishText = (TextView)  imageLayout.findViewById(R.id.introduce_wish_text);
-			final Button  introduce_by_email = (Button)  imageLayout.findViewById(R.id.introduce_by_email);
-			final Button  introduce_by_googleplay = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplay);
-			final Button  introduce_by_twitter = (Button)  imageLayout.findViewById(R.id.introduce_by_twitter);
-			final Button  introduce_by_facebook = (Button)  imageLayout.findViewById(R.id.introduce_by_facebook);
-			final Button  introduce_by_Line = (Button)  imageLayout.findViewById(R.id.introduce_by_Line);
-			final Button  introduce_by_googleplus = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplus);
-			final Button  introduce_view_to_top = (Button)  imageLayout.findViewById(R.id.introduce_view_to_top);
+			final Button  introduceByEmail = (Button)  imageLayout.findViewById(R.id.introduce_by_email);
+			final Button  introduceByGoogleplay = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplay);
+			final Button  introduceByTwitter = (Button)  imageLayout.findViewById(R.id.introduce_by_twitter);
+			final Button  introduceByFacebook = (Button)  imageLayout.findViewById(R.id.introduce_by_facebook);
+			final Button  introduceByLine = (Button)  imageLayout.findViewById(R.id.introduce_by_Line);
+			final Button  introduceByGoogleplus = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplus);
+			final Button  introduceViewToTop = (Button)  imageLayout.findViewById(R.id.introduce_view_to_top);
 
 			introduceWishText.setText(Html.fromHtml(getString(R.string.introduce_wish_text)));
-			introduce_by_email.setText(getString(R.string.introduce_by_email));
-			introduce_by_googleplay.setText(getString(R.string.introduce_by_googleplay));
-			introduce_by_twitter.setText(getString(R.string.introduce_by_twitter));
-			introduce_by_facebook.setText(getString(R.string.introduce_by_facebook));
-			introduce_by_Line.setText(getString(R.string.introduce_by_Line));
-			introduce_by_googleplus.setText(getString(R.string.introduce_by_googleplus));
-			introduce_view_to_top.setText(getString(R.string.introduce_view_to_top));
+			introduceByEmail.setText(getString(R.string.introduce_by_email));
+			introduceByGoogleplay.setText(getString(R.string.introduce_by_googleplay));
+			introduceByTwitter.setText(getString(R.string.introduce_by_twitter));
+			introduceByFacebook.setText(getString(R.string.introduce_by_facebook));
+			introduceByLine.setText(getString(R.string.introduce_by_Line));
+			introduceByGoogleplus.setText(getString(R.string.introduce_by_googleplus));
+			introduceViewToTop.setText(getString(R.string.introduce_view_to_top));
 
 			IntroduceWish IWListner = new IntroduceWish();
-			introduce_by_email.setOnClickListener(IWListner);
-			introduce_by_googleplay.setOnClickListener(IWListner);
-			introduce_by_twitter.setOnClickListener(IWListner);
-			introduce_by_facebook.setOnClickListener(IWListner);
-			introduce_by_Line.setOnClickListener(IWListner);
-			introduce_by_googleplus.setOnClickListener(IWListner);
-			introduce_view_to_top.setOnClickListener(IWListner);
+			introduceByEmail.setOnClickListener(IWListner);
+			introduceByGoogleplay.setOnClickListener(IWListner);
+			introduceByTwitter.setOnClickListener(IWListner);
+			introduceByFacebook.setOnClickListener(IWListner);
+			introduceByLine.setOnClickListener(IWListner);
+			introduceByGoogleplus.setOnClickListener(IWListner);
+			introduceViewToTop.setOnClickListener(IWListner);
 
 			// シークバー
 			// どこまで読み込み中かを表示する
@@ -252,22 +252,21 @@ public class ImagePagerActivity extends BaseActivity  {
 				if (mOpeingType.equals("LEFT_OPENING") ) {
 					pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
 				} else {
-					//pageRightSwipeGuideImage.setRotationX(180);
-					pageRightSwipeGuideImage.setRotationY(180);
-					pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
+					pageLeftSwipeGuideImage.setVisibility(View.VISIBLE);
 				}
 				pageRightSwipeGuideImage.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Log.v("pageRightSwipeGuideImage:onClick" + mPager.getCurrentItem(), "INFO");
-						if (mOpeingType.equals("LEFT_OPENING") ) {
-							mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
-						} else {
-							mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
-						}
+						mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
 					}
 				});
-
+				pageLeftSwipeGuideImage.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
+					}
+				});
+				
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == 1 ) ||
 			           (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 2 )  ) {	// -1 ページ目
 				// 書籍奥付け情報の表示

@@ -55,6 +55,14 @@
         android:background="@null"
         android:src="@drawable/page_right_swipe_guide_image"
         android:visibility="gone" />
+    <ImageButton
+        android:id="@+id/page_left_swipe_guide_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:background="@null"
+        android:src="@drawable/page_left_swipe_guide_image"
+        android:visibility="gone" />
 
     <!-- 書籍奥付け表示 -->
     <ScrollView
@@ -105,7 +113,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textStyle="bold"
                android:textColor="#FFFFFF"
                 android:layout_margin="10dip"/>
 
