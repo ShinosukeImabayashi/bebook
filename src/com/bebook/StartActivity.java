@@ -29,7 +29,7 @@ public class StartActivity extends FragmentActivity implements LoaderCallbacks<B
 		// 設定情報関連
 		mUap = (UILApplication) this.getApplication();
 		///mUap.ebookconst.getImageUrls2();
-		startBookListLoadData("http://www.imabaya.com/ebooktest/ebookconst.xml");	// ネット越しに設定情報 xml ファイルを読み込み
+		startBookListLoadData(getString(R.string.book_const_xml_url));	// ネット越しに設定情報 xml ファイルを読み込み
 	}
 
 	// BookList.xml 設定ファイル呼び出し

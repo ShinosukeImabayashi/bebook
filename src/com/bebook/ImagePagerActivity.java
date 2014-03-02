@@ -1,16 +1,15 @@
 
 package com.bebook;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
-//import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +60,8 @@ public class ImagePagerActivity extends BaseActivity  {
 	private String[] mBookImageUrls;	// 書籍の画像 URL リスト
 	private String mBookTitleNameText;	// 書籍のタイトルテキスト
 	private String mBookPublicationText;	// 書籍の奥付けテキスト
-
+	private String mOpeingType;	// 書籍が左開きか右開きか
+	private int  mStartPagerPosition;  // 書籍表示開始ページ
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,8 +94,26 @@ public class ImagePagerActivity extends BaseActivity  {
 		mBookTitleNameText  = booklist.getBookTitleNameText(mSelectListPosition);
 		mBookPublicationText  = booklist.getBookPublicationText(mSelectListPosition);
 
+		// 左開きか右開きかの指定取得
+		mOpeingType = booklist.getBookOpeningtype(mSelectListPosition);
+		// 初期ページ数設定
+		if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
+			mStartPagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
+		} else { // 右開き
+			mStartPagerPosition = mBookImageUrls.length + 1;	// 最後のページから開く
+		}
+
+		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
+		if (savedInstanceState != null) {
+			mStartPagerPosition = savedInstanceState.getInt(STATE_POSITION);
+		}
+
+		// 表示・奥付けページ追加の準備と、表示開始位置の指定（右開きだったら末尾ページから始める）
+		String[] templist;
 		// リストの先頭に空文字列を２アイテム、末尾に２アイテム挿入しておく
-		String[] templist = new String[mBookImageUrls.length + 4];
+		// 先頭の２アイテムは、操作案内＆書籍奥付け情報
+		// 末尾の２アイテムは、書籍奥付け情報＆書籍情報レビューお願い
+		templist = new String[mBookImageUrls.length + 4];
 		templist[0] = "";
 		templist[1] = "";
 		for (int i=0; i <mBookImageUrls.length;  i++ ) {
@@ -104,15 +122,6 @@ public class ImagePagerActivity extends BaseActivity  {
 		templist[mBookImageUrls.length + 2] = "";
 		templist[mBookImageUrls.length + 3] = "";
 		mBookImageUrls = templist;
-
-
-		// 初期ページ数設定
-		int pagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
-
-		// 端末回転による縦横変換を行った際の同一ページ保持（これが無いと端末回転した際に最初のページに戻る）
-		if (savedInstanceState != null) {
-			pagerPosition = savedInstanceState.getInt(STATE_POSITION);
-		}
 
 		// universalimageloader の DisplayImageOptions 設定値初期設定
 		mDisplayImageOptions = new DisplayImageOptions.Builder()
@@ -131,20 +140,14 @@ public class ImagePagerActivity extends BaseActivity  {
 		// 表示領域と 画像読み込みオブジェクト（ImagePagerAdapter）とをアダプターで関連付ける
 		mPager = (asaViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(new ImagePagerAdapter(mBookImageUrls));
-		mPager.setCurrentItem(pagerPosition);
+		mPager.setCurrentItem(mStartPagerPosition);
 		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風になる。ちょっとおもしろい。
 
 
 		// アクセス解析
 		EasyTracker.getInstance(this).send(MapBuilder.createEvent("uition", "butpress", "play_button", null).build());
-	}
+	} // onCreate
 
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		Log.v("ImagePagerActivity - onSaveInstanceState", "INFO");
-		outState.putInt(STATE_POSITION, mPager.getCurrentItem());
-	}
 
 
 	// 画像の表示管理全般
@@ -153,6 +156,12 @@ public class ImagePagerActivity extends BaseActivity  {
 		private String[] images;
 		private LayoutInflater inflater;
 		private PhotoViewAttacher mAttacher;
+
+		ImagePagerAdapter(String[] images) {
+			Log.v("ImagePagerAdapter - ImagePagerAdapter", "INFO");
+			this.images = images;
+			inflater = getLayoutInflater();
+		}
 
 		@Override
 		// 各ページ生成時のタイミングで呼び出される
@@ -169,6 +178,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			// アナウンス系
 			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
 
+
 			// 書籍奥付け表示領域
 			final TextView  bookSummaryInfo = (TextView)  imageLayout.findViewById(R.id.book_summary_info);
 			final ScrollView bookSummaryInfoScrollParent =  (ScrollView)  imageLayout.findViewById(R.id.book_summary_info_scrollparent);
@@ -182,6 +192,8 @@ public class ImagePagerActivity extends BaseActivity  {
 			final Button  introduce_by_facebook = (Button)  imageLayout.findViewById(R.id.introduce_by_facebook);
 			final Button  introduce_by_Line = (Button)  imageLayout.findViewById(R.id.introduce_by_Line);
 			final Button  introduce_by_googleplus = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplus);
+			final Button  introduce_view_to_top = (Button)  imageLayout.findViewById(R.id.introduce_view_to_top);
+
 			introduceWishText.setText(Html.fromHtml(getString(R.string.introduce_wish_text)));
 			introduce_by_email.setText(getString(R.string.introduce_by_email));
 			introduce_by_googleplay.setText(getString(R.string.introduce_by_googleplay));
@@ -189,6 +201,16 @@ public class ImagePagerActivity extends BaseActivity  {
 			introduce_by_facebook.setText(getString(R.string.introduce_by_facebook));
 			introduce_by_Line.setText(getString(R.string.introduce_by_Line));
 			introduce_by_googleplus.setText(getString(R.string.introduce_by_googleplus));
+			introduce_view_to_top.setText(getString(R.string.introduce_view_to_top));
+
+			IntroduceWish IWListner = new IntroduceWish();
+			introduce_by_email.setOnClickListener(IWListner);
+			introduce_by_googleplay.setOnClickListener(IWListner);
+			introduce_by_twitter.setOnClickListener(IWListner);
+			introduce_by_facebook.setOnClickListener(IWListner);
+			introduce_by_Line.setOnClickListener(IWListner);
+			introduce_by_googleplus.setOnClickListener(IWListner);
+			introduce_view_to_top.setOnClickListener(IWListner);
 
 			// シークバー
 			// どこまで読み込み中かを表示する
@@ -220,27 +242,34 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			// position は 0 から、mPager.getCurrentItem() は 0 からカウントスタート
 			//（※現在表示ページの確認に position の値を使うのは不適当。非同期処理ゆえ）
-			// setTitle("instantiateItem position：" + position+ "-mPager.currentitem:" + mPager.getCurrentItem());
-			///Toast.makeText(ImagePagerActivity.this, "ページ： " + position , Toast.LENGTH_SHORT).show();
+
+
+
+
 			Log.v("instantiateItem position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
-			if (position == 0) {	// -2 ページ目
-				Log.v("pageRightSwipeGuideImage position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
-				pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
+			if ( (mOpeingType.equals("LEFT_OPENING") && position == 0 ) ||
+			      (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 1 )  ) {	// -2 ページ目
+				if (mOpeingType.equals("LEFT_OPENING") ) {
+					pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
+				} else {
+					//pageRightSwipeGuideImage.setRotationX(180);
+					pageRightSwipeGuideImage.setRotationY(180);
+					pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
+				}
 				pageRightSwipeGuideImage.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Log.v("pageRightSwipeGuideImage:onClick" + mPager.getCurrentItem(), "INFO");
-						mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						if (mOpeingType.equals("LEFT_OPENING") ) {
+							mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						} else {
+							mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
+						}
 					}
 				});
 
-			} else if (position == 1) {	// -1 ページ目
-				introduceScrollParent.setVisibility(View.VISIBLE);
-
-
-
-
-/*
+			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == 1 ) ||
+			           (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 2 )  ) {	// -1 ページ目
 				// 書籍奥付け情報の表示
 				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));	// 簡易 HTML 文法が使用可能
 				bookSummaryInfoScrollParent.setVisibility(View.VISIBLE);
@@ -249,20 +278,48 @@ public class ImagePagerActivity extends BaseActivity  {
 					@Override
 					public void onClick(View v) {
 						Log.v("bookSummaryInfo:onClick" + mPager.getCurrentItem(), "INFO");
-						mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						if (mOpeingType.equals("LEFT_OPENING") ) {
+							mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						} else {
+							mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
+						}
 					}
 				});
-*/
-			} else if (position == this.getCount()-1) {	// 最終ページの後
+
+			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == this.getCount() - 2 ) ||
+				           (mOpeingType.equals("RIGHT_OPENING") && position == 1 )  ) {	// 最終ページ + 2
 				// 書籍奥付け情報の表示
-				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));
+				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));	// 簡易 HTML 文法が使用可能
 				bookSummaryInfoScrollParent.setVisibility(View.VISIBLE);
-				Log.v("bookSummaryInfo position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
-			} else if (position == this.getCount()-2) {	// 最終ページの後
-				// 書籍奥付け情報の表示
-				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));
-				bookSummaryInfoScrollParent.setVisibility(View.VISIBLE);
-				Log.v("bookSummaryInfo position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
+				Log.v("bookSummaryInfo" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
+				bookSummaryInfo.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Log.v("bookSummaryInfo:onClick" + mPager.getCurrentItem(), "INFO");
+						if (mOpeingType.equals("LEFT_OPENING") ) {
+							mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						} else {
+							mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
+						}
+					}
+				});
+
+			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == this.getCount() - 1 ) ||
+					       (mOpeingType.equals("RIGHT_OPENING") && position == 0 )  ) {	// 最終ページ + 2
+				// 書籍情報レビューお願い領域の表示
+				introduceScrollParent.setVisibility(View.VISIBLE);
+				introduceScrollParent.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Log.v("bookSummaryInfo:onClick" + mPager.getCurrentItem(), "INFO");
+						if (mOpeingType.equals("LEFT_OPENING") ) {
+							mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
+						} else {
+							mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
+						}
+					}
+				});
+
 			} else {
 
 				// imageLoader で画像の読み込み処理を行う
@@ -320,7 +377,6 @@ public class ImagePagerActivity extends BaseActivity  {
 							mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
 						}
 
-
 					}
 
 					// 読み込みキャンセル時
@@ -335,38 +391,9 @@ public class ImagePagerActivity extends BaseActivity  {
 			view.addView(imageLayout, 0);	// imageLayout をビューに紐付け
 
 			return imageLayout;
-		} // instantiateItem @Override 終わり
+		} // instantiateItem
 
-		@Override
-		public boolean isViewFromObject(View view, Object object) {
-			return view.equals(object);
-		}
 
-		@Override
-		public void restoreState(Parcelable state, ClassLoader loader) {
-		}
-
-		@Override
-		public Parcelable saveState() {
-			return null;
-		}
-
-		ImagePagerAdapter(String[] images) {
-			Log.v("ImagePagerAdapter - ImagePagerAdapter", "INFO");
-			this.images = images;
-			inflater = getLayoutInflater();
-		}
-
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			Log.v("ImagePagerAdapter - destroyItem p=" +position, "INFO");
-			container.removeView((View) object);
-		}
-
-		@Override
-		public int getCount() {
-			return images.length;
-		}
 
 		// 画面タップ時のアクション
 		private class ViewTapListener implements OnViewTapListener {
@@ -374,7 +401,7 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			@Override
 			public void onViewTap(View view, float x, float y) {
-				Log.v("ImagePagerAdapter - onViewTap", "x=" + x);
+
 				// Viewサイズを取得する
 				float viewWidth = view.getWidth();
 				float viewHeight = view.getHeight();
@@ -414,7 +441,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				}
 				Log.v("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + mPager.getCurrentItem(), "INFO");
 			}
-		}
+		} //ViewTapListener
 
 		// 画面ロングタップ時のアクション
 		private class LongClickListener implements OnLongClickListener {
@@ -434,46 +461,119 @@ public class ImagePagerActivity extends BaseActivity  {
 			@Override
 			public void onMatrixChanged(RectF rect) {
 				// asaViewPager のスワイプ機能を一旦停止させる
-				mPager.setCanSwipeMode(mPager.CAN_SWIPE_NONE);
+				mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_NONE);
 
-				// 端末解像度の取得
-		        Display display = getWindowManager().getDefaultDisplay();
-		        Point p = new Point();
-		        display.getSize(p);
-		        float displaysizeWidth = p.x;
-		        float displaysizeHeight = p.y;
-				//Log.v("ImagePagerAdapter - display.getSize", "x=" + displaysizeWidth + " y=" + mAttacher.getDisplayMatrix());
+				// ビューウィンドウの横幅サイズ (dot) を取得
+				float displaysizeWidth = mPager.getWidth();
 
 				// RectF(left, top, right, bottom)
-				float imageHeight = rect.height(); // 画像サイズ縦幅（ズーミング後）
+				//float imageHeight = rect.height(); // 画像サイズ縦幅（ズーミング後）
 				float imageWidth = rect.width(); // 画像サイズ横幅（ズーミング後）
-
-				//Log.v("MatrixChangeListener ", " imageWidth=" + imageWidth);
 
 				// 右端、左端に近かったら、asaViewPager のスワイプを可にする
 				// 左端の時は rect.left が 0 、右端の時は rect.right が端末の解像度（x dot)で判定できる
 				// （画像を画面サイズ以上に拡大していなかったら、条件は常に成り立つ）
 				if (rect.left > -1) { // 左端
 					if (imageWidth > displaysizeWidth) {
-							mPager.setCanSwipeMode(mPager.CAN_SWIPE_RIGHT_ONLY);	// 右スワイプで左のページにのみ遷移許可
+						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_RIGHT_ONLY);	// 右スワイプで左のページにのみ遷移許可
 					} else {
-						mPager.setCanSwipeMode(mPager.CAN_SWIPE_ALL);
+						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
 					}
 				} else if (rect.right < displaysizeWidth + 1) { // 右端
 					if (imageWidth > displaysizeWidth) {
-							mPager.setCanSwipeMode(mPager.CAN_SWIPE_LEFT_ONLY);	// 左スワイプで左のページにのみ遷移許可
+						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_LEFT_ONLY);	// 左スワイプで左のページにのみ遷移許可
 					} else {
-						mPager.setCanSwipeMode(mPager.CAN_SWIPE_ALL);
+						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
 					}
 				}
+			} //onMatrixChanged
 
+		} //MatrixChangeListener
+
+
+
+
+		public class IntroduceWish implements OnClickListener {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent;
+			      switch(v.getId()){
+			        case R.id.introduce_by_email:
+			        	Uri uri=Uri.parse("mailto:");
+			        	intent=new Intent(Intent.ACTION_SENDTO,uri);
+			        	intent.putExtra(Intent.EXTRA_SUBJECT,"タイトル");
+			        	intent.putExtra(Intent.EXTRA_TEXT,"ボディのテキスト");
+			        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_by_googleplay:
+			        	Uri uri2=Uri.parse("https://play.google.com/store/apps/details?id=com.webclap.sweetstyle.sweetDigitalClockHappy");
+			        	intent=new Intent(Intent.ACTION_VIEW,uri2);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_by_twitter:
+			        	Uri uri3=Uri.parse("http://twitter.com/share?url=http://yahoo.co.jp/eee.html&text=本の紹介ツイートです");
+			        	intent=new Intent(Intent.ACTION_VIEW,uri3);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_by_facebook:
+			        	Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=http://yahoo.co.jp/eee.html&t=本の紹介です！");
+			        	intent=new Intent(Intent.ACTION_VIEW,uri4);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_by_Line:
+			        	Uri uri5=Uri.parse("http://line.naver.jp/msg/text/本の紹介です！ http://yahoo.co.jp/eee.html");
+			        	intent=new Intent(Intent.ACTION_VIEW,uri5);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_by_googleplus:
+			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=http://yahoo.co.jp/eee.html");
+			        	intent=new Intent(Intent.ACTION_VIEW,uri6);
+			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_view_to_top:
+			        	finish();
+			            break;
+			     }
 			}
 
+		} //IntroduceWish
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view.equals(object);
 		}
 
+		@Override
+		public void restoreState(Parcelable state, ClassLoader loader) {
+		}
 
+		@Override
+		public Parcelable saveState() {
+			return null;
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			Log.v("ImagePagerAdapter - destroyItem p=" +position, "INFO");
+			container.removeView((View) object);
+		}
+
+		@Override
+		public int getCount() {
+			return images.length;
+		}
+
+	} // ImagePagerAdapter
+
+
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		Log.v("ImagePagerActivity - onSaveInstanceState", "INFO");
+		outState.putInt(STATE_POSITION, mPager.getCurrentItem());
 	}
-
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -494,7 +594,7 @@ public class ImagePagerActivity extends BaseActivity  {
 
 
 
-}
+} //ImagePagerActivity
 
 
 

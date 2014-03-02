@@ -19,11 +19,14 @@ public class AbsListViewBaseActivity extends BaseActivity {
 	protected boolean pauseOnScroll = false;
 	protected boolean pauseOnFling = true;
 
+
+	
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		pauseOnScroll = savedInstanceState.getBoolean(STATE_PAUSE_ON_SCROLL, false);
 		pauseOnFling = savedInstanceState.getBoolean(STATE_PAUSE_ON_FLING, true);
 	}
+
 
 	@Override
 	public void onResume() {

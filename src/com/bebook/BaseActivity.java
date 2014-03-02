@@ -9,8 +9,6 @@ import android.view.MenuItem;
 
 import com.bebook.R;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 

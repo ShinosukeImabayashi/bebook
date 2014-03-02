@@ -7,8 +7,8 @@
    <string name="introduce_by_email">この本をメール友達に勧める</string>
    <string name="introduce_by_googleplay">Google play でレビューする</string>
    <string name="introduce_by_twitter">twitter でつぶやく</string>
-   <string name="introduce_by_facebook">facebook でイイネ！する</string>
-   <string name="introduce_by_Line">Line で共有する</string>
+   <string name="introduce_by_facebook">facebook にシェアする</string>
+   <string name="introduce_by_Line">Line の友達にシェアする</string>
    <string name="introduce_by_googleplus">google+ で共有する</string>
-
+   <string name="introduce_view_to_top">TOP へ</string>
 </resources>

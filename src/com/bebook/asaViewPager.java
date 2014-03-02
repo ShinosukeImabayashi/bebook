@@ -2,17 +2,16 @@ package com.bebook;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class asaViewPager extends android.support.v4.view.ViewPager {
 
-	final public int CAN_SWIPE_NONE= 0; // スワイプによるページ切り替えを許可しない
-	final public int CAN_SWIPE_ALL = 1; // スワイプによるページ切り替えを許可する
-	final public int CAN_SWIPE_LEFT_ONLY = 2; // スワイプによるページ切り替えを許可する（左スワイプのみ）
-	final public int CAN_SWIPE_RIGHT_ONLY = 3; // スワイプによるページ切り替えを許可する（右スワイプのみ）
-	final public int LEFT_SWIPE = 1; // 左にスワイプしている
-	final public int RIGHT_SWIPE = 2; // 右にスワイプしている
+	final public static int CAN_SWIPE_NONE= 0; // スワイプによるページ切り替えを許可しない
+	final public static int CAN_SWIPE_ALL = 1; // スワイプによるページ切り替えを許可する
+	final public static int CAN_SWIPE_LEFT_ONLY = 2; // スワイプによるページ切り替えを許可する（左スワイプのみ）
+	final public static int CAN_SWIPE_RIGHT_ONLY = 3; // スワイプによるページ切り替えを許可する（右スワイプのみ）
+	final public static int LEFT_SWIPE = 1; // 左にスワイプしている
+	final public static int RIGHT_SWIPE = 2; // 右にスワイプしている
 
 
 	boolean mIsSwipe = true; // スワイプによるページ切り替えを許可する

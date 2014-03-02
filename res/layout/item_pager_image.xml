@@ -98,7 +98,7 @@
                 android:ems="10"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#CCCCFF"
-                android:layout_margin="10dip"/>
+                android:layout_margin="40dip"/>
 
             <Button
                 android:id="@+id/introduce_by_email"
@@ -106,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textStyle="bold"
+               android:textColor="#FFFFFF"
                 android:layout_margin="10dip"/>
 
             <Button
@@ -113,30 +114,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="#FFFFFF"
                 android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
                 android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
                  android:layout_margin="10dip" />
 
             <Button
                 android:id="@+id/introduce_by_Line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:layout_margin="10dip"/>
+                android:textColor="#FFFFFF"
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_googleplus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
                 android:layout_margin="10dip"/>
 <!--
             <Button
@@ -150,8 +156,8 @@
                 android:id="@+id/introduce_view_to_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dip"
-                android:text="TOP へ" />
+                android:textColor="#FFFFFF"
+                android:layout_margin="40dip"/>
         </LinearLayout>
     </ScrollView>
 

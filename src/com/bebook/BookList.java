@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -95,7 +96,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 			e.printStackTrace();
 		}
 
-		//
+		// 実際の並び替え
 		try {
 			Iterator<String> it;
 			if (sortOrder.equals("desc")) {
@@ -213,7 +214,29 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		return mCoverTextList.toArray(new String[mCoverTextList.size()]);
 	}
 
+	/**
+	 *  書籍が左開きか右開きかの指定取得（任意の１冊分）
+	 *  @param listnum リストの何番目が選択されたか
+	 */
+	public String getBookOpeningtype (int listnum) {
 
+		String bookid = mBookIdList.get(listnum);	// bookid に変換
+
+		// 左開きか右開きかの指定取得
+		String opeingType;
+		try {
+			opeingType = ((String) (mBookListData.get(bookid).get("openingtype"))).toLowerCase();
+		} catch (NullPointerException  e) {
+			opeingType = "LEFT_OPENING";	// 指定が無かった場合のデフォルトは左開き
+		}
+		if (opeingType.equals("right"))  {
+			opeingType = "RIGHT_OPENING";
+		} else {
+			opeingType = "LEFT_OPENING";
+		}
+		//Log.v("getBookImageUrl", "opeingType=" + opeingType);
+		return opeingType;
+	}
 
 	/**
 	 *  書籍データ取得（任意の１冊分）
@@ -221,21 +244,29 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	 */
 	public String[] getBookImageUrl (int listnum) {
 
-		ArrayList <String> getBookImageUrl  = new ArrayList <String>();
-		ArrayList <String> getBookImageUrl2  = new ArrayList <String>();
+		ArrayList <String> bookImageUrlList  = new ArrayList <String>();
 
 		String bookid = mBookIdList.get(listnum);	// bookid に変換
+
+		// 左開きか右開きかの指定取得
+		String opeingType = getBookOpeningtype(listnum);
+
+		// 書籍 URLリストの取得
 		try {
 			@SuppressWarnings("unchecked")
-			ArrayList<String> arrayList = (ArrayList<String>) mBookListData.get(bookid).get("contentsUrl");
-			getBookImageUrl = arrayList;	// 書籍の内容画像データの url リストを取得
-			getBookImageUrl2  = new ArrayList <String>(getBookImageUrl) ;	// 内容画像データは追記修正するので、コピーを作ってそちらを利用する
+			ArrayList<String> urlList = (ArrayList<String>) mBookListData.get(bookid).get("contentsUrl"); // 書籍の内容画像データの url リストを取得
+			bookImageUrlList  = new ArrayList <String>(urlList) ;	// 内容画像データは追記修正するので、コピーを作ってそちらを利用する
 		} catch (Exception  e) {
 			Log.e("getBookCoverImageUrl", "error");
 			e.printStackTrace();
 		}
 
-		return getBookImageUrl2.toArray(new String[getBookImageUrl2.size()]);
+		// RIGHT_OPENING モードの場合はそのまま、LEFT_OPENING モードの場合はリストを逆順に並び替える
+		if (opeingType.equals("RIGHT_OPENING"))  {
+			Collections.reverse(bookImageUrlList);
+		}
+
+		return bookImageUrlList.toArray(new String[bookImageUrlList.size()]);
 	}
 
 
@@ -298,11 +329,11 @@ public class BookList extends AsyncTaskLoader <BookList> {
 						            	contentsUrl = new ArrayList <String>();
 						            	contentsText = new ArrayList <String>();
 					            	}	else if (tag.equals("iurl")) {
-					            		contentsUrl.add(xmlPullParser.getText());
+					            		contentsUrl.add(xmlPullParser.getText().trim());
 					            	}	else if (tag.equals("itext")) {
-					            		contentsText.add(xmlPullParser.getText());
+					            		contentsText.add(xmlPullParser.getText().trim());
 					            	} else {
-					            		bookData.put(tag,  xmlPullParser.getText());	// 特殊処理必要なタグ以外のデータはここで拾っておく
+					            		bookData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
 					            	}
 				            	}
 
@@ -311,7 +342,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 					            	if (tag.equals("author")) {
 					            		;
 					            	} else {
-					            		mAuthorData.put(tag,  xmlPullParser.getText());	// 特殊処理必要なタグ以外のデータはここで拾っておく
+					            		mAuthorData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
 					            	}
 				            	}
 
@@ -320,7 +351,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 					            	if (tag.equals("publisher")) {
 					            		;
 					            	} else {
-					            		mPublisherData.put(tag,  xmlPullParser.getText());	// 特殊処理必要なタグ以外のデータはここで拾っておく
+					            		mPublisherData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
 					            	}
 				            	}
 
@@ -329,7 +360,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 					            	if (tag.equals("advertising")) {
 					            		;
 					            	} else {
-					            		mAdvertisingData.put(tag,  xmlPullParser.getText());	// 特殊処理必要なタグ以外のデータはここで拾っておく
+					            		mAdvertisingData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
 					            	}
 				            	}
 
