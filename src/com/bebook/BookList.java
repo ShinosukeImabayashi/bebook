@@ -7,8 +7,10 @@ import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -114,9 +116,10 @@ public class BookList extends AsyncTaskLoader <BookList> {
 					// 書籍の一覧画面に表示する各書籍ごとのタイトルテキストを生成
 					mCoverTextList.add(
 							(String) mBookListData.get(SortBookListData.get(o).toString()).get("name")
-							+ " - " + (String) mBookListData.get(SortBookListData.get(o).toString()).get("covertext")
-							+ " [" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("updatedate") + "]"
-							+ " page : (" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("page") + ")"
+							+ "\n" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("covertext")
+							+ "\n [" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("updatedate") + "]"
+							+ "    (page : " + (String) mBookListData.get(SortBookListData.get(o).toString()).get("page") + ")"
+							+ "\n"
 							);
 
 				}
@@ -149,6 +152,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	 */
 	public String getBookPublicationText(int listnum) {
 		String bookid = mBookIdList.get(listnum);	// bookid に変換
+
 
 		String bookInfoText =
 				"<BR><BR><BR>" +
@@ -271,140 +275,165 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 
 
-		@Override
-		public BookList loadInBackground() {
+	@Override
+	public BookList loadInBackground() {
 
-			// １書籍データを管理
-			Map <String, Object> bookData = new HashMap<String, Object> ();
-			// １書籍内の画像データを管理
-			List <String> contentsUrl = new ArrayList <String>();
-			List <String> contentsText = new ArrayList <String>();
+		// １書籍データを管理
+		Map <String, Object> bookData = new HashMap<String, Object> ();
+		// １書籍内の画像データを管理
+		List <String> contentsUrl = new ArrayList <String>();
+		List <String> contentsText = new ArrayList <String>();
 
-			// URLConnection による xml の読み込み
-			try{
-			    XmlPullParser xmlPullParser = Xml.newPullParser();
+		// URLConnection による xml の読み込み
+		try{
+			XmlPullParser xmlPullParser = Xml.newPullParser();
 
-			    URLConnection connection = new URL(mXmlUrl).openConnection();	//指定した url から設定 xml ファイルを取得
+			URLConnection connection = new URL(mXmlUrl).openConnection();	//指定した url から設定 xml ファイルを取得
 
-			    xmlPullParser.setInput(connection.getInputStream(), "UTF-8");
+			xmlPullParser.setInput(connection.getInputStream(), "UTF-8");
 
-			    int eventType;
-	        	String nowField = "";
-			    while ( (eventType = xmlPullParser.getEventType()) != XmlPullParser.END_DOCUMENT) {
+			int eventType;
+			String nowField = "";
+			while ( (eventType = xmlPullParser.getEventType()) != XmlPullParser.END_DOCUMENT) {
 
-			    	///Log.v("21 XmlPullParserSampleUrl", "-" + eventType + "-" + xmlPullParser.getName() + "-"  +  xmlPullParser.getText() + "-");
-			    		// 読み込んだ xml データに対して、開きタグ・閉じタグ・内容のそれぞれに応じてデータ再まとめ処理を実施
-			    		if (eventType == XmlPullParser.START_DOCUMENT) {	// 一番最初のみ
-			    			Log.v("0 XmlPullParserSampleUrl", "start");
-			    		} else if (eventType == XmlPullParser.START_TAG) {
-			            	String tag = xmlPullParser.getName();
-				            if (tag != null) {
-				            	xmlPullParser.next();	// タグ内の本文テキスト取得
-				            	eventType = xmlPullParser.getEventType();
-				            	//Log.v("21 XmlPullParserSampleUrl", "-" + eventType + "-" + tag + "-"  +  xmlPullParser.getText() + "-");
+				///Log.v("21 XmlPullParserSampleUrl", "-" + eventType + "-" + xmlPullParser.getName() + "-"  +  xmlPullParser.getText() + "-");
+				// 読み込んだ xml データに対して、開きタグ・閉じタグ・内容のそれぞれに応じてデータ再まとめ処理を実施
+				if (eventType == XmlPullParser.START_DOCUMENT) {	// 一番最初のみ
+					Log.v("0 XmlPullParserSampleUrl", "start");
+				} else if (eventType == XmlPullParser.START_TAG) {
+					String tag = xmlPullParser.getName();
+					if (tag != null) {
+						xmlPullParser.next();	// タグ内の本文テキスト取得
+						eventType = xmlPullParser.getEventType();
+						//Log.v("21 XmlPullParserSampleUrl", "-" + eventType + "-" + tag + "-"  +  xmlPullParser.getText() + "-");
 
-				            	// xml の大カテゴリでの場合分け
-				            	if (tag.equals("book")) {	// 書籍情報フィールド
-				            		nowField = "book";
-				            	}	else if (tag.equals("publisher")) {	// 出版社フィールド
-				            		nowField = "publisher";
-				            	}	else if (tag.equals("author")) {	// 著作者フィールド
-				            		nowField = "author";
-				            	}	else if (tag.equals("advertising")) {	// 広告フィールド
-				            		nowField = "advertising";
-				            	}
+						// xml の大カテゴリでの場合分け
+						if (tag.equals("book")) {	// 書籍情報フィールド
+							nowField = "book";
+						}	else if (tag.equals("publisher")) {	// 出版社フィールド
+							nowField = "publisher";
+						}	else if (tag.equals("author")) {	// 著作者フィールド
+							nowField = "author";
+						}	else if (tag.equals("advertising")) {	// 広告フィールド
+							nowField = "advertising";
+						}
 
-				            	// 書籍情報フィールドの処理（複数アイテム存在することを想定）
-				            	if (nowField.equals("book")) {
-					            	if (tag.equals("book")) {	// book 単位での大処理
-					            		// 書籍データを bookList に挿入
-						            	bookData.put("contentsUrl", contentsUrl);
-						            	bookData.put("contentsText", contentsText);
-						            	if (bookData.get("id") != null) {
-						            		mBookListData.put((String) bookData.get("id"),  (HashMap<String, Object>) bookData);
-						            	}
-					            		// 次の書籍データに移る準備
-					            		bookData = new HashMap<String, Object>();
-					            	}	else if (tag.equals("contents")) {	// book 内の contents 処理のスタート
-						            	contentsUrl = new ArrayList <String>();
-						            	contentsText = new ArrayList <String>();
-					            	}	else if (tag.equals("iurl")) {
-					            		contentsUrl.add(xmlPullParser.getText().trim());
-					            	}	else if (tag.equals("itext")) {
-					            		contentsText.add(xmlPullParser.getText().trim());
-					            	} else {
-					            		bookData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
-					            	}
-				            	}
+						// 書籍情報フィールドの処理（複数アイテム存在することを想定）
+						if (nowField.equals("book")) {
+							if (tag.equals("book")) {	// book 単位での大処理
+								// 書籍データを bookList に挿入
+								bookData.put("contentsUrl", contentsUrl);
+								bookData.put("contentsText", contentsText);
+								if (bookData.get("id") != null) {
+									mBookListData.put((String) bookData.get("id"),  (HashMap<String, Object>) bookData);
+								}
+								// 次の書籍データに移る準備
+								bookData = new HashMap<String, Object>();
+							}	else if (tag.equals("contents")) {	// book 内の contents 処理のスタート
+								contentsUrl = new ArrayList <String>();
+								contentsText = new ArrayList <String>();
+							}	else if (tag.equals("iurl")) {
+								if (xmlPullParser.getText() != null) {
+									contentsUrl.add(xmlPullParser.getText().trim());
+								} else {
+									contentsUrl.add("");
+								}
+							}	else if (tag.equals("itext")) {
+								if (xmlPullParser.getText() != null) {
+									contentsText.add(xmlPullParser.getText().trim());
+								} else {
+									contentsText.add("");
+								}
+							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
+								if (xmlPullParser.getText() != null) {
+									bookData.put(tag,  xmlPullParser.getText().trim());
+								} else {
+									bookData.put(tag,  "");
+								}
+							}
+						}
 
-				            	// 著作者フィールドの処理
-				            	if (nowField.equals("author")) {
-					            	if (tag.equals("author")) {
-					            		;
-					            	} else {
-					            		mAuthorData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
-					            	}
-				            	}
+						// 著作者フィールドの処理
+						if (nowField.equals("author")) {
+							if (tag.equals("author")) {
+								;
+							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
+								if (xmlPullParser.getText() != null) {
+									mAuthorData.put(tag,  xmlPullParser.getText().trim());
+								} else {
+									mAuthorData.put(tag,  "");
+								}
+							}
+						}
 
-				            	// 出版社情報フィールドの処理
-				            	if (nowField.equals("publisher")) {
-					            	if (tag.equals("publisher")) {
-					            		;
-					            	} else {
-					            		mPublisherData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
-					            	}
-				            	}
+						// 出版社情報フィールドの処理
+						if (nowField.equals("publisher")) {
+							if (tag.equals("publisher")) {
+								;
+							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
+								if (xmlPullParser.getText() != null) {
+									mPublisherData.put(tag,  xmlPullParser.getText().trim());
+								} else {
+									mPublisherData.put(tag,  "");
+								}
+							}
+						}
 
-				            	// 広告フィールドの処理
-				            	if (nowField.equals("advertising")) {
-					            	if (tag.equals("advertising")) {
-					            		;
-					            	} else {
-					            		mAdvertisingData.put(tag,  xmlPullParser.getText().trim());	// 特殊処理必要なタグ以外のデータはここで拾っておく
-					            	}
-				            	}
+						// 広告フィールドの処理
+						if (nowField.equals("advertising")) {
+							if (tag.equals("advertising")) {
+								;
+							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
+								if (xmlPullParser.getText() != null) {
+									mAdvertisingData.put(tag,  xmlPullParser.getText().trim());
+								} else {
+									mAdvertisingData.put(tag,  "");
+								}
+							}
+						}
 
-				            	//Log.v("22 XmlPullParserSampleUrl", "" + bookData.toString());
+						//Log.v("22 XmlPullParserSampleUrl", "" + bookData.toString());
 
-				            }
-			            } else if(eventType == XmlPullParser.END_TAG) {	// 閉じタグ確認時の処理
-				            //Log.v("3 XmlPullParserSampleUrl", eventType + " " + xmlPullParser.getName() + " " + xmlPullParser.getText());
-			            	String tag = xmlPullParser.getName();
-			            	if (tag.equals("book")) {	// 書籍情報フィールド
-			            		nowField = "";
-			            	}	else if (tag.equals("publisher")) {	// 出版社フィールド
-			            		nowField = "";
-			            	}	else if (tag.equals("author")) {	// 著作者フィールド
-			            		nowField = "";
-			            	}	else if (tag.equals("advertising")) {	// 広告フィールド
-			            		nowField = "author";
-			            	}
-			            } else if(eventType == XmlPullParser.TEXT) {
-				            //Log.v("4 XmlPullParserSampleUrl", eventType + " " + xmlPullParser.getName() + " " + xmlPullParser.getText());
-			            }
+					}
+				} else if(eventType == XmlPullParser.END_TAG) {	// 閉じタグ確認時の処理
+					//Log.v("3 XmlPullParserSampleUrl", eventType + " " + xmlPullParser.getName() + " " + xmlPullParser.getText());
+					String tag = xmlPullParser.getName();
+					if (tag.equals("book")) {	// 書籍情報フィールド
+						nowField = "";
+					}	else if (tag.equals("publisher")) {	// 出版社フィールド
+						nowField = "";
+					}	else if (tag.equals("author")) {	// 著作者フィールド
+						nowField = "";
+					}	else if (tag.equals("advertising")) {	// 広告フィールド
+						nowField = "";
+					}
+				} else if(eventType == XmlPullParser.TEXT) {
+					//Log.v("4 XmlPullParserSampleUrl", eventType + " " + xmlPullParser.getName() + " " + xmlPullParser.getText());
+				}
 
-			            xmlPullParser.next();
+				xmlPullParser.next();
 
-			    }
+			}
 
-		    } catch (Exception  e) {
-		        Log.e("getImageUrls2", "getImageUrls2");
-		    	e.printStackTrace();
-		    }
+		} catch (Exception  e) {
+			Log.e("getImageUrls2", "getImageUrls2");
+			e.printStackTrace();
+		}
 
-			try {
-				// 最後の書籍データを bookList に挿入
-				bookData.put("contentsUrl", contentsUrl);
-				bookData.put("contentsText", contentsText);
-	        	if (bookData.get("id") != null) {
-	        		mBookListData.put((String)bookData.get("id"),  (HashMap<String, Object>) bookData);
-	        	}
-		    } catch (Exception  e) {
-		    	e.printStackTrace();
-		    }
+		try {
+			// 最後の書籍データを bookList に挿入
+			bookData.put("contentsUrl", contentsUrl);
+			bookData.put("contentsText", contentsText);
+			if (bookData.get("id") != null) {
+				mBookListData.put((String)bookData.get("id"),  (HashMap<String, Object>) bookData);
+			}
+		} catch (Exception  e) {
+			e.printStackTrace();
+		}
 
-			// 書籍データ取得（プログラム参考用）
-	/*
+
+		// 書籍データ取得（プログラム参考用）
+		/*
 			try {
 		        Iterator it = mBookListData.keySet().iterator();
 		        while (it.hasNext()) {
@@ -424,9 +453,9 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		        Log.e("getImageUrls2", "getImageUrls2");
 		    	e.printStackTrace();
 		    }
-	*/
-		    return this;
-		}
+		 */
+		return this;
+	}
 
 	@Override
 	protected void onStartLoading() {

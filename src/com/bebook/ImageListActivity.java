@@ -4,8 +4,6 @@ package com.bebook;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -52,7 +50,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		// リスト形式での画像表示に伴う設定項目
 		mDisplayImageOptions = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.ic_stub)
+		.showImageOnLoading(R.drawable.loader)
 		.showImageForEmptyUri(R.drawable.ic_empty)
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(true)

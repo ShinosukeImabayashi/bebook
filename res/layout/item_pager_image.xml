@@ -5,6 +5,7 @@
     android:padding="0dip" >
 
     <!-- 画像表示メイン領域 -->
+
     <ImageView
         android:id="@+id/pageimage"
         android:layout_width="fill_parent"
@@ -14,6 +15,7 @@
         android:contentDescription="@string/descr_image" />
 
     <!-- 画像読み込み中表示 -->
+
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
@@ -22,16 +24,33 @@
         android:visibility="gone" />
 
     <!-- 下部シークバー -->
+
+    <TextView
+        android:id="@+id/seek_bar_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dip"
+        android:background="#FFFF00"
+        android:includeFontPadding="true"
+        android:maxLines="10"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FF00FF"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <SeekBar
-        android:id="@+id/pageSeekBar"
-        android:layout_width="match_parent"
+        android:id="@+id/page_seek_bar"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:progressDrawable="@drawable/swipe_background"
         android:visibility="gone" />
     <!-- drawable/progressDrawable で 背景バーの詳細スタイル設定を行っている -->
 
+
     <!-- 書籍情報表示ヘッダ -->
+
     <TextView
         android:id="@+id/header_info"
         android:layout_width="match_parent"
@@ -47,6 +66,7 @@
         android:visibility="gone" />
 
     <!-- スワイプ操作案内 -->
+
     <ImageButton
         android:id="@+id/page_right_swipe_guide_image"
         android:layout_width="wrap_content"
@@ -55,6 +75,7 @@
         android:background="@null"
         android:src="@drawable/page_right_swipe_guide_image"
         android:visibility="gone" />
+
     <ImageButton
         android:id="@+id/page_left_swipe_guide_image"
         android:layout_width="wrap_content"
@@ -65,6 +86,7 @@
         android:visibility="gone" />
 
     <!-- 書籍奥付け表示 -->
+
     <ScrollView
         android:id="@+id/book_summary_info_scrollparent"
         android:layout_width="fill_parent"
@@ -75,7 +97,6 @@
             android:id="@+id/book_summary_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center"
             android:layout_margin="10dip"
             android:autoLink="all"
             android:ems="30"
@@ -87,6 +108,7 @@
     </ScrollView>
 
     <!-- 書籍レビューお願い -->
+
     <ScrollView
         android:id="@+id/introduce"
         android:layout_width="fill_parent"
@@ -103,68 +125,69 @@
                 android:id="@+id/introduce_wish_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="40dip"
                 android:ems="10"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#CCCCFF"
-                android:layout_margin="40dip"/>
+                android:textColor="#CCCCFF" />
 
             <Button
                 android:id="@+id/introduce_by_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-               android:textColor="#FFFFFF"
-                android:layout_margin="10dip"/>
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/introduce_by_googleplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#FFFFFF"
-                android:layout_margin="10dip"/>
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/introduce_by_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_margin="10dip"/>
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/introduce_by_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                 android:layout_margin="10dip" />
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/introduce_by_Line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_margin="10dip"/>
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/introduce_by_googleplus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_margin="10dip"/>
-<!--
+                android:layout_margin="10dip"
+                android:textColor="#FFFFFF" />
+            <!--
             <Button
                 android:id="@+id/newbook_announce_mailaddress_regist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dip"
                 android:text="新作通知が欲しい" />
-  -->
+            -->
+
             <Button
                 android:id="@+id/introduce_view_to_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:layout_margin="40dip"/>
+                android:layout_margin="40dip"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </ScrollView>
 

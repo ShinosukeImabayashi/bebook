@@ -1,6 +1,9 @@
 
 package com.bebook;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -215,37 +218,40 @@ public class ImagePagerActivity extends BaseActivity  {
 			// シークバー
 			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar;
-			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
+			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
 			pageSeekBar.setMax(this.getCount()-2);
 
 			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 				// シークバー トラッキング開始時
 				@Override
 				public void onStartTrackingTouch(SeekBar pageSeekBar) {
-					Log.v("onStartTrackingTouch()",
-							String.valueOf(pageSeekBar.getProgress()));
+					Log.v("onStartTrackingTouch()", 	String.valueOf(pageSeekBar.getProgress()));
 				}
 				// シークバー トラッキング中
 				@Override
 				public void onProgressChanged(SeekBar pageSeekBar, int progress, boolean fromTouch) {
-					Log.v("onProgressChanged()",
-							String.valueOf(progress) + ", " + String.valueOf(fromTouch));
+					Log.v("onProgressChanged()", String.valueOf(progress) + ", " + String.valueOf(fromTouch));
+
+					// シークバーで現在トラック中のページ数を表示したい
+					// 下記の実装を試したが、ViewPager の配下でやると、画面に実際にデータが反映表示されるのがページング後になるので意味が無い
+					// 要技術検討項目
+					//ViewGroup parent = (ViewGroup) mPager.getParent();	// 引数で得られるのは PhotoView の view なので、その親の Activity の view を取得
+					//View imageLayout = inflater.inflate(R.layout.item_pager_image, mPager, true);	// 第三パラメータの attachToRoot は、ここでは true 必須
+					//TextView SeekInfo = (TextView) imageLayout.findViewById(R.id.seek_bar_info);
+					//SeekInfo.setText(String.valueOf(progress));
+
 				}
 				// シークバー トラッキング終了時
 				@Override
 				public void onStopTrackingTouch(SeekBar pageSeekBar) {
-					Log.v("onStopTrackingTouch()",
-							String.valueOf(pageSeekBar.getProgress()));
+					Log.v("onStopTrackingTouch()", 	String.valueOf(pageSeekBar.getProgress()));
 					mPager.setCurrentItem(pageSeekBar.getProgress());
 				}
 			});
 
+			// 各ページの表示
 			// position は 0 から、mPager.getCurrentItem() は 0 からカウントスタート
 			//（※現在表示ページの確認に position の値を使うのは不適当。非同期処理ゆえ）
-
-
-
-
 			Log.v("instantiateItem position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
 			if ( (mOpeingType.equals("LEFT_OPENING") && position == 0 ) ||
 			      (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 1 )  ) {	// -2 ページ目
@@ -266,7 +272,7 @@ public class ImagePagerActivity extends BaseActivity  {
 						mPager.arrowScroll(View.FOCUS_LEFT);	// 次のページへ遷移させる
 					}
 				});
-				
+
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == 1 ) ||
 			           (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 2 )  ) {	// -1 ページ目
 				// 書籍奥付け情報の表示
@@ -409,7 +415,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				//Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " - " + yPercentage, Toast.LENGTH_SHORT).show();
 				ViewGroup parent = (ViewGroup) view.getParent();	// 引数で得られるのは PhotoView の view なので、その親の Activity の view を取得
 				View imageLayout = inflater.inflate(R.layout.item_pager_image, parent, true);	// 第三パラメータの attachToRoot は、ここでは true 必須
-				SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.pageSeekBar);
+				SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
 				TextView headerInfo = (TextView) imageLayout.findViewById(R.id.header_info);
 
 				// 画面縦に 1/3 ずつでクリック範囲を区切る
@@ -423,9 +429,14 @@ public class ImagePagerActivity extends BaseActivity  {
 						getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 						pageSeekBar.setProgress(mPager.getCurrentItem());
 						pageSeekBar.setVisibility(View.VISIBLE);
-						int nowPage = mPager.getCurrentItem() - 1;
+						int nowPage;	// 現在ページ数
+						if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
+							nowPage = mPager.getCurrentItem() - 1;
+						} else { // 右開き
+							nowPage = (getCount() - 4)  - (mPager.getCurrentItem() - 2);
+						}
 						int totalPage = getCount() - 4;
-						headerInfo.setText(mBookTitleNameText + " page :  " + nowPage + " / " + totalPage);
+						headerInfo.setText(mBookTitleNameText + " - No. " + nowPage + " / " + totalPage);
 						headerInfo.setVisibility(View.VISIBLE);
 					} else {
 						onCenterTouchFlag = 0;
@@ -494,40 +505,52 @@ public class ImagePagerActivity extends BaseActivity  {
 
 		public class IntroduceWish implements OnClickListener {
 
+
 			@Override
 			public void onClick(View v) {
+
+				String appUrl = "https://play.google.com/store/apps/details?id=" + getPackageName();
+
+				// 書籍名を URL エンコード化
+				String bookTitleName = mBookTitleNameText;
+				try {
+					bookTitleName = URLEncoder.encode(bookTitleName, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+
 				Intent intent;
 			      switch(v.getId()){
 			        case R.id.introduce_by_email:
 			        	Uri uri=Uri.parse("mailto:");
 			        	intent=new Intent(Intent.ACTION_SENDTO,uri);
-			        	intent.putExtra(Intent.EXTRA_SUBJECT,"タイトル");
-			        	intent.putExtra(Intent.EXTRA_TEXT,"ボディのテキスト");
+			        	intent.putExtra(Intent.EXTRA_SUBJECT, mBookTitleNameText);
+			        	intent.putExtra(Intent.EXTRA_TEXT, "『" + mBookTitleNameText + "』" + appUrl + "");
 			        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_googleplay:
-			        	Uri uri2=Uri.parse("https://play.google.com/store/apps/details?id=com.webclap.sweetstyle.sweetDigitalClockHappy");
+			        	Uri uri2=Uri.parse(appUrl);
 			        	intent=new Intent(Intent.ACTION_VIEW,uri2);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_twitter:
-			        	Uri uri3=Uri.parse("http://twitter.com/share?url=http://yahoo.co.jp/eee.html&text=本の紹介ツイートです");
+			        	Uri uri3=Uri.parse("http://twitter.com/share?url=" + appUrl + "&text=『" + bookTitleName + "』");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri3);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_facebook:
-			        	Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=http://yahoo.co.jp/eee.html&t=本の紹介です！");
+			        	Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=" + appUrl + "&t=『" + bookTitleName + "』");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri4);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_Line:
-			        	Uri uri5=Uri.parse("http://line.naver.jp/msg/text/本の紹介です！ http://yahoo.co.jp/eee.html");
+			        	Uri uri5=Uri.parse("http://line.naver.jp/msg/text/『" + bookTitleName + "』 " + appUrl + "");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri5);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_googleplus:
-			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=http://yahoo.co.jp/eee.html");
+			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=" + appUrl + "");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri6);
 			        	startActivity(intent);
 			            break;
