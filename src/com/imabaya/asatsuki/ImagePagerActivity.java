@@ -58,11 +58,13 @@ public class ImagePagerActivity extends BaseActivity  {
 	private asaViewPager mPager;
 
 	private String[] mBookImageUrls;	// 書籍の画像 URL リスト
+	private String[] mBookExplanationTexts;	// 書籍の画像説明文リスト
 	private String mBookTitleNameText;	// 書籍のタイトルテキスト
 	private String mBookPublicationText;	// 書籍の奥付けテキスト
 	private String mOpeingType;	// 書籍が左開きか右開きか
 	private int  mStartPagerPosition;  // 書籍表示開始ページ
 
+	private static final int PAGE_START_NUM = 2;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,8 +89,9 @@ public class ImagePagerActivity extends BaseActivity  {
 		// 書籍情報オブジェクトの取得
 		BookList booklist = mUap.getBooklist();
 
-		// 書籍画像 URL リストの取得
+		// 書籍画像 URL リスト・説明文リストの取得
 		mBookImageUrls = booklist.getBookImageUrl(mSelectListPosition);
+		mBookExplanationTexts = booklist.getBookImageExplanationText(mSelectListPosition);
 
 		// 書籍のタイトルや奥付けテキストの取得
 		mBookTitleNameText  = booklist.getBookTitleNameText(mSelectListPosition);
@@ -98,7 +101,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		mOpeingType = booklist.getBookOpeningtype(mSelectListPosition);
 		// 初期ページ数設定
 		if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
-			mStartPagerPosition = 2;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
+			mStartPagerPosition = PAGE_START_NUM;	// ★position 0 と 1 は初期化処理がおかしいので使わないようにする
 		} else { // 右開き
 			mStartPagerPosition = mBookImageUrls.length + 1;	// 最後のページから開く
 		}
@@ -117,7 +120,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		templist[0] = "";
 		templist[1] = "";
 		for (int i=0; i <mBookImageUrls.length;  i++ ) {
-			templist[i + 2] = mBookImageUrls[i].toString();
+			templist[i + PAGE_START_NUM] = mBookImageUrls[i].toString();
 		}
 		templist[mBookImageUrls.length + 2] = "";
 		templist[mBookImageUrls.length + 3] = "";
@@ -143,9 +146,9 @@ public class ImagePagerActivity extends BaseActivity  {
 		mPager.setCurrentItem(mStartPagerPosition);
 		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風になる。ちょっとおもしろい。
 
-
 		// アクセス解析
-		EasyTracker.getInstance(this).send(MapBuilder.createEvent("uition", "butpress", "play_button", null).build());
+		EasyTracker.getInstance(this).send(MapBuilder.createEvent("first event", "second event", "third event", null).build());
+
 	} // onCreate
 
 
@@ -166,6 +169,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		@Override
 		// 各ページ生成時のタイミングで呼び出される
 		public Object instantiateItem(ViewGroup view, int position) {
+			EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("ImagePager", "instantiateItem", "third event", null).build());			// アクセス解析
 			Log.v("ImagePagerAdapter - instantiateItem p=" +position, "INFO");
 
 			//レイアウトファイル item_pager_image をインスタンス化する
@@ -192,6 +196,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			final Button  introduceByFacebook = (Button)  imageLayout.findViewById(R.id.introduce_by_facebook);
 			final Button  introduceByLine = (Button)  imageLayout.findViewById(R.id.introduce_by_Line);
 			final Button  introduceByGoogleplus = (Button)  imageLayout.findViewById(R.id.introduce_by_googleplus);
+			final Button  introduceViewToFirstpage = (Button)  imageLayout.findViewById(R.id.introduce_view_to_firstpage);
 			final Button  introduceViewToTop = (Button)  imageLayout.findViewById(R.id.introduce_view_to_top);
 
 			introduceWishText.setText(Html.fromHtml(getString(R.string.introduce_wish_text)));
@@ -201,6 +206,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			introduceByFacebook.setText(getString(R.string.introduce_by_facebook));
 			introduceByLine.setText(getString(R.string.introduce_by_Line));
 			introduceByGoogleplus.setText(getString(R.string.introduce_by_googleplus));
+			introduceViewToFirstpage.setText(getString(R.string.introduce_view_to_firstpage));
 			introduceViewToTop.setText(getString(R.string.introduce_view_to_top));
 
 			IntroduceWish IWListner = new IntroduceWish();
@@ -210,13 +216,14 @@ public class ImagePagerActivity extends BaseActivity  {
 			introduceByFacebook.setOnClickListener(IWListner);
 			introduceByLine.setOnClickListener(IWListner);
 			introduceByGoogleplus.setOnClickListener(IWListner);
+			introduceViewToFirstpage.setOnClickListener(IWListner);
 			introduceViewToTop.setOnClickListener(IWListner);
 
 			// シークバー
 			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar;
 			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
-			pageSeekBar.setMax(this.getCount()-2);
+			pageSeekBar.setMax(this.getCount() - PAGE_START_NUM);
 
 			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 				// シークバー トラッキング開始時
@@ -412,14 +419,15 @@ public class ImagePagerActivity extends BaseActivity  {
 				//Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " - " + yPercentage, Toast.LENGTH_SHORT).show();
 				ViewGroup parent = (ViewGroup) view.getParent();	// 引数で得られるのは PhotoView の view なので、その親の Activity の view を取得
 				View imageLayout = inflater.inflate(R.layout.item_pager_image, parent, true);	// 第三パラメータの attachToRoot は、ここでは true 必須
-				SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
-				TextView headerInfo = (TextView) imageLayout.findViewById(R.id.header_info);
+				SeekBar pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);	// シークバー
+				TextView headerInfo = (TextView) imageLayout.findViewById(R.id.header_info); //ヘッダー
+				TextView imageExplanation = (TextView) imageLayout.findViewById(R.id.image_explanation); //画像説明文
 
 				// 画面縦に 1/3 ずつでクリック範囲を区切る
 				if (xPercentage <33) {
 					mPager.arrowScroll(View.FOCUS_LEFT);	// 前のページへ遷移させる
 				} else if (xPercentage <66) {
-					// 領域をタップすると、ウインドウマネージャーとページヘッダーとシークバーを表示する。
+					// 領域をタップすると、ウインドウマネージャーとページヘッダーと画像説明文とシークバーを表示する。
 					// 再度タップすると、表示したそれらを再び非表示にする。
 					if (onCenterTouchFlag == 0) {
 						onCenterTouchFlag = 1;
@@ -430,16 +438,32 @@ public class ImagePagerActivity extends BaseActivity  {
 						if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
 							nowPage = mPager.getCurrentItem() - 1;
 						} else { // 右開き
-							nowPage = (getCount() - 4)  - (mPager.getCurrentItem() - 2);
+							nowPage = (getCount() - 4)  - (mPager.getCurrentItem() - PAGE_START_NUM);
 						}
 						int totalPage = getCount() - 4;
+
+						// ページヘッダー表示
 						headerInfo.setText(mBookTitleNameText + " - No. " + nowPage + " / " + totalPage);
 						headerInfo.setVisibility(View.VISIBLE);
+
+						// 画像説明文表示
+						boolean isImageExplanation = true;
+						try {
+							imageExplanation.setText(mBookExplanationTexts[mPager.getCurrentItem() - PAGE_START_NUM]);
+						} catch (ArrayIndexOutOfBoundsException e) {
+							// 画像説明文が無い場合
+							isImageExplanation = false;
+						}
+						if (isImageExplanation == true) {
+							imageExplanation.setVisibility(View.VISIBLE);
+						}
+
 					} else {
 						onCenterTouchFlag = 0;
 						getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 						pageSeekBar.setVisibility(View.GONE);
 						headerInfo.setVisibility(View.GONE);
+						imageExplanation.setVisibility(View.GONE);
 					}
 					//pageSeekBar.setVisibility(View.VISIBLE);
 
@@ -502,7 +526,6 @@ public class ImagePagerActivity extends BaseActivity  {
 
 		public class IntroduceWish implements OnClickListener {
 
-
 			@Override
 			public void onClick(View v) {
 
@@ -550,6 +573,13 @@ public class ImagePagerActivity extends BaseActivity  {
 			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=" + appUrl + "");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri6);
 			        	startActivity(intent);
+			            break;
+			        case R.id.introduce_view_to_firstpage:
+						if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
+				        	mPager.setCurrentItem(PAGE_START_NUM);
+						} else { // 右開き
+							mPager.setCurrentItem( (getCount() - 2) - PAGE_START_NUM + 1);
+						}
 			            break;
 			        case R.id.introduce_view_to_top:
 			        	finish();

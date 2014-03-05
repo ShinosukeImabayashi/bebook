@@ -241,7 +241,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	}
 
 	/**
-	 *  書籍データ取得（任意の１冊分）
+	 *  書籍画像データ取得（任意の１冊分）
 	 *  @param listnum リストの何番目が選択されたか
 	 */
 	public String[] getBookImageUrl (int listnum) {
@@ -272,6 +272,38 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	}
 
 
+	/**
+	 *  書籍画像説明データ取得（任意の１冊分）
+	 *  @param listnum リストの何番目が選択されたか
+	 */
+	public String[] getBookImageExplanationText (int listnum) {
+
+		ArrayList <String> bookImageTextList  = new ArrayList <String>();
+
+		String bookid = mBookIdList.get(listnum);	// bookid に変換
+
+		// 左開きか右開きかの指定取得
+		String opeingType = getBookOpeningtype(listnum);
+
+		// 書籍 URLリストの取得
+		try {
+			@SuppressWarnings("unchecked")
+			ArrayList<String> urlList = (ArrayList<String>) mBookListData.get(bookid).get("contentsText"); // 書籍の内容画像データの説明文リストを取得
+			bookImageTextList  = new ArrayList <String>(urlList) ;	// コピーを作ってそちらを利用する
+		} catch (Exception  e) {
+			Log.e("getBookCoverImageUrl", "error");
+			e.printStackTrace();
+		}
+
+		// RIGHT_OPENING モードの場合はそのまま、LEFT_OPENING モードの場合はリストを逆順に並び替える
+		if (opeingType.equals("RIGHT_OPENING"))  {
+			Collections.reverse(bookImageTextList);
+		}
+
+		return bookImageTextList.toArray(new String[bookImageTextList.size()]);
+	}
+
+
 
 	@Override
 	public BookList loadInBackground() {
@@ -292,6 +324,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 			int eventType;
 			String nowField = "";
+			int bookPageImageCount = 0;
+			int bookPageTextCount = 0;
 			while ( (eventType = xmlPullParser.getEventType()) != XmlPullParser.END_DOCUMENT) {
 
 				///Log.v("21 XmlPullParserSampleUrl", "-" + eventType + "-" + xmlPullParser.getName() + "-"  +  xmlPullParser.getText() + "-");
@@ -322,6 +356,8 @@ public class BookList extends AsyncTaskLoader <BookList> {
 								// 書籍データを bookList に挿入
 								bookData.put("contentsUrl", contentsUrl);
 								bookData.put("contentsText", contentsText);
+								bookPageImageCount = 0;
+								bookPageTextCount = 0;
 								if (bookData.get("id") != null) {
 									mBookListData.put((String) bookData.get("id"),  (HashMap<String, Object>) bookData);
 								}
@@ -330,18 +366,24 @@ public class BookList extends AsyncTaskLoader <BookList> {
 							}	else if (tag.equals("contents")) {	// book 内の contents 処理のスタート
 								contentsUrl = new ArrayList <String>();
 								contentsText = new ArrayList <String>();
-							}	else if (tag.equals("iurl")) {
-								if (xmlPullParser.getText() != null) {
+							}	else if (tag.equals("iurl")) { // 書籍ページイメージ URL
+								if ( bookPageImageCount != bookPageTextCount ) {	// <iurl> タグに対応する <itext> が無い場合、ダミーを入れておく。
+									contentsText.add("");
+									bookPageTextCount++;
+								}
+								if (xmlPullParser.getText() != null) { // 書籍ページ説明文
 									contentsUrl.add(xmlPullParser.getText().trim());
 								} else {
 									contentsUrl.add("");
 								}
+								bookPageImageCount++;
 							}	else if (tag.equals("itext")) {
 								if (xmlPullParser.getText() != null) {
 									contentsText.add(xmlPullParser.getText().trim());
 								} else {
 									contentsText.add("");
 								}
+								bookPageTextCount++;
 							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
 								if (xmlPullParser.getText() != null) {
 									bookData.put(tag,  xmlPullParser.getText().trim());

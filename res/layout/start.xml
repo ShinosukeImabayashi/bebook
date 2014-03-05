@@ -10,23 +10,24 @@
     tools:context=".StartActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/start_loading_text"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imageView1"
-        android:layout_alignTop="@+id/imageView1"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="222dp"
         android:text="@string/start_announce" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/start_loading_view"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="100dp"
         android:adjustViewBounds="false"
-        android:src="@drawable/tumb00" />
+        android:src="@drawable/loader" />
 
 
 

@@ -10,5 +10,6 @@
    <string name="introduce_by_facebook">facebook にシェアする</string>
    <string name="introduce_by_Line">Line の友達にシェアする</string>
    <string name="introduce_by_googleplus">google+ で共有する</string>
-   <string name="introduce_view_to_top">TOP へ</string>
+   <string name="introduce_view_to_firstpage">最初のページへ戻る</string>
+   <string name="introduce_view_to_top">TOP へ戻る</string>
 </resources>

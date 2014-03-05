@@ -4,8 +4,7 @@
     android:layout_height="fill_parent"
     android:padding="0dip" >
 
-    <!-- 画像表示メイン領域 -->
-
+    <!-- メイン画像表示 -->
     <ImageView
         android:id="@+id/pageimage"
         android:layout_width="fill_parent"
@@ -15,7 +14,6 @@
         android:contentDescription="@string/descr_image" />
 
     <!-- 画像読み込み中表示 -->
-
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
@@ -24,7 +22,6 @@
         android:visibility="gone" />
 
     <!-- 下部シークバー -->
-
     <TextView
         android:id="@+id/seek_bar_info"
         android:layout_width="wrap_content"
@@ -37,6 +34,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FF00FF"
         android:textStyle="bold"
+        android:shadowColor="#888"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
         android:visibility="gone" />
 
     <SeekBar
@@ -48,9 +49,28 @@
         android:visibility="gone" />
     <!-- drawable/progressDrawable で 背景バーの詳細スタイル設定を行っている -->
 
+    <!-- 画像説明文表示 -->
+    <TextView
+        android:id="@+id/image_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="#99000000"
+        android:includeFontPadding="true"
+        android:maxLines="10"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#EEEEFF"
+        android:textStyle="bold"
+        android:shadowColor="#333333"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:visibility="gone" />
 
     <!-- 書籍情報表示ヘッダ -->
-
     <TextView
         android:id="@+id/header_info"
         android:layout_width="match_parent"
@@ -63,10 +83,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#EEEEFF"
         android:textStyle="bold"
+        android:shadowColor="#333333"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
         android:visibility="gone" />
 
     <!-- スワイプ操作案内 -->
-
     <ImageButton
         android:id="@+id/page_right_swipe_guide_image"
         android:layout_width="wrap_content"
@@ -86,7 +109,6 @@
         android:visibility="gone" />
 
     <!-- 書籍奥付け表示 -->
-
     <ScrollView
         android:id="@+id/book_summary_info_scrollparent"
         android:layout_width="fill_parent"
@@ -98,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dip"
+            android:textIsSelectable="true"
             android:autoLink="all"
             android:ems="30"
             android:includeFontPadding="true"
@@ -108,7 +131,6 @@
     </ScrollView>
 
     <!-- 書籍レビューお願い -->
-
     <ScrollView
         android:id="@+id/introduce"
         android:layout_width="fill_parent"
@@ -118,14 +140,18 @@
         <LinearLayout
             android:id="@+id/introduce_linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/introduce_wish_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dip"
+                android:layout_marginTop="80dip"
+                android:layout_marginBottom="20dip"
+                android:layout_marginLeft="40dip"
+                android:layout_marginRight="40dip"
+                android:textIsSelectable="true"
                 android:ems="10"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#CCCCFF" />
@@ -183,10 +209,23 @@
             -->
 
             <Button
+                android:id="@+id/introduce_view_to_firstpage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dip"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="100dip"
+                android:layout_marginRight="100dip"
+                android:textColor="#FFFFFF" />
+
+            <Button
                 android:id="@+id/introduce_view_to_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dip"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="40dip"
+                android:layout_marginLeft="100dip"
+                android:layout_marginRight="100dip"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
     </ScrollView>
