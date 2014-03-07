@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 
-
-
 public class AbsListViewBaseActivity extends BaseActivity {
 
 	protected AbsListView listView;

@@ -2,6 +2,7 @@
 package com.imabaya.asatsuki;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,11 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.item_help:
+			// ヘルプ画面へ遷移
+			Intent intent = new Intent(this, HelpActivity.class);
+			startActivity(intent);
+			return true;
 		case R.id.item_clear_memory_cache:
 			imageLoader.clearMemoryCache();
 			return true;

@@ -223,7 +223,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar;
 			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
-			pageSeekBar.setMax(this.getCount() - PAGE_START_NUM);
+			pageSeekBar.setMax(this.getCount() - PAGE_START_NUM + 1);
 
 			pageSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 				// シークバー トラッキング開始時
@@ -536,6 +536,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				try {
 					bookTitleName = URLEncoder.encode(bookTitleName, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
+					bookTitleName = "";
 					e.printStackTrace();
 				}
 
@@ -638,7 +639,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		try
 		{
 			wait(msec);
-		}catch(InterruptedException e){}
+		} catch (InterruptedException e){}
 	}
 
 

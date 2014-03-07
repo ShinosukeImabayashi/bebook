@@ -7,8 +7,10 @@ import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,6 +22,9 @@ import java.util.TreeMap;
 
 
 public class BookList extends AsyncTaskLoader <BookList> {
+
+	// 状態異常データステータス
+	public String mErrorStatus;			// "FileNotFoundException" / "UnknownHostException"
 
 	// 全書籍データを管理
 	@SuppressWarnings("rawtypes")
@@ -47,6 +52,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	public BookList(Context context, String url) {
 		super(context);
 		mXmlUrl = url;
+		mErrorStatus = null;
 	}
 
 
@@ -113,11 +119,12 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 					// 書籍の一覧画面に表示する各書籍ごとのタイトルテキストを生成
 					mCoverTextList.add(
-							(String) mBookListData.get(SortBookListData.get(o).toString()).get("name")
-							+ "\n" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("covertext")
-							+ "\n [" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("updatedate") + "]"
-							+ "    (page : " + (String) mBookListData.get(SortBookListData.get(o).toString()).get("page") + ")"
-							+ "\n"
+							" <b>"  + (String) mBookListData.get(SortBookListData.get(o).toString()).get("name") + "</b>"
+							+ " <SMALL>  (" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("page") + " page)</SMALL>"
+							+ "<BR>"
+							+ "<BR>" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("covertext")
+							+ "<BR><SMALL> [" + (String) mBookListData.get(SortBookListData.get(o).toString()).get("updatedate") + "]</SMALL>"
+							+ "<BR>"
 							);
 
 				}
@@ -177,7 +184,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 						"twitter : " + mPublisherData.get("skype") + "<BR>" +
 						"skype : " + mPublisherData.get("mail") + "<BR>";
 
-		return bookInfoText + "\n" + publicationText;
+		return bookInfoText + "\n" + publicationText + "<BR><BR><BR><BR><BR><BR><BR>" ;
 	}
 
 
@@ -320,7 +327,15 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 			URLConnection connection = new URL(mXmlUrl).openConnection();	//指定した url から設定 xml ファイルを取得
 
-			xmlPullParser.setInput(connection.getInputStream(), "UTF-8");
+			try {
+				xmlPullParser.setInput(connection.getInputStream(), "UTF-8");		// 取得通信実施
+			} catch (UnknownHostException e) {	// 通信エラー
+				mErrorStatus = "UnknownHostException";
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {	// xml ファイルが存在しないエラー
+				mErrorStatus = "FileNotFoundException";
+				e.printStackTrace();
+			}
 
 			int eventType;
 			String nowField = "";

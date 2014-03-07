@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.imabaya.asatsuki.R;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -56,35 +57,44 @@ public class StartActivity extends FragmentActivity implements LoaderCallbacks<B
 	// ロード完了時
 	@Override
 	public void onLoadFinished(Loader <BookList> arg0, BookList booklist) {
+		Log.v("StartActivity BookList - onLoadFinished", "onLoadFinished");
 
 		// 取得したデータを UILApplication オブジェクトに入れて永続化する
 		mUap.setBooklist(booklist);
+		if (booklist.mErrorStatus != null) {
+			if (booklist.mErrorStatus.equals("UnknownHostException")) {
+				Toast.makeText(this, "通信エラー：インターネットに繋がっているかご確認下さい。", Toast.LENGTH_LONG).show();
+			} else if (booklist.mErrorStatus.equals("FileNotFoundException")) {
+				Toast.makeText(this, "通信エラー：サーバ上の設定ファイルにアクセスできませんでした。", Toast.LENGTH_LONG).show();
+			}
+			finish();
+		} else {
+			// 次の表紙リスト一覧画面へ遷移
+			Intent intent = new Intent(this, ImageListActivity.class);
+			startActivity(intent);
+			// このアクティビティは任務を終えて終了。バックキーで戻らないようにしておく。
+			finish();
+		}
 
-		Log.v("StartActivity BookList - onLoaderReset", "onLoaderReset");
+	} //onLoadFinished
 
-		// 次の表紙リスト一覧画面へ遷移
-		Intent intent = new Intent(this, ImageListActivity.class);
-		startActivity(intent);
-		// このアクティビティは任務を終えて終了。バックキーで戻らないようにしておく。
-		finish();
-	}
 
 	@Override
 	public void onLoaderReset(Loader <BookList> arg0) {
 		Log.v("StartActivity BookList - onLoaderReset", "onLoaderReset");
 	}
 
-	  @Override
-	  public void onStart() {
+	@Override
+	public void onStart() {
 		Log.v("StartActivity:onStart", "INFO");
-	    super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);
-	  }
-	  @Override
-	  public void onStop() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	@Override
+	public void onStop() {
 		Log.v("StartActivity:onStop", "INFO");
-	    super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);
-	  }
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}
 }
 

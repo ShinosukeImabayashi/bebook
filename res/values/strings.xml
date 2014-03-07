@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">asatsuki book reader</string>
+    <!-- start -->
+    <string name="app_name">Asatsuki Book Reader</string>
     <string name="action_settings">Settings</string>
-    <string name="start_announce">now inisializing...</string>
+    <string name="start_announce">now inisializing…</string>
 
-   <!-- introduce -->
+   <!-- Introduce -->
    <string name="introduce_wish_text">この本はいかがでしたか？  気に入って頂けたなら応援をお願いします！</string>
    <string name="introduce_by_email">この本をメール友達に勧める</string>
    <string name="introduce_by_googleplay">Google play でレビューする</string>
@@ -16,18 +17,42 @@
    <string name="introduce_view_to_firstpage">最初のページへ戻る</string>
    <string name="introduce_view_to_top">TOP へ戻る</string>
 
-    <!-- Activity titles -->
-    <string name="ac_name_image_list">Image List Example</string>
-    <string name="ac_name_image_pager">Image Pager Example</string>
-    <!-- Labels -->
+    <!-- Activity Titles -->
+    <string name="ac_name_image_list">Image List</string>
+    <string name="ac_name_image_pager">Image Pager</string>
+
+    <!-- Menu Labels -->
     <string name="menu_item_clear_memory_cache">Clear memory cache</string>
     <string name="menu_item_clear_disc_cache">Clear disc cache</string>
     <string name="menu_item_pause_on_scroll">Pause on scroll</string>
     <string name="menu_item_pause_on_fling">Pause on fling</string>
-    <!-- Content descriptions -->
+    <string name="menu_help">help</string>
+
+    <!-- help  -->
+    <string name="help_back">前の画面に戻る</string>
+
+    <!-- Content Descriptions -->
     <string name="descr_image">Image</string>
 
+    <!-- Clash Report -->
+    <string name="crash_toast_text">予期せぬエラーが発生しました。確認中です…</string>
+    <string name="crash_dialog_title">予期せぬエラーが発生し、ソフトウェアが機能停止しました。</string>
+    <string name="crash_dialog_text">
+エラーの原因は何か？　特定には、調査の必要があります。ソフトウェアの問題かもしれませんし、データの問題かもしれませんし、端末固有の問題かもしれません。\n
+いずれにしましても、エラーの発生をできる限り抑えて、本ソフトウェアを快適にお使い頂けるよう、改善対応に努めていきたいと考えております。\n
+よろしければ、問題解決に必要なデータをお送りください。下の OK ボタンを押すだけです。\n
+お送り頂くデータには、貴方の名前や電話帳の中身といった、個人情報のたぐいは含まれません。\n</string>
+    <string name="crash_dialog_comment_prompt">●エラーが発生した時の状況</string>
+    <string name="crash_dialog_ok_toast">ご協力頂きありがとうございました！</string>
 
-
+ <!--
+<string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
+<string name="crash_dialog_title">CrashTest has crashed</string>
+<string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+<string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+<string name="crash_dialog_ok_toast">Thank you !</string>
+-->
 
 </resources>

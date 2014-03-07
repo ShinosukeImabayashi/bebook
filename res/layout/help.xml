@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/help_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/help_base"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/help_info1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help_info1"
+                android:textIsSelectable="true"
+                 android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:id="@+id/help_guide_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/page_left_swipe_guide_image" />
+
+            <TextView
+                android:id="@+id/help_info2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help_info2"
+                android:textIsSelectable="true"
+                android:autoLink="all"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Button
+                android:id="@+id/help_back1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="20dip"
+                android:paddingBottom="20dip"
+                android:paddingLeft="60dip"
+                android:paddingRight="60dip"
+                android:layout_marginTop="60dip"
+                android:layout_marginBottom="60dip"
+                android:text="@string/help_back" />
+
+            <TextView
+                android:id="@+id/help_opensource_licence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:autoLink="all"
+                android:text="@string/help_opensource_licence" />
+
+            <Button
+                android:id="@+id/help_back2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="20dip"
+                android:paddingBottom="20dip"
+                android:paddingLeft="60dip"
+                android:paddingRight="60dip"
+                android:layout_marginTop="60dip"
+                android:layout_marginBottom="60dip"
+                android:text="@string/help_back" />
+
+            </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

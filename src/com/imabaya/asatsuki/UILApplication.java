@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright 2011-2013 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
 package com.imabaya.asatsuki;
 
 import android.annotation.TargetApi;
@@ -25,8 +10,19 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import org.acra.*;
+import org.acra.annotation.*;
 
-
+@ReportsCrashes(formKey="",
+	formUri="http://www.imabaya.com/asatsuki/crashreport/receivereport.php",
+	mode = ReportingInteractionMode.DIALOG,
+	resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
+	resDialogText = R.string.crash_dialog_text,
+	resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+	resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
+	resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
+	resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
+)
 public class UILApplication extends Application {
 
 	// 書籍情報の統括管理オブジェクト
@@ -51,20 +47,16 @@ public class UILApplication extends Application {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
 		}
-
 		super.onCreate();
 
-
+		ACRA.init(this);	// エラーレポート
+		
 		// UnivasalImageLoader の初期化処理
 		initImageLoader(getApplicationContext());
 	}
 
 	// Univasal Image Loader の初期設定
 	public static void initImageLoader(Context context) {
-		// This configuration tuning is custom. You can tune every option, you may tune some of them,
-		// or you can create default configuration by
-		//  ImageLoaderConfiguration.createDefault(this);
-		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 		//.threadPoolSize(1)
 		.threadPriority(Thread.MAX_PRIORITY)
@@ -74,7 +66,7 @@ public class UILApplication extends Application {
 		.tasksProcessingOrder(QueueProcessingType.LIFO)
 		.writeDebugLogs() // Remove for release app
 		.build();
-		// Initialize ImageLoader with configuration.
+
 		ImageLoader.getInstance().init(config);
 	}
 }

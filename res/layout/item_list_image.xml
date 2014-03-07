@@ -7,17 +7,18 @@
         android:id="@+id/listimage"
         android:layout_width="72dip"
         android:layout_height="72dip"
-        android:layout_margin="3dip"
+        android:layout_margin="7dip"
         android:adjustViewBounds="true"
         android:contentDescription="@string/descr_image"
         android:scaleType="centerCrop" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/listimage_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
-        android:layout_marginLeft="20dip"
+        android:layout_marginLeft="10dip"
+         android:layout_marginRight="20dip"
         android:textSize="22sp" />
 
 </LinearLayout>

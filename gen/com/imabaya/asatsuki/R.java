@@ -40,83 +40,109 @@ public final class R {
         public static final int swipe_background=0x7f020008;
     }
     public static final class id {
-        public static final int action_settings=0x7f09001a;
-        public static final int book_summary_info=0x7f09000c;
-        public static final int book_summary_info_scrollparent=0x7f09000b;
-        public static final int header_info=0x7f090008;
-        public static final int image_explanation=0x7f090007;
-        public static final int introduce=0x7f09000d;
-        public static final int introduce_by_Line=0x7f090014;
-        public static final int introduce_by_email=0x7f090010;
-        public static final int introduce_by_facebook=0x7f090013;
-        public static final int introduce_by_googleplay=0x7f090011;
-        public static final int introduce_by_googleplus=0x7f090015;
-        public static final int introduce_by_twitter=0x7f090012;
-        public static final int introduce_linearLayout=0x7f09000e;
-        public static final int introduce_view_to_firstpage=0x7f090016;
-        public static final int introduce_view_to_top=0x7f090017;
-        public static final int introduce_wish_text=0x7f09000f;
-        public static final int item_clear_disc_cache=0x7f09001c;
-        public static final int item_clear_memory_cache=0x7f09001b;
-        public static final int item_pause_on_fling=0x7f09001e;
-        public static final int item_pause_on_scroll=0x7f09001d;
-        public static final int listimage=0x7f090001;
-        public static final int loading=0x7f090004;
-        public static final int page_left_swipe_guide_image=0x7f09000a;
-        public static final int page_right_swipe_guide_image=0x7f090009;
-        public static final int page_seek_bar=0x7f090006;
-        public static final int pageimage=0x7f090003;
+        public static final int action_settings=0x7f090022;
+        public static final int book_summary_info=0x7f090014;
+        public static final int book_summary_info_scrollparent=0x7f090013;
+        public static final int header_info=0x7f090010;
+        public static final int help_back1=0x7f090006;
+        public static final int help_back2=0x7f090008;
+        public static final int help_base=0x7f090002;
+        public static final int help_guide_image=0x7f090004;
+        public static final int help_info1=0x7f090003;
+        public static final int help_info2=0x7f090005;
+        public static final int help_opensource_licence=0x7f090007;
+        public static final int help_scroll=0x7f090001;
+        public static final int image_explanation=0x7f09000f;
+        public static final int introduce=0x7f090015;
+        public static final int introduce_by_Line=0x7f09001c;
+        public static final int introduce_by_email=0x7f090018;
+        public static final int introduce_by_facebook=0x7f09001b;
+        public static final int introduce_by_googleplay=0x7f090019;
+        public static final int introduce_by_googleplus=0x7f09001d;
+        public static final int introduce_by_twitter=0x7f09001a;
+        public static final int introduce_linearLayout=0x7f090016;
+        public static final int introduce_view_to_firstpage=0x7f09001e;
+        public static final int introduce_view_to_top=0x7f09001f;
+        public static final int introduce_wish_text=0x7f090017;
+        public static final int item_clear_disc_cache=0x7f090025;
+        public static final int item_clear_memory_cache=0x7f090024;
+        public static final int item_help=0x7f090023;
+        public static final int item_pause_on_fling=0x7f090027;
+        public static final int item_pause_on_scroll=0x7f090026;
+        public static final int listimage=0x7f090009;
+        public static final int listimage_text=0x7f09000a;
+        public static final int loading=0x7f09000c;
+        public static final int page_left_swipe_guide_image=0x7f090012;
+        public static final int page_right_swipe_guide_image=0x7f090011;
+        public static final int page_seek_bar=0x7f09000e;
+        public static final int pageimage=0x7f09000b;
         public static final int pager=0x7f090000;
-        public static final int seek_bar_info=0x7f090005;
-        public static final int start_loading_text=0x7f090018;
-        public static final int start_loading_view=0x7f090019;
-        public static final int text=0x7f090002;
+        public static final int seek_bar_info=0x7f09000d;
+        public static final int start_loading_text=0x7f090020;
+        public static final int start_loading_view=0x7f090021;
     }
     public static final class layout {
         public static final int ac_image_list=0x7f030000;
         public static final int ac_image_pager=0x7f030001;
-        public static final int item_list_image=0x7f030002;
-        public static final int item_pager_image=0x7f030003;
-        public static final int start=0x7f030004;
+        public static final int help=0x7f030002;
+        public static final int item_list_image=0x7f030003;
+        public static final int item_pager_image=0x7f030004;
+        public static final int start=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f080000;
         public static final int main_menu=0x7f080001;
     }
     public static final class string {
-        /**  Activity titles 
+        /**  Activity Titles 
          */
-        public static final int ac_name_image_list=0x7f04000e;
-        public static final int ac_name_image_pager=0x7f04000f;
-        public static final int action_settings=0x7f040003;
-        public static final int app_name=0x7f040002;
+        public static final int ac_name_image_list=0x7f040011;
+        public static final int ac_name_image_pager=0x7f040012;
+        public static final int action_settings=0x7f040006;
+        /**  start 
+         */
+        public static final int app_name=0x7f040005;
         public static final int book_const_xml_url=0x7f040001;
-        /**  Content descriptions 
+        public static final int crash_dialog_comment_prompt=0x7f04001d;
+        public static final int crash_dialog_ok_toast=0x7f04001e;
+        public static final int crash_dialog_text=0x7f04001c;
+        public static final int crash_dialog_title=0x7f04001b;
+        /**  Clash Report 
          */
-        public static final int descr_image=0x7f040014;
+        public static final int crash_toast_text=0x7f04001a;
+        /**  Content Descriptions 
+         */
+        public static final int descr_image=0x7f040019;
         /**  アカウントのトラッキングID 
          */
         public static final int ga_trackingId=0x7f040000;
-        public static final int introduce_by_Line=0x7f04000a;
-        public static final int introduce_by_email=0x7f040006;
-        public static final int introduce_by_facebook=0x7f040009;
-        public static final int introduce_by_googleplay=0x7f040007;
-        public static final int introduce_by_googleplus=0x7f04000b;
-        public static final int introduce_by_twitter=0x7f040008;
-        public static final int introduce_view_to_firstpage=0x7f04000c;
-        public static final int introduce_view_to_top=0x7f04000d;
-        /**  introduce 
+        /**  help  
+         */
+        public static final int help_back=0x7f040018;
+        public static final int help_info1=0x7f040002;
+        public static final int help_info2=0x7f040003;
+        public static final int help_opensource_licence=0x7f040004;
+        public static final int introduce_by_Line=0x7f04000d;
+        public static final int introduce_by_email=0x7f040009;
+        public static final int introduce_by_facebook=0x7f04000c;
+        public static final int introduce_by_googleplay=0x7f04000a;
+        public static final int introduce_by_googleplus=0x7f04000e;
+        public static final int introduce_by_twitter=0x7f04000b;
+        public static final int introduce_view_to_firstpage=0x7f04000f;
+        public static final int introduce_view_to_top=0x7f040010;
+        /**  Introduce 
  introduce 
          */
-        public static final int introduce_wish_text=0x7f040005;
-        public static final int menu_item_clear_disc_cache=0x7f040011;
-        /**  Labels 
+        public static final int introduce_wish_text=0x7f040008;
+        public static final int menu_help=0x7f040017;
+        public static final int menu_item_clear_disc_cache=0x7f040014;
+        /**  Menu Labels 
          */
-        public static final int menu_item_clear_memory_cache=0x7f040010;
-        public static final int menu_item_pause_on_fling=0x7f040013;
-        public static final int menu_item_pause_on_scroll=0x7f040012;
-        public static final int name=0x7f040015;
-        public static final int start_announce=0x7f040004;
+        public static final int menu_item_clear_memory_cache=0x7f040013;
+        public static final int menu_item_pause_on_fling=0x7f040016;
+        public static final int menu_item_pause_on_scroll=0x7f040015;
+        public static final int name=0x7f04001f;
+        public static final int start_announce=0x7f040007;
     }
     public static final class style {
         /** 

@@ -4,6 +4,7 @@ package com.imabaya.asatsuki;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -117,7 +118,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 			if (convertView == null) {
 				view = getLayoutInflater().inflate(R.layout.item_list_image, parent, false);
 				holder = new ViewHolder();
-				holder.text = (TextView) view.findViewById(R.id.text);
+				holder.text = (TextView) view.findViewById(R.id.listimage_text);
 				holder.image = (ImageView) view.findViewById(R.id.listimage);
 				view.setTag(holder);
 			} else {
@@ -125,7 +126,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 			}
 
 			// 表紙タイトルの表示
-			holder.text.setText(mCoverText[position]);
+			holder.text.setText(Html.fromHtml(mCoverText[position]));
 
 			// 表紙画像の表示
 			imageLoader.displayImage(mCoverImageUrls[position], holder.image, mDisplayImageOptions, animateFirstListener);

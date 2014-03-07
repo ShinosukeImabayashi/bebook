@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="0dip" >
 
     <!-- メイン画像表示 -->
     <ImageView
         android:id="@+id/pageimage"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:adjustViewBounds="false"
         android:contentDescription="@string/descr_image" />
@@ -92,8 +92,8 @@
     <!-- スワイプ操作案内 -->
     <ImageButton
         android:id="@+id/page_right_swipe_guide_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical|center"
         android:background="@null"
         android:src="@drawable/page_right_swipe_guide_image"
@@ -101,8 +101,8 @@
 
     <ImageButton
         android:id="@+id/page_left_swipe_guide_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical|center"
         android:background="@null"
         android:src="@drawable/page_left_swipe_guide_image"
@@ -111,14 +111,14 @@
     <!-- 書籍奥付け表示 -->
     <ScrollView
         android:id="@+id/book_summary_info_scrollparent"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone" >
 
         <TextView
             android:id="@+id/book_summary_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_margin="10dip"
             android:textIsSelectable="true"
             android:autoLink="all"
@@ -133,8 +133,8 @@
     <!-- 書籍レビューお願い -->
     <ScrollView
         android:id="@+id/introduce"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone" >
 
         <LinearLayout
