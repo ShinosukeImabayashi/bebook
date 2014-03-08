@@ -32,11 +32,6 @@ public class HelpActivity extends Activity {
 			}
 		});
 
-
-	}
-
-
-
-
+	} //onCreate
 
 }

@@ -42,7 +42,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		BookList booklist = mUap.getBooklist();
 
 		// 表紙画像 URL リストの取得
-		mCoverImageUrls = booklist.getBookCoverImageUrl("id", "asc");
+		mCoverImageUrls = booklist.getBookCoverImageUrl("printorder", "asc");
 
 		// 表紙タイトルリストの取得
 		mCoverText = booklist.getBookCoverText();

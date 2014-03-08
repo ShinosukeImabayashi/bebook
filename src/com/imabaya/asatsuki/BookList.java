@@ -66,25 +66,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		ArrayList <String> mCoverImageList = new ArrayList <String>();
 		mBookIdList = new ArrayList <String>();
 		mCoverTextList = new ArrayList <String>();
-		/*
-		try {
-	        Iterator it = mBookListData.keySet().iterator();
-	        while (it.hasNext()) {
-	            Object o = it.next();
-	            if (o != null) {
-	        		Log.v("getBookCoverImageUrl", o.toString() + "---" + ((Map) mBookListData.get(o)).get("coverimageurl"));
-	            	mCoverImageList.add((String) ((Map) mBookListData.get(o)).get("coverimageurl"));	// 表紙画像 url のリストを格納
-	            	mBookIdList.add((String) ((Map) mBookListData.get(o)).get("id"));	// bookid のリストを格納
-	            }
-	        }
-	    } catch (Exception  e) {
-	        Log.e("getBookCoverImageUrl", "error");
-	    	e.printStackTrace();
-	    }
-		 */
 
-
-		// printorder sort
 		// key 要素で自動ソートする TreeMap で、ソートしたい値を key とした連想配列を作る
 		TreeMap <String, String> SortBookListData= new TreeMap<String, String> ();
 		try {
@@ -157,7 +139,6 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	 */
 	public String getBookPublicationText(int listnum) {
 		String bookid = mBookIdList.get(listnum);	// bookid に変換
-
 
 		String bookInfoText =
 				"<BR><BR><BR>" +
@@ -399,6 +380,18 @@ public class BookList extends AsyncTaskLoader <BookList> {
 									contentsText.add("");
 								}
 								bookPageTextCount++;
+							}	else if (tag.equals("printorder")) {
+								if (xmlPullParser.getText() != null) {
+									int printorder = 9999;
+									try {
+										printorder = Integer.valueOf(xmlPullParser.getText());
+									} catch (Exception e) {
+										printorder = 9999;
+									}
+									bookData.put(tag,  String.format("%04d", printorder));	// 1 → 0001
+								} else {
+									bookData.put(tag,  "9999");
+								}
 							} else {	// 特殊処理必要なタグ以外のデータはここで拾っておく
 								if (xmlPullParser.getText() != null) {
 									bookData.put(tag,  xmlPullParser.getText().trim());

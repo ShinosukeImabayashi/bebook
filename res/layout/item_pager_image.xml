@@ -89,12 +89,13 @@
         android:shadowRadius="1.5"
         android:visibility="gone" />
 
+
     <!-- スワイプ操作案内 -->
     <ImageButton
         android:id="@+id/page_right_swipe_guide_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|center"
+        android:layout_gravity="center_vertical|top"
         android:background="@null"
         android:src="@drawable/page_right_swipe_guide_image"
         android:visibility="gone" />
@@ -103,10 +104,11 @@
         android:id="@+id/page_left_swipe_guide_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|center"
+        android:layout_gravity="center_vertical|top"
         android:background="@null"
         android:src="@drawable/page_left_swipe_guide_image"
         android:visibility="gone" />
+
 
     <!-- 書籍奥付け表示 -->
     <ScrollView

@@ -97,6 +97,9 @@ public class ImagePagerActivity extends BaseActivity  {
 		mBookTitleNameText  = booklist.getBookTitleNameText(mSelectListPosition);
 		mBookPublicationText  = booklist.getBookPublicationText(mSelectListPosition);
 
+		// アクセス解析
+		EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("OpenBook", getPackageName(), mBookTitleNameText, null).build());
+
 		// 左開きか右開きかの指定取得
 		mOpeingType = booklist.getBookOpeningtype(mSelectListPosition);
 		// 初期ページ数設定
@@ -146,8 +149,6 @@ public class ImagePagerActivity extends BaseActivity  {
 		mPager.setCurrentItem(mStartPagerPosition);
 		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風になる。ちょっとおもしろい。
 
-		// アクセス解析
-		EasyTracker.getInstance(this).send(MapBuilder.createEvent("first event", "second event", "third event", null).build());
 
 	} // onCreate
 
@@ -169,7 +170,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		@Override
 		// 各ページ生成時のタイミングで呼び出される
 		public Object instantiateItem(ViewGroup view, int position) {
-			EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("ImagePager", "instantiateItem", "third event", null).build());			// アクセス解析
+
 			Log.v("ImagePagerAdapter - instantiateItem p=" +position, "INFO");
 
 			//レイアウトファイル item_pager_image をインスタンス化する
@@ -297,6 +298,9 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == this.getCount() - 2 ) ||
 				           (mOpeingType.equals("RIGHT_OPENING") && position == 1 )  ) {	// 最終ページ + 2
+				// アクセス解析
+				EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("ReadEnd", getPackageName(), mBookTitleNameText, null).build());
+
 				// 書籍奥付け情報の表示
 				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));	// 簡易 HTML 文法が使用可能
 				bookSummaryInfoScrollParent.setVisibility(View.VISIBLE);
@@ -347,19 +351,19 @@ public class ImagePagerActivity extends BaseActivity  {
 						String message = null;
 						switch (failReason.getType()) {
 						case IO_ERROR:
-							message = "Input/Output error";
+							message = getString(R.string.loadimage_error_io_error);
 							break;
 						case DECODING_ERROR:
-							message = "Image can't be decoded";
+							message = getString(R.string.loadimage_error_decoding_error);
 							break;
 						case NETWORK_DENIED:
-							message = "Downloads are denied";
+							message = getString(R.string.loadimage_error_network_denied);
 							break;
 						case OUT_OF_MEMORY:
-							message = "Out Of Memory error";
+							message = getString(R.string.loadimage_error_out_of_memory);
 							break;
 						case UNKNOWN:
-							message = "Unknown error";
+							message = getString(R.string.loadimage_error_unknown);
 							break;
 						}
 						Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -470,7 +474,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				} else {
 					mPager.arrowScroll(View.FOCUS_RIGHT);	// 次のページへ遷移させる
 				}
-				Log.v("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + mPager.getCurrentItem(), "INFO");
+				///Log.v("onPhotoTap：" + xPercentage + " " + yPercentage + " page:" + mPager.getCurrentItem(), "INFO");
 			}
 		} //ViewTapListener
 
@@ -528,7 +532,6 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			@Override
 			public void onClick(View v) {
-
 				String appUrl = "https://play.google.com/store/apps/details?id=" + getPackageName();
 
 				// 書籍名を URL エンコード化
@@ -541,8 +544,10 @@ public class ImagePagerActivity extends BaseActivity  {
 				}
 
 				Intent intent;
+				String caseType = "";
 			      switch(v.getId()){
-			        case R.id.introduce_by_email:
+			      case R.id.introduce_by_email:
+			        	caseType = "introduce_by_email";
 			        	Uri uri=Uri.parse("mailto:");
 			        	intent=new Intent(Intent.ACTION_SENDTO,uri);
 			        	intent.putExtra(Intent.EXTRA_SUBJECT, mBookTitleNameText);
@@ -551,26 +556,31 @@ public class ImagePagerActivity extends BaseActivity  {
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_googleplay:
+			        	caseType = "introduce_by_googleplay";
 			        	Uri uri2=Uri.parse(appUrl);
 			        	intent=new Intent(Intent.ACTION_VIEW,uri2);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_twitter:
+			        	caseType = "introduce_by_twitter";
 			        	Uri uri3=Uri.parse("http://twitter.com/share?url=" + appUrl + "&text=『" + bookTitleName + "』");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri3);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_facebook:
+			        	caseType = "introduce_by_facebook";
 			        	Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=" + appUrl + "&t=『" + bookTitleName + "』");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri4);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_Line:
+			        	caseType = "introduce_by_Line";
 			        	Uri uri5=Uri.parse("http://line.naver.jp/msg/text/『" + bookTitleName + "』 " + appUrl + "");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri5);
 			        	startActivity(intent);
 			            break;
 			        case R.id.introduce_by_googleplus:
+			        	caseType = "introduce_by_googleplus";
 			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=" + appUrl + "");
 			        	intent=new Intent(Intent.ACTION_VIEW,uri6);
 			        	startActivity(intent);
@@ -586,6 +596,12 @@ public class ImagePagerActivity extends BaseActivity  {
 			        	finish();
 			            break;
 			     }
+
+			     // アクセス解析
+			      if (caseType != "") {
+			    	  EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("IntroduceWish", getPackageName(), caseType, null).build());
+			      }
+
 			}
 
 		} //IntroduceWish

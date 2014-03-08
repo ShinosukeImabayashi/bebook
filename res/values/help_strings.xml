@@ -2,19 +2,30 @@
 <resources>
 
 <string name="help_info1">
-使い方\n
-の\n
-説明
+\n
+■本ソフトウェアの使い方\n
+だいたい\n
+下の\n
+図の\n
+とおり\n
+で\n
+す。\n
 </string>
 
 <string name="help_info2">
- 製作者説明＆ソフトバージョン＆サイトURL
+ \n
+■クレジット\n
+ 製作者説明：石川啄木\n
+ ソフトバージョン：0.00\n
+ サイトURL：http://www.bearpark.jp/\n
 </string>
 
 <string name="help_opensource_licence">
 \n
 本ソフトウェアでは、「Apache License Version 2.0」ライセンスに基づき、以下のライブラリを使用しております。\n
 開発者の方々に、深い謝意を示します。\n
+\n
+\n
 \n
 ・PhotoView\n
 \n

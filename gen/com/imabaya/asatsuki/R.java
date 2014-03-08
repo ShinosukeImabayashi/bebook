@@ -29,15 +29,16 @@ public final class R {
         public static final int activity_vertical_margin=0x7f060001;
     }
     public static final class drawable {
-        public static final int ic_empty=0x7f020000;
-        public static final int ic_error=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int ic_launcher_web=0x7f020003;
-        public static final int ic_stub=0x7f020004;
-        public static final int loader=0x7f020005;
-        public static final int page_left_swipe_guide_image=0x7f020006;
-        public static final int page_right_swipe_guide_image=0x7f020007;
-        public static final int swipe_background=0x7f020008;
+        public static final int help001=0x7f020000;
+        public static final int ic_empty=0x7f020001;
+        public static final int ic_error=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int ic_launcher_web=0x7f020004;
+        public static final int ic_stub=0x7f020005;
+        public static final int loader=0x7f020006;
+        public static final int page_left_swipe_guide_image=0x7f020007;
+        public static final int page_right_swipe_guide_image=0x7f020008;
+        public static final int swipe_background=0x7f020009;
     }
     public static final class id {
         public static final int action_settings=0x7f090022;
@@ -95,30 +96,35 @@ public final class R {
     }
     public static final class string {
         /**  Activity Titles 
+ Activity Titles 
          */
         public static final int ac_name_image_list=0x7f040011;
         public static final int ac_name_image_pager=0x7f040012;
         public static final int action_settings=0x7f040006;
         /**  start 
+ start 
          */
         public static final int app_name=0x7f040005;
         public static final int book_const_xml_url=0x7f040001;
-        public static final int crash_dialog_comment_prompt=0x7f04001d;
-        public static final int crash_dialog_ok_toast=0x7f04001e;
-        public static final int crash_dialog_text=0x7f04001c;
-        public static final int crash_dialog_title=0x7f04001b;
+        public static final int crash_dialog_comment_prompt=0x7f040022;
+        public static final int crash_dialog_ok_toast=0x7f040023;
+        public static final int crash_dialog_text=0x7f040021;
+        public static final int crash_dialog_title=0x7f040020;
         /**  Clash Report 
+ Clash Report 
          */
-        public static final int crash_toast_text=0x7f04001a;
+        public static final int crash_toast_text=0x7f04001f;
         /**  Content Descriptions 
+ Content Descriptions 
          */
-        public static final int descr_image=0x7f040019;
+        public static final int descr_image=0x7f04001e;
         /**  アカウントのトラッキングID 
          */
         public static final int ga_trackingId=0x7f040000;
         /**  help  
+ help  
          */
-        public static final int help_back=0x7f040018;
+        public static final int help_back=0x7f04001d;
         public static final int help_info1=0x7f040002;
         public static final int help_info2=0x7f040003;
         public static final int help_opensource_licence=0x7f040004;
@@ -131,17 +137,27 @@ public final class R {
         public static final int introduce_view_to_firstpage=0x7f04000f;
         public static final int introduce_view_to_top=0x7f040010;
         /**  Introduce 
+ Introduce 
  introduce 
          */
         public static final int introduce_wish_text=0x7f040008;
+        public static final int loadimage_error_decoding_error=0x7f040019;
+        /**  ImagePager  
+ ImagePager  
+         */
+        public static final int loadimage_error_io_error=0x7f040018;
+        public static final int loadimage_error_network_denied=0x7f04001a;
+        public static final int loadimage_error_out_of_memory=0x7f04001b;
+        public static final int loadimage_error_unknown=0x7f04001c;
         public static final int menu_help=0x7f040017;
         public static final int menu_item_clear_disc_cache=0x7f040014;
         /**  Menu Labels 
+ Menu Labels 
          */
         public static final int menu_item_clear_memory_cache=0x7f040013;
         public static final int menu_item_pause_on_fling=0x7f040016;
         public static final int menu_item_pause_on_scroll=0x7f040015;
-        public static final int name=0x7f04001f;
+        public static final int name=0x7f040024;
         public static final int start_announce=0x7f040007;
     }
     public static final class style {
