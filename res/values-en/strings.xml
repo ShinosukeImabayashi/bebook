@@ -17,10 +17,6 @@
    <string name="introduce_view_to_firstpage">Back to first page</string>
    <string name="introduce_view_to_top">Back to TOP</string>
 
-    <!-- Activity Titles -->
-    <string name="ac_name_image_list">Image List</string>
-    <string name="ac_name_image_pager">Image Pager</string>
-
     <!-- Menu Labels -->
     <string name="menu_item_clear_memory_cache">Clear memory cache</string>
     <string name="menu_item_clear_disc_cache">Clear disc cache</string>

@@ -21,8 +21,29 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <!-- 下部シークバー -->
+    <!-- 画像説明文表示 -->
     <TextView
+        android:id="@+id/image_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="#99000000"
+        android:includeFontPadding="true"
+        android:maxLines="10"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#EEEEFF"
+        android:textStyle="bold"
+        android:shadowColor="#333333"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:visibility="gone" />
+
+        <!-- 下部シークバー -->
+        <TextView
         android:id="@+id/seek_bar_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,26 +70,6 @@
         android:visibility="gone" />
     <!-- drawable/progressDrawable で 背景バーの詳細スタイル設定を行っている -->
 
-    <!-- 画像説明文表示 -->
-    <TextView
-        android:id="@+id/image_explanation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="30dip"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:background="#99000000"
-        android:includeFontPadding="true"
-        android:maxLines="10"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#EEEEFF"
-        android:textStyle="bold"
-        android:shadowColor="#333333"
-        android:shadowDx="1.5"
-        android:shadowDy="1.5"
-        android:shadowRadius="1.5"
-        android:visibility="gone" />
 
     <!-- 書籍情報表示ヘッダ -->
     <TextView
@@ -149,7 +150,7 @@
                 android:id="@+id/introduce_wish_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dip"
+                android:layout_marginTop="40dip"
                 android:layout_marginBottom="20dip"
                 android:layout_marginLeft="40dip"
                 android:layout_marginRight="40dip"
@@ -163,44 +164,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_googleplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_twitter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_Line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
 
             <Button
                 android:id="@+id/introduce_by_googleplus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dip"
-                android:textColor="#FFFFFF" />
+                android:layout_margin="10dip"/>
             <!--
             <Button
                 android:id="@+id/newbook_announce_mailaddress_regist"
@@ -217,8 +212,7 @@
                 android:layout_marginTop="40dip"
                 android:layout_marginBottom="10dip"
                 android:layout_marginLeft="100dip"
-                android:layout_marginRight="100dip"
-                android:textColor="#FFFFFF" />
+                android:layout_marginRight="100dip"/>
 
             <Button
                 android:id="@+id/introduce_view_to_top"
@@ -227,8 +221,7 @@
                 android:layout_marginTop="10dip"
                 android:layout_marginBottom="40dip"
                 android:layout_marginLeft="100dip"
-                android:layout_marginRight="100dip"
-                android:textColor="#FFFFFF" />
+                android:layout_marginRight="100dip"/>
         </LinearLayout>
     </ScrollView>
 

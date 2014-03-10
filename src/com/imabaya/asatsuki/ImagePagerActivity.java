@@ -417,9 +417,9 @@ public class ImagePagerActivity extends BaseActivity  {
 
 				// Viewサイズを取得する
 				float viewWidth = view.getWidth();
-				float viewHeight = view.getHeight();
+				//float viewHeight = view.getHeight();
 				int xPercentage = (int) ((x / viewWidth) * 100);
-				int yPercentage = (int) ((y / viewHeight) * 100);
+				//int yPercentage = (int) ((y / viewHeight) * 100);
 				//Toast.makeText(ImagePagerActivity.this, "tap! " + xPercentage + " - " + yPercentage, Toast.LENGTH_SHORT).show();
 				ViewGroup parent = (ViewGroup) view.getParent();	// 引数で得られるのは PhotoView の view なので、その親の Activity の view を取得
 				View imageLayout = inflater.inflate(R.layout.item_pager_image, parent, true);	// 第三パラメータの attachToRoot は、ここでは true 必須

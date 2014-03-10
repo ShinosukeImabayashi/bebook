@@ -53,7 +53,7 @@ public final class R {
         public static final int help_info2=0x7f090005;
         public static final int help_opensource_licence=0x7f090007;
         public static final int help_scroll=0x7f090001;
-        public static final int image_explanation=0x7f09000f;
+        public static final int image_explanation=0x7f09000d;
         public static final int introduce=0x7f090015;
         public static final int introduce_by_Line=0x7f09001c;
         public static final int introduce_by_email=0x7f090018;
@@ -75,10 +75,10 @@ public final class R {
         public static final int loading=0x7f09000c;
         public static final int page_left_swipe_guide_image=0x7f090012;
         public static final int page_right_swipe_guide_image=0x7f090011;
-        public static final int page_seek_bar=0x7f09000e;
+        public static final int page_seek_bar=0x7f09000f;
         public static final int pageimage=0x7f09000b;
         public static final int pager=0x7f090000;
-        public static final int seek_bar_info=0x7f09000d;
+        public static final int seek_bar_info=0x7f09000e;
         public static final int start_loading_text=0x7f090020;
         public static final int start_loading_view=0x7f090021;
     }
@@ -95,36 +95,35 @@ public final class R {
         public static final int main_menu=0x7f080001;
     }
     public static final class string {
-        /**  Activity Titles 
- Activity Titles 
-         */
-        public static final int ac_name_image_list=0x7f040011;
-        public static final int ac_name_image_pager=0x7f040012;
         public static final int action_settings=0x7f040006;
         /**  start 
+ start 
  start 
          */
         public static final int app_name=0x7f040005;
         public static final int book_const_xml_url=0x7f040001;
-        public static final int crash_dialog_comment_prompt=0x7f040022;
-        public static final int crash_dialog_ok_toast=0x7f040023;
-        public static final int crash_dialog_text=0x7f040021;
-        public static final int crash_dialog_title=0x7f040020;
+        public static final int crash_dialog_comment_prompt=0x7f040020;
+        public static final int crash_dialog_ok_toast=0x7f040021;
+        public static final int crash_dialog_text=0x7f04001f;
+        public static final int crash_dialog_title=0x7f04001e;
         /**  Clash Report 
  Clash Report 
+ Clash Report 
          */
-        public static final int crash_toast_text=0x7f04001f;
+        public static final int crash_toast_text=0x7f04001d;
         /**  Content Descriptions 
  Content Descriptions 
+ Content Descriptions 
          */
-        public static final int descr_image=0x7f04001e;
+        public static final int descr_image=0x7f04001c;
         /**  アカウントのトラッキングID 
          */
         public static final int ga_trackingId=0x7f040000;
         /**  help  
  help  
+ help  
          */
-        public static final int help_back=0x7f04001d;
+        public static final int help_back=0x7f04001b;
         public static final int help_info1=0x7f040002;
         public static final int help_info2=0x7f040003;
         public static final int help_opensource_licence=0x7f040004;
@@ -138,26 +137,27 @@ public final class R {
         public static final int introduce_view_to_top=0x7f040010;
         /**  Introduce 
  Introduce 
- introduce 
+ Introduce 
          */
         public static final int introduce_wish_text=0x7f040008;
-        public static final int loadimage_error_decoding_error=0x7f040019;
+        public static final int loadimage_error_decoding_error=0x7f040017;
         /**  ImagePager  
  ImagePager  
+ ImagePager  
          */
-        public static final int loadimage_error_io_error=0x7f040018;
-        public static final int loadimage_error_network_denied=0x7f04001a;
-        public static final int loadimage_error_out_of_memory=0x7f04001b;
-        public static final int loadimage_error_unknown=0x7f04001c;
-        public static final int menu_help=0x7f040017;
-        public static final int menu_item_clear_disc_cache=0x7f040014;
+        public static final int loadimage_error_io_error=0x7f040016;
+        public static final int loadimage_error_network_denied=0x7f040018;
+        public static final int loadimage_error_out_of_memory=0x7f040019;
+        public static final int loadimage_error_unknown=0x7f04001a;
+        public static final int menu_help=0x7f040015;
+        public static final int menu_item_clear_disc_cache=0x7f040012;
         /**  Menu Labels 
  Menu Labels 
+ Menu Labels 
          */
-        public static final int menu_item_clear_memory_cache=0x7f040013;
-        public static final int menu_item_pause_on_fling=0x7f040016;
-        public static final int menu_item_pause_on_scroll=0x7f040015;
-        public static final int name=0x7f040024;
+        public static final int menu_item_clear_memory_cache=0x7f040011;
+        public static final int menu_item_pause_on_fling=0x7f040014;
+        public static final int menu_item_pause_on_scroll=0x7f040013;
         public static final int start_announce=0x7f040007;
     }
     public static final class style {

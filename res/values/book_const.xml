@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="book_const_xml_url">http://www.imabaya.com/ebooktest/ebookconst.xml</string>
+ <resources>
+    <string name="book_const_xml_url"  translatable="false">http://www.imabaya.com/ebooktest/ebookconst.xml</string>
 </resources>
