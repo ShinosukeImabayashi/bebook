@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -453,7 +455,14 @@ public class ImagePagerActivity extends BaseActivity  {
 						// 画像説明文表示
 						boolean isImageExplanation = true;
 						try {
-							imageExplanation.setText(mBookExplanationTexts[mPager.getCurrentItem() - PAGE_START_NUM]);
+							String explanationText = mBookExplanationTexts[mPager.getCurrentItem() - PAGE_START_NUM];
+							explanationText = explanationText.replaceAll("\n", "<br>");
+							// <a> タグ利用の準備
+							MovementMethod movementmethod = LinkMovementMethod.getInstance(); // LinkMovementMethod のインスタンスを取得
+							imageExplanation.setMovementMethod(movementmethod);// TextView に LinkMovementMethod を登録
+							CharSequence spanned = Html.fromHtml(explanationText);// URLSpan をテキストにを組み込みます
+							// 画像説明文をビューにセット
+							imageExplanation.setText(spanned);
 						} catch (ArrayIndexOutOfBoundsException e) {
 							// 画像説明文が無い場合
 							isImageExplanation = false;

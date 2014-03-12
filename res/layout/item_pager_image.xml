@@ -33,6 +33,7 @@
         android:background="#99000000"
         android:includeFontPadding="true"
         android:maxLines="10"
+        android:textIsSelectable="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#EEEEFF"
         android:textStyle="bold"

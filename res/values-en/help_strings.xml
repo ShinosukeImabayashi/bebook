@@ -4,15 +4,18 @@
 <string name="help_info1">
 \n
 ■本ソフトウェアの使い方\n
-だいたい下の図のとおりです。\n
+シンプルな書籍アプリです。\n
+一覧画面で読みたい書籍を選びます。
+書籍閲覧画面では、下の図をご覧下さい。\n
 </string>
 
 <string name="help_info2">
  \n
 ■クレジット\n
- 製作者説明：Shinosuke Imabayashi\n
- ソフトバージョン：0.00\n
- サイトURL：http://www.imabaya.com/asatsuki/\n
+ 書籍アプリ製作者：Shinosuke Imabayashi\n
+ ソフトバージョン：1.00\n
+ サイトURL：http://www.imabaya.com/asatsuki\n
+ (書籍の著作者情報については、個別の書籍の奥付けをご確認下さい)\n
 </string>
 
 <string name="help_opensource_licence">
