@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,21 +51,27 @@ public class UILApplication extends Application {
 		super.onCreate();
 
 		ACRA.init(this);	// エラーレポート
-		
+
 		// UnivasalImageLoader の初期化処理
 		initImageLoader(getApplicationContext());
 	}
 
+
+
 	// Univasal Image Loader の初期設定
 	public static void initImageLoader(Context context) {
+		int memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 8);	// 最大で搭載メモリの 1/3 まで使用する
+		Log.v("memoryCacheSize", " " + memoryCacheSize);
+
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 		//.threadPoolSize(1)
 		.threadPriority(Thread.MAX_PRIORITY)
+		//.memoryCacheSize(memoryCacheSize)
 		//.denyCacheImageMultipleSizesInMemory()
 		//.discCacheFileCount(100)
 		.discCacheFileNameGenerator(new Md5FileNameGenerator())
 		.tasksProcessingOrder(QueueProcessingType.LIFO)
-		.writeDebugLogs() // Remove for release app
+		///.writeDebugLogs() // Remove for release app
 		.build();
 
 		ImageLoader.getInstance().init(config);

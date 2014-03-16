@@ -142,26 +142,27 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 		String bookInfoText =
 				"<BR><BR><BR>" +
-						"■書籍情報<BR>" +
-						"name : " + (String) mBookListData.get(bookid).get("name") + "<BR>" +
-						"page : " +  (String) mBookListData.get(bookid).get("page") + "<BR>" +
-						"explanation : " +  (String) mBookListData.get(bookid).get("explanation") + "<BR>" +
-						"appeal : " +  (String) mBookListData.get(bookid).get("appeal") + "<BR>" +
-						"makedate : " +  (String) mBookListData.get(bookid).get("makedate") + "<BR>" +
-						"version : " +  (String) mBookListData.get(bookid).get("version") + "<BR>" +
-						"updatedate : " +  (String) mBookListData.get(bookid).get("updatedate") + "<BR>";
+						"▼書籍情報<BR>" +
+						"書籍名 : " + (String) mBookListData.get(bookid).get("name") + " " +
+						"( " +  (String) mBookListData.get(bookid).get("page") + ") ページ<BR>" +
+						"<BR>" +  (String) mBookListData.get(bookid).get("explanation") + "<BR>" +
+						" " +  (String) mBookListData.get(bookid).get("appeal") + "<BR>" +
+						"<BR>初版 : " +  (String) mBookListData.get(bookid).get("makedate") + "<BR>" +
+						"最新版 : " +  (String) mBookListData.get(bookid).get("updatedate") + "<BR>" +
+						"version : " +  (String) mBookListData.get(bookid).get("version") + "<BR>";
+
 
 		String publicationText =
-				"<BR>■著作者情報<BR>" +
-						"name : " + mAuthorData.get("name") + "<BR>" +
-						"url : " + mAuthorData.get("url") + "<BR>" +
-						"mail : " + mAuthorData.get("mail") + "<BR>" +
+				"<BR>▼著作者情報<BR>" +
+						"名前 : " + mAuthorData.get("name") + "<BR>" +
+						"サイトURL : " + mAuthorData.get("url") + "<BR>" +
+						"メールアドレス : " + mAuthorData.get("mail") + "<BR>" +
 						"twitter : " + mAuthorData.get("twitter") + "<BR>" +
 						"skype : " + mAuthorData.get("skype") + "<BR>" +
-						"<BR>■出版者情報<BR>" +
-						"name : " + mPublisherData.get("name") + "<BR>" +
-						"url : " + mPublisherData.get("url") + "<BR>" +
-						"mail :" + mPublisherData.get("twitter") + "<BR>" +
+						"<BR>▼発行者情報<BR>" +
+						"名前 : " + mPublisherData.get("name") + "<BR>" +
+						"サイトURL : " + mPublisherData.get("url") + "<BR>" +
+						"メールアドレス :" + mPublisherData.get("twitter") + "<BR>" +
 						"twitter : " + mPublisherData.get("skype") + "<BR>" +
 						"skype : " + mPublisherData.get("mail") + "<BR>";
 
@@ -207,6 +208,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	/**
 	 *  書籍が左開きか右開きかの指定取得（任意の１冊分）
 	 *  @param listnum リストの何番目が選択されたか
+	 *  @return "RIGHT_OPENING" or  "LEFT_OPENING"
 	 */
 	public String getBookOpeningtype (int listnum) {
 
@@ -231,6 +233,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	/**
 	 *  書籍画像データ取得（任意の１冊分）
 	 *  @param listnum リストの何番目が選択されたか
+	 *  @return １ページ目からの書籍画像 URL 群
 	 */
 	public String[] getBookImageUrl (int listnum) {
 
@@ -263,6 +266,7 @@ public class BookList extends AsyncTaskLoader <BookList> {
 	/**
 	 *  書籍画像説明データ取得（任意の１冊分）
 	 *  @param listnum リストの何番目が選択されたか
+	 *  @return １ページ目からの書籍説明テキスト群
 	 */
 	public String[] getBookImageExplanationText (int listnum) {
 
@@ -291,8 +295,59 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		return bookImageTextList.toArray(new String[bookImageTextList.size()]);
 	}
 
+	/**
+	 *  広告表示／非表示設定情報取得
+	 *  @param listnum リストの何番目が選択されたか
+	 *  @param printfield 広告表示場所
+	 *     (1:読書前広告、2:読書後広告、3:書籍表紙、4:書籍奥付、5:書籍本文)
+	 *  @return 広告を出す設定であれば true, 出さない設定または指定無しの場合は false
+	 */
+	public boolean getIsBookAdvertising(int listnum, int printfield) {
+		String bookid = mBookIdList.get(listnum);	// bookid に変換
+		if (printfield < 1 || printfield > 5) {
+			return false;
+		}
+		String sPrintfield = "ad" + String.format("%03d", printfield);	// 文字列 ad001～ad005 を作る
+		String IsBookAdvertising = "";
+		try {
+			IsBookAdvertising = ((String) (mBookListData.get(bookid).get(sPrintfield))).toLowerCase();
+		} catch (NullPointerException  e) {
+
+		}
+
+		if (IsBookAdvertising.equals("true")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 
+
+	/**
+	 *  広告ユニットID取得 （AdMob）
+	 *  @param adtype 広告ユニットの種類指定（"bunner", "interstitial"）
+	 *  @return 広告ユニットID（例外：指定がおかしい場合や、書籍設定 xml に指定が無かった場合は、"" を返す）
+	 */
+	public String getAdmobAdvertisingUnitId(String adtype) {
+		if (adtype.equals("bunner")) {
+			String admobAdvertisingUnitId = (String) mAdvertisingData.get("admob-bunner-unit-id");
+			return admobAdvertisingUnitId;
+		} else  if (adtype.equals("interstitial")) {
+				String admobAdvertisingUnitId = (String) mAdvertisingData.get("admob-interstitial-unit-id");
+				return admobAdvertisingUnitId;
+			} else {
+			return "";
+		}
+
+	}
+
+
+
+	/**
+	 *  書籍設定 xml ファイルをインターネット上から取得
+	 *  データはメンバ変数に入れ込む
+	 */
 	@Override
 	public BookList loadInBackground() {
 

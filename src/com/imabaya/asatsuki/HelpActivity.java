@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.*;
+import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 
 
 public class HelpActivity extends Activity {
@@ -41,35 +42,49 @@ public class HelpActivity extends Activity {
 			}
 		});
 
+		
 
+	    // 広告表示の追加スタイルの設定
+	    Bundle bundle = new Bundle();
+	    bundle.putString("color_bg", "AAAAFF");
+	    bundle.putString("color_bg_top", "FFFFFF");
+	    bundle.putString("color_border", "FFFFFF");
+	    bundle.putString("color_link", "000080");
+	    bundle.putString("color_text", "808080");
+	    bundle.putString("color_url", "008000");
+	    AdMobExtras extras = new AdMobExtras(bundle);
+		
 
-	    // admob 広告配信オブジェクトの作成
+	    // admob スマートバナー広告配信オブジェクトの作成
 	    adView = new AdView(this);
 	    adView.setAdUnitId("ca-app-pub-8815528739036624/4719045392");
 	    adView.setAdSize(AdSize.SMART_BANNER);
 	    LinearLayout layout = (LinearLayout)findViewById(R.id.help_parent);
 	    layout.addView(adView, 0);
 
-	    // 広告リクエスト
+	    // スマートバナー広告リクエスト
 	    AdRequest adRequest = new AdRequest.Builder()
 	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
 	    .addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
 	    .build();
+	    
 	    adView.loadAd(adRequest);
 
 
-	    // インタースティシャルを作成する。
+	    // admob インタースティシャル広告配信オブジェクトの作成
 	    interstitial = new InterstitialAd(this);
 	    interstitial.setAdUnitId("ca-app-pub-8815528739036624/6195778599");
 
-	    // 広告リクエストを作成する。
+	    
+	    // インタースティシャル広告リクエスト
 	    AdRequest adRequest2 = new AdRequest.Builder()
+	    .addNetworkExtras(extras) // 追加スタイルの設定
 	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
 	    .addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
 	    .build();
-	    // インタースティシャルの読み込みを開始する。
 	    interstitial.loadAd(adRequest2);
 
+	    // ボタン押下イベントなどのタイミングでインタースティシャル広告の刺し込み表示を実行
 	    displayInterstitial();
 	} //onCreate
 

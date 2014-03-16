@@ -238,51 +238,53 @@ containing a value of this type.
         public static final int swipe_background=0x7f020025;
     }
     public static final class id {
-        public static final int action_settings=0x7f050028;
-        public static final int book_summary_info=0x7f05001a;
-        public static final int book_summary_info_scrollparent=0x7f050019;
-        public static final int header_info=0x7f050016;
-        public static final int help_back1=0x7f05000c;
-        public static final int help_back2=0x7f05000e;
-        public static final int help_base=0x7f050008;
-        public static final int help_guide_image=0x7f05000a;
-        public static final int help_info1=0x7f050009;
-        public static final int help_info2=0x7f05000b;
-        public static final int help_opensource_licence=0x7f05000d;
-        public static final int help_parent=0x7f050006;
-        public static final int help_scroll=0x7f050007;
+        public static final int ac_image_pager_base=0x7f050005;
+        public static final int action_settings=0x7f05002a;
+        public static final int book_summary_info=0x7f05001c;
+        public static final int book_summary_info_scrollparent=0x7f05001b;
+        public static final int header_info=0x7f050018;
+        public static final int help_back1=0x7f05000d;
+        public static final int help_back2=0x7f05000f;
+        public static final int help_base=0x7f050009;
+        public static final int help_guide_image=0x7f05000b;
+        public static final int help_info1=0x7f05000a;
+        public static final int help_info2=0x7f05000c;
+        public static final int help_opensource_licence=0x7f05000e;
+        public static final int help_parent=0x7f050007;
+        public static final int help_scroll=0x7f050008;
         public static final int hybrid=0x7f050004;
-        public static final int image_explanation=0x7f050013;
-        public static final int introduce=0x7f05001b;
-        public static final int introduce_by_Line=0x7f050022;
-        public static final int introduce_by_email=0x7f05001e;
-        public static final int introduce_by_facebook=0x7f050021;
-        public static final int introduce_by_googleplay=0x7f05001f;
-        public static final int introduce_by_googleplus=0x7f050023;
-        public static final int introduce_by_twitter=0x7f050020;
-        public static final int introduce_linearLayout=0x7f05001c;
-        public static final int introduce_view_to_firstpage=0x7f050024;
-        public static final int introduce_view_to_top=0x7f050025;
-        public static final int introduce_wish_text=0x7f05001d;
-        public static final int item_clear_disc_cache=0x7f05002b;
-        public static final int item_clear_memory_cache=0x7f05002a;
-        public static final int item_help=0x7f050029;
-        public static final int item_pause_on_fling=0x7f05002d;
-        public static final int item_pause_on_scroll=0x7f05002c;
-        public static final int listimage=0x7f05000f;
-        public static final int listimage_text=0x7f050010;
-        public static final int loading=0x7f050012;
+        public static final int image_explanation=0x7f050015;
+        public static final int introduce=0x7f05001d;
+        public static final int introduce_by_Line=0x7f050024;
+        public static final int introduce_by_email=0x7f050020;
+        public static final int introduce_by_facebook=0x7f050023;
+        public static final int introduce_by_googleplay=0x7f050021;
+        public static final int introduce_by_googleplus=0x7f050025;
+        public static final int introduce_by_twitter=0x7f050022;
+        public static final int introduce_linearLayout=0x7f05001e;
+        public static final int introduce_view_to_firstpage=0x7f050026;
+        public static final int introduce_view_to_top=0x7f050027;
+        public static final int introduce_wish_text=0x7f05001f;
+        public static final int item_clear_disc_cache=0x7f05002d;
+        public static final int item_clear_memory_cache=0x7f05002c;
+        public static final int item_help=0x7f05002b;
+        public static final int item_pager_image_base=0x7f050012;
+        public static final int item_pause_on_fling=0x7f05002f;
+        public static final int item_pause_on_scroll=0x7f05002e;
+        public static final int listimage=0x7f050010;
+        public static final int listimage_text=0x7f050011;
+        public static final int loading=0x7f050014;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int page_left_swipe_guide_image=0x7f050018;
-        public static final int page_right_swipe_guide_image=0x7f050017;
-        public static final int page_seek_bar=0x7f050015;
-        public static final int pageimage=0x7f050011;
-        public static final int pager=0x7f050005;
+        public static final int page_left_swipe_guide_image=0x7f05001a;
+        public static final int page_right_swipe_guide_image=0x7f050019;
+        public static final int page_seek_bar=0x7f050017;
+        public static final int pageimage=0x7f050013;
+        public static final int pager=0x7f050006;
         public static final int satellite=0x7f050002;
-        public static final int seek_bar_info=0x7f050014;
-        public static final int start_loading_text=0x7f050026;
-        public static final int start_loading_view=0x7f050027;
+        public static final int seek_bar_info=0x7f050016;
+        public static final int start_loading_text=0x7f050028;
+        public static final int start_loading_view=0x7f050029;
         public static final int terrain=0x7f050003;
     }
     public static final class integer {
@@ -301,12 +303,12 @@ containing a value of this type.
         public static final int main_menu=0x7f0b0001;
     }
     public static final class string {
-        public static final int action_settings=0x7f060020;
+        public static final int action_settings=0x7f060021;
         /**  start 
  start 
  start 
          */
-        public static final int app_name=0x7f06001f;
+        public static final int app_name=0x7f060020;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
@@ -402,20 +404,20 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060013;
-        public static final int crash_dialog_comment_prompt=0x7f06003a;
-        public static final int crash_dialog_ok_toast=0x7f06003b;
-        public static final int crash_dialog_text=0x7f060039;
-        public static final int crash_dialog_title=0x7f060038;
+        public static final int crash_dialog_comment_prompt=0x7f06003b;
+        public static final int crash_dialog_ok_toast=0x7f06003c;
+        public static final int crash_dialog_text=0x7f06003a;
+        public static final int crash_dialog_title=0x7f060039;
         /**  Clash Report 
  Clash Report 
  Clash Report 
          */
-        public static final int crash_toast_text=0x7f060037;
+        public static final int crash_toast_text=0x7f060038;
         /**  Content Descriptions 
  Content Descriptions 
  Content Descriptions 
          */
-        public static final int descr_image=0x7f060036;
+        public static final int descr_image=0x7f060037;
         /**  アカウントのトラッキングID 
          */
         public static final int ga_trackingId=0x7f06001a;
@@ -423,42 +425,43 @@ containing a value of this type.
  help  
  help  
          */
-        public static final int help_back=0x7f060035;
-        public static final int help_info1=0x7f06001c;
-        public static final int help_info2=0x7f06001d;
-        public static final int help_opensource_licence=0x7f06001e;
-        public static final int introduce_by_Line=0x7f060027;
-        public static final int introduce_by_email=0x7f060023;
-        public static final int introduce_by_facebook=0x7f060026;
-        public static final int introduce_by_googleplay=0x7f060024;
-        public static final int introduce_by_googleplus=0x7f060028;
-        public static final int introduce_by_twitter=0x7f060025;
-        public static final int introduce_view_to_firstpage=0x7f060029;
-        public static final int introduce_view_to_top=0x7f06002a;
+        public static final int help_back=0x7f060036;
+        public static final int help_info1=0x7f06001d;
+        public static final int help_info2=0x7f06001e;
+        public static final int help_opensource_licence=0x7f06001f;
+        public static final int introduce_by_Line=0x7f060028;
+        public static final int introduce_by_email=0x7f060024;
+        public static final int introduce_by_facebook=0x7f060027;
+        public static final int introduce_by_googleplay=0x7f060025;
+        public static final int introduce_by_googleplus=0x7f060029;
+        public static final int introduce_by_twitter=0x7f060026;
+        public static final int introduce_view_to_firstpage=0x7f06002a;
+        public static final int introduce_view_to_top=0x7f06002b;
         /**  Introduce 
  Introduce 
  Introduce 
          */
-        public static final int introduce_wish_text=0x7f060022;
-        public static final int loadimage_error_decoding_error=0x7f060031;
+        public static final int introduce_wish_text=0x7f060023;
+        public static final int is_debug_mobe=0x7f06001c;
+        public static final int loadimage_error_decoding_error=0x7f060032;
         /**  ImagePager  
  ImagePager  
  ImagePager  
          */
-        public static final int loadimage_error_io_error=0x7f060030;
-        public static final int loadimage_error_network_denied=0x7f060032;
-        public static final int loadimage_error_out_of_memory=0x7f060033;
-        public static final int loadimage_error_unknown=0x7f060034;
-        public static final int menu_help=0x7f06002f;
-        public static final int menu_item_clear_disc_cache=0x7f06002c;
+        public static final int loadimage_error_io_error=0x7f060031;
+        public static final int loadimage_error_network_denied=0x7f060033;
+        public static final int loadimage_error_out_of_memory=0x7f060034;
+        public static final int loadimage_error_unknown=0x7f060035;
+        public static final int menu_help=0x7f060030;
+        public static final int menu_item_clear_disc_cache=0x7f06002d;
         /**  Menu Labels 
  Menu Labels 
  Menu Labels 
          */
-        public static final int menu_item_clear_memory_cache=0x7f06002b;
-        public static final int menu_item_pause_on_fling=0x7f06002e;
-        public static final int menu_item_pause_on_scroll=0x7f06002d;
-        public static final int start_announce=0x7f060021;
+        public static final int menu_item_clear_memory_cache=0x7f06002c;
+        public static final int menu_item_pause_on_fling=0x7f06002f;
+        public static final int menu_item_pause_on_scroll=0x7f06002e;
+        public static final int start_announce=0x7f060022;
     }
     public static final class style {
         /** 

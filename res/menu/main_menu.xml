@@ -10,7 +10,7 @@
         android:id="@+id/item_clear_memory_cache"
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_item_clear_memory_cache"
-        android:visible="false"/>
+        android:visible="true"/>
     <item
         android:id="@+id/item_clear_disc_cache"
         android:showAsAction="ifRoom|withText"

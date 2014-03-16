@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_pager_image_base"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dip" >
@@ -33,7 +34,6 @@
         android:background="#99000000"
         android:includeFontPadding="true"
         android:maxLines="10"
-        android:textIsSelectable="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#EEEEFF"
         android:textStyle="bold"
@@ -42,6 +42,7 @@
         android:shadowDy="1.5"
         android:shadowRadius="1.5"
         android:visibility="gone" />
+              <!-- 注意：android:textIsSelectable="true" の指定を入れると、4.1 系で TextView の表示領域がおかしくなる -->
 
         <!-- 下部シークバー -->
         <TextView

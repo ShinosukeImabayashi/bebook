@@ -14,6 +14,7 @@ import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -45,6 +49,11 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.imabaya.asatsuki.R;
 
 
@@ -65,6 +74,10 @@ public class ImagePagerActivity extends BaseActivity  {
 	private String mBookPublicationText;	// 書籍の奥付けテキスト
 	private String mOpeingType;	// 書籍が左開きか右開きか
 	private int  mStartPagerPosition;  // 書籍表示開始ページ
+
+	private AdView mBunnerAdView;	// admob バナー広告配信
+	private InterstitialAd mInterstitialAdView;	//admob インタースティシャル広告配信
+	private AdView adView;	// admob バナー広告配信
 
 	private static final int PAGE_START_NUM = 2;
 
@@ -145,14 +158,92 @@ public class ImagePagerActivity extends BaseActivity  {
 		.displayer(new FadeInBitmapDisplayer(3000))	// ３秒掛けてゆっくりフェードインアニメーション表示を行うと雰囲気良い
 		.build();
 
+
+
+
+
+
+	    // ■admob スマートバナー広告配信オブジェクトの作成
+	    adView = new AdView(this);
+	    adView.setAdUnitId("ca-app-pub-8815528739036624/4719045392");
+	    adView.setAdSize(AdSize.SMART_BANNER);
+	    // スマートバナー広告リクエスト
+	    AdRequest adRequestBanner = new AdRequest.Builder()
+	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
+	    .addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
+	    .build();
+
+	    LinearLayout baseLayout = (LinearLayout) findViewById(R.id.ac_image_pager_base);
+	     baseLayout.addView(adView, 0, new LinearLayout.LayoutParams(
+	    		 LinearLayout.LayoutParams.WRAP_CONTENT,
+	    		 LinearLayout.LayoutParams.WRAP_CONTENT));
+		adView.loadAd(adRequestBanner);
+
+
+
+
+
+
+
+
+
+
+
+
 		// 表示領域と 画像読み込みオブジェクト（ImagePagerAdapter）とをアダプターで関連付ける
 		mPager = (asaViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(new ImagePagerAdapter(mBookImageUrls));
 		mPager.setCurrentItem(mStartPagerPosition);
-		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風になる。ちょっとおもしろい。
+		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風などになる。
+
+
+		// ■admob インタースティシャル広告表示
+		boolean isBookAd = booklist.getIsBookAdvertising(mSelectListPosition, 1);
+		String adUnitId = booklist.getAdmobAdvertisingUnitId("interstitial");
+		Log.v("getAdmobAdvertisingUnitId", 	"adUnitId=" + adUnitId + " isBookAd=" + isBookAd);
+		if (isBookAd == true && adUnitId != null) {  // 広告を表示するかしないか
+
+			// 広告リクエスト
+			AdRequest adRequest = new AdRequest.Builder()
+				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
+				.addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
+				.build();
+
+			// インタースティシャル広告配信オブジェクトの作成
+			mInterstitialAdView = new InterstitialAd(this);
+			mInterstitialAdView.setAdUnitId(adUnitId);
+
+			// インタースティシャルの読み込み開始
+			mInterstitialAdView.loadAd(adRequest);
+			mInterstitialAdView.setAdListener(new AdListener(){	    // リスナー設定
+				public void onAdLoaded(){
+					try {
+						if (mInterstitialAdView.isLoaded()) {
+							mInterstitialAdView.show();
+							Log.v("mInterstitialAdView - isLoaded", 	"show");
+						}
+					} catch (NullPointerException e) {
+						Log.w("mInterstitialAdView - isLoaded", 	"NullPointerException");
+					}
+
+				}
+			 });
+		} // printAd
+
+
+
+
+
+
 
 
 	} // onCreate
+
+
+
+
+
+
 
 
 
@@ -162,6 +253,10 @@ public class ImagePagerActivity extends BaseActivity  {
 		private String[] images;
 		private LayoutInflater inflater;
 		private PhotoViewAttacher mAttacher;
+
+		private boolean isInitialAdLoading = false;
+
+
 
 		ImagePagerAdapter(String[] images) {
 			Log.v("ImagePagerAdapter - ImagePagerAdapter", "INFO");
@@ -180,7 +275,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			assert imageLayout != null;
 			final ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);		// 読み込み中にアニメーション表示する
-			imageView.setBackgroundColor(Color.BLACK);
+///			imageView.setBackgroundColor(Color.BLACK); // admob 広告表示に支障をきたす
 
 			// アナウンス系
 			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
@@ -259,7 +354,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			// 各ページの表示
 			// position は 0 から、mPager.getCurrentItem() は 0 からカウントスタート
 			//（※現在表示ページの確認に position の値を使うのは不適当。非同期処理ゆえ）
-			Log.v("instantiateItem position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
+			///Log.v("instantiateItem position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
 			if ( (mOpeingType.equals("LEFT_OPENING") && position == 0 ) ||
 			      (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 1 )  ) {	// -2 ページ目
 				if (mOpeingType.equals("LEFT_OPENING") ) {
@@ -376,7 +471,7 @@ public class ImagePagerActivity extends BaseActivity  {
 					// 画像読み込み完了時
 					@Override
 					public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-						Log.v("imageLoader - onLoadingComplete p=" +mPager.getCurrentItem() , "INFO");
+						///Log.v("imageLoader - onLoadingComplete p=" +mPager.getCurrentItem() , "INFO");
 						spinner.setVisibility(View.GONE);
 
 						// PhotoViewAttacher にお願いして表示画像を表示領域にフィットさせる
@@ -632,7 +727,8 @@ public class ImagePagerActivity extends BaseActivity  {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			Log.v("ImagePagerAdapter - destroyItem p=" +position, "INFO");
-			container.removeView((View) object);
+			container.removeView((View) object);	// コンテナの廃棄
+
 		}
 
 		@Override
@@ -660,12 +756,22 @@ public class ImagePagerActivity extends BaseActivity  {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	public synchronized void sleep(long msec) {	// 指定ミリ秒の間、完全スリープ
-		try
-		{
-			wait(msec);
-		} catch (InterruptedException e){}
-	}
+    @Override
+    protected void onDestroy() {
+		Log.v("ImagePagerActivity - onDestroy", "INFO");
+		//mBunnerAdView.destroy();
+		mBunnerAdView = null;
+		mInterstitialAdView = null;
+		//mPager.setAdapter(null);
+		mPager = null;
+		//mImageLoader.destroy();
+		mImageLoader = null;
+
+		finish();
+		System.gc();
+
+		super.onDestroy();
+    }
 
 
 

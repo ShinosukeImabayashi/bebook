@@ -32,9 +32,11 @@ public abstract class BaseActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.item_clear_memory_cache:
+			Log.v("BaseActivity:item_clear_memory_cache", "INFO");
 			imageLoader.clearMemoryCache();
 			return true;
 		case R.id.item_clear_disc_cache:
+			Log.v("BaseActivity:item_clear_disc_cache", "INFO");
 			imageLoader.clearDiscCache();
 			return true;
 		default:

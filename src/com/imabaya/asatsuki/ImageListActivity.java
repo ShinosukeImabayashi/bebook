@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -76,6 +77,22 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		AnimateFirstDisplayListener.displayedImages.clear();
 		super.onBackPressed();
 	}
+
+    @Override
+    protected void onDestroy() {
+		Log.v("ImageListActivity - onDestroy", "INFO");
+		listView = null;
+
+		finish();
+		System.gc();
+
+		super.onDestroy();
+    }
+
+
+
+
+
 
 	// 書籍閲覧画面への遷移
 	private void startImagePagerActivity(int position) {
