@@ -141,10 +141,10 @@ public class BookList extends AsyncTaskLoader <BookList> {
 		String bookid = mBookIdList.get(listnum);	// bookid に変換
 
 		String bookInfoText =
-				"<BR><BR><BR>" +
+				"<BR><BR>" +
 						"▼書籍情報<BR>" +
 						"書籍名 : " + (String) mBookListData.get(bookid).get("name") + " " +
-						"( " +  (String) mBookListData.get(bookid).get("page") + ") ページ<BR>" +
+						"(" +  (String) mBookListData.get(bookid).get("page") + ") ページ<BR>" +
 						"<BR>" +  (String) mBookListData.get(bookid).get("explanation") + "<BR>" +
 						" " +  (String) mBookListData.get(bookid).get("appeal") + "<BR>" +
 						"<BR>初版 : " +  (String) mBookListData.get(bookid).get("makedate") + "<BR>" +
