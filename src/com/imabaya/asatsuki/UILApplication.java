@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.imabaya.asatsuki.R;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;

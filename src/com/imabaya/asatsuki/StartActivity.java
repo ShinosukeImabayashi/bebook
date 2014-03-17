@@ -8,8 +8,8 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.imabaya.asatsuki.R;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.imabaya.asatsuki.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class StartActivity extends FragmentActivity implements LoaderCallbacks<BookList> {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
  <resources>
+    <string name="app_name"  translatable="false">Asatsuki Book Reader</string>
     <string name="book_const_xml_url"  translatable="false">http://www.imabaya.com/ebooktest/ebookconst.xml</string>
     <string name="is_debug_mobe"  translatable="false">true</string>
 </resources>

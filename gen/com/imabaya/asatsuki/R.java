@@ -225,17 +225,16 @@ containing a value of this type.
         public static final int help001=0x7f020018;
         public static final int ic_empty=0x7f020019;
         public static final int ic_error=0x7f02001a;
-        public static final int ic_launcher=0x7f02001b;
-        public static final int ic_launcher_web=0x7f02001c;
-        public static final int ic_plusone_medium_off_client=0x7f02001d;
-        public static final int ic_plusone_small_off_client=0x7f02001e;
-        public static final int ic_plusone_standard_off_client=0x7f02001f;
-        public static final int ic_plusone_tall_off_client=0x7f020020;
-        public static final int ic_stub=0x7f020021;
-        public static final int loader=0x7f020022;
-        public static final int page_left_swipe_guide_image=0x7f020023;
-        public static final int page_right_swipe_guide_image=0x7f020024;
-        public static final int swipe_background=0x7f020025;
+        public static final int ic_launcher_web=0x7f02001b;
+        public static final int ic_plusone_medium_off_client=0x7f02001c;
+        public static final int ic_plusone_small_off_client=0x7f02001d;
+        public static final int ic_plusone_standard_off_client=0x7f02001e;
+        public static final int ic_plusone_tall_off_client=0x7f02001f;
+        public static final int ic_stub=0x7f020020;
+        public static final int loader=0x7f020021;
+        public static final int page_left_swipe_guide_image=0x7f020022;
+        public static final int page_right_swipe_guide_image=0x7f020023;
+        public static final int swipe_background=0x7f020024;
     }
     public static final class id {
         public static final int ac_image_pager_base=0x7f050005;
@@ -303,12 +302,12 @@ containing a value of this type.
         public static final int main_menu=0x7f0b0001;
     }
     public static final class string {
-        public static final int action_settings=0x7f060021;
         /**  start 
  start 
  start 
          */
-        public static final int app_name=0x7f060020;
+        public static final int action_settings=0x7f060021;
+        public static final int app_name=0x7f06001b;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
@@ -332,7 +331,7 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
-        public static final int book_const_xml_url=0x7f06001b;
+        public static final int book_const_xml_url=0x7f06001c;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -426,9 +425,9 @@ containing a value of this type.
  help  
          */
         public static final int help_back=0x7f060036;
-        public static final int help_info1=0x7f06001d;
-        public static final int help_info2=0x7f06001e;
-        public static final int help_opensource_licence=0x7f06001f;
+        public static final int help_info1=0x7f06001e;
+        public static final int help_info2=0x7f06001f;
+        public static final int help_opensource_licence=0x7f060020;
         public static final int introduce_by_Line=0x7f060028;
         public static final int introduce_by_email=0x7f060024;
         public static final int introduce_by_facebook=0x7f060027;
@@ -442,7 +441,7 @@ containing a value of this type.
  Introduce 
          */
         public static final int introduce_wish_text=0x7f060023;
-        public static final int is_debug_mobe=0x7f06001c;
+        public static final int is_debug_mobe=0x7f06001d;
         public static final int loadimage_error_decoding_error=0x7f060032;
         /**  ImagePager  
  ImagePager  

@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.*;
 import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+import com.imabaya.asatsuki.R;
+
 
 
 public class HelpActivity extends Activity {
@@ -42,7 +44,7 @@ public class HelpActivity extends Activity {
 			}
 		});
 
-		
+
 
 	    // 広告表示の追加スタイルの設定
 	    Bundle bundle = new Bundle();
@@ -53,7 +55,7 @@ public class HelpActivity extends Activity {
 	    bundle.putString("color_text", "808080");
 	    bundle.putString("color_url", "008000");
 	    AdMobExtras extras = new AdMobExtras(bundle);
-		
+
 
 	    // admob スマートバナー広告配信オブジェクトの作成
 	    adView = new AdView(this);
@@ -67,7 +69,7 @@ public class HelpActivity extends Activity {
 	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
 	    .addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
 	    .build();
-	    
+
 	    adView.loadAd(adRequest);
 
 
@@ -75,7 +77,7 @@ public class HelpActivity extends Activity {
 	    interstitial = new InterstitialAd(this);
 	    interstitial.setAdUnitId("ca-app-pub-8815528739036624/6195778599");
 
-	    
+
 	    // インタースティシャル広告リクエスト
 	    AdRequest adRequest2 = new AdRequest.Builder()
 	    .addNetworkExtras(extras) // 追加スタイルの設定

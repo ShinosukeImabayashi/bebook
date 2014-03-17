@@ -21,6 +21,8 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

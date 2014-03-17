@@ -1,11 +1,12 @@
 package com.imabaya.asatsuki;
 
+
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,12 +47,12 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.imabaya.asatsuki.R;
+
 
 
 public class ImagePagerActivity extends BaseActivity  {
@@ -83,7 +81,7 @@ public class ImagePagerActivity extends BaseActivity  {
 	boolean mIsBookInterstitialAdBeforeRead = false;	// 1 = 広告配信（読書前）
 	boolean mIsBookInterstitialAdAfterRead = false;	// 2 = 広告配信（読書後）
 	boolean mIsBookBannerAd = false;	// 3 = バナー広告配信
-	
+
 
 	private static final int PAGE_START_NUM = 2;
 
@@ -459,7 +457,7 @@ public class ImagePagerActivity extends BaseActivity  {
 							mAttacher.setOnLongClickListener(new LongClickListener());	// ロングクリックイベントのリスナー設定
 							mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
 						}
-					} 
+					}
 
 					// 読み込みキャンセル時
 					@Override
@@ -524,7 +522,7 @@ public class ImagePagerActivity extends BaseActivity  {
 						try {
 							String explanationText = mBookExplanationTexts[mPager.getCurrentItem() - PAGE_START_NUM];
 							explanationText = explanationText.replaceAll("\n", "<br>");
-							
+
 							if (explanationText.equals("")) {
 								isImageExplanation = false;
 							}
