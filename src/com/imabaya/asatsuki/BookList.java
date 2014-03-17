@@ -326,12 +326,12 @@ public class BookList extends AsyncTaskLoader <BookList> {
 
 	/**
 	 *  広告ユニットID取得 （AdMob）
-	 *  @param adtype 広告ユニットの種類指定（"bunner", "interstitial"）
+	 *  @param adtype 広告ユニットの種類指定（"banner", "interstitial"）
 	 *  @return 広告ユニットID（例外：指定がおかしい場合や、書籍設定 xml に指定が無かった場合は、"" を返す）
 	 */
 	public String getAdmobAdvertisingUnitId(String adtype) {
-		if (adtype.equals("bunner")) {
-			String admobAdvertisingUnitId = (String) mAdvertisingData.get("admob-bunner-unit-id");
+		if (adtype.equals("banner")) {
+			String admobAdvertisingUnitId = (String) mAdvertisingData.get("admob-banner-unit-id");
 			return admobAdvertisingUnitId;
 		} else  if (adtype.equals("interstitial")) {
 				String admobAdvertisingUnitId = (String) mAdvertisingData.get("admob-interstitial-unit-id");

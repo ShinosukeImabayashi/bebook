@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.imabaya.asatsuki.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -28,8 +31,14 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 	DisplayImageOptions mDisplayImageOptions;
 	UILApplication mUap;
+	BookList booklist;
 	String[] mCoverImageUrls;
 	String[] mCoverText;
+	int ｍSelectedListItemPosition;	// リストの何番目が選択されたか
+
+	AdRequest mAdRequestInterstitial;	//admob インタースティシャル広告配信
+	InterstitialAd mInterstitialAdView;
+	boolean mIsBookInterstitialAdBeforeRead = false;	// 1 = 広告配信（読書前）
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		mUap = (UILApplication) this.getApplication();
 
 		// 書籍情報オブジェクトの取得
-		BookList booklist = mUap.getBooklist();
+		booklist = mUap.getBooklist();
 
 		// 表紙画像 URL リストの取得
 		mCoverImageUrls = booklist.getBookCoverImageUrl("printorder", "asc");
@@ -67,10 +76,83 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		listView.setOnItemClickListener(new OnItemClickListener() {// 書籍閲覧画面への遷移
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				startImagePagerActivity(position);
+				prepareStartImagePagerActivity(position);
+			}
+		});
+
+
+
+	}
+
+	// ■admob インタースティシャル広告表示準備
+	private void loadInterstitialAd () {
+		Log.v("mInterstitialAdView - loadInterstitialAd", 	"INFO");
+		String adUnitInterstitialId = booklist.getAdmobAdvertisingUnitId("interstitial");
+		mAdRequestInterstitial = new AdRequest.Builder()
+			.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
+			.addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
+			.build();
+
+		// 広告配信オブジェクトの作成
+		mInterstitialAdView = new InterstitialAd(this);
+		mInterstitialAdView.setAdUnitId(adUnitInterstitialId);
+
+		// 読み込み開始
+		mInterstitialAdView.loadAd(mAdRequestInterstitial);
+		mInterstitialAdView.setAdListener(new AdListener(){	    // リスナー設定
+			public void onAdClosed() {	// 広告表示がクローズされた場合
+				Log.w("mInterstitialAdView - onAdClosed", 	"ｍSelectedListItemPosition=" + ｍSelectedListItemPosition);
+				startImagePagerActivity(ｍSelectedListItemPosition);
 			}
 		});
 	}
+
+
+
+	// 書籍閲覧画面への遷移準備
+    // インタースティシャル広告配信設定が有ったら、表示し、広告クローズ後に書籍閲覧アクティビティへ遷移する
+	private void prepareStartImagePagerActivity(int position) {
+
+		ｍSelectedListItemPosition = position;
+
+		// 書籍情報オブジェクトの取得
+		mIsBookInterstitialAdBeforeRead = booklist.getIsBookAdvertising(position, 1);	// 1 = 広告配信（読書前）
+		Log.v("startImagePagerActivity", 	" isBookInterstitialAdBeforeRead=" + mIsBookInterstitialAdBeforeRead);
+		if (mIsBookInterstitialAdBeforeRead == true) { // 広告表示設定有り
+			try {
+				if (mInterstitialAdView.isLoaded()) {
+					mInterstitialAdView.show();
+					Log.v("mInterstitialAdView - isLoaded", 	"show");
+				} else {
+					startImagePagerActivity(ｍSelectedListItemPosition);
+				}
+			} catch (NullPointerException e) {
+				Log.w("mInterstitialAdView - isLoaded", 	"NullPointerException");
+				startImagePagerActivity(ｍSelectedListItemPosition);
+			}
+		} else { // 広告表示設定無し
+			startImagePagerActivity(ｍSelectedListItemPosition);
+		}
+
+	}
+
+
+
+	// 書籍閲覧画面への遷移
+	private void startImagePagerActivity(int position) {
+		Intent intent = new Intent(this, ImagePagerActivity.class);
+		//intent.putExtra(Extra.IMAGES, mCoverImageUrls);
+		intent.putExtra("IMAGE_POSITION", position);		// 何番目の書籍が選ばれたかを指定
+		startActivity(intent);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		// 広告表示準備（ onResume は初回起動時にも呼ばれる）
+		loadInterstitialAd ();
+	}
+
 
 	@Override
 	public void onBackPressed() {
@@ -83,6 +165,8 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		Log.v("ImageListActivity - onDestroy", "INFO");
 		listView = null;
 
+		// imageLoader.destroy();  ２回目の起動時にエラーが発生する
+
 		finish();
 		System.gc();
 
@@ -91,18 +175,7 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 
 
-
-
-
-	// 書籍閲覧画面への遷移
-	private void startImagePagerActivity(int position) {
-		Intent intent = new Intent(this, ImagePagerActivity.class);
-		//intent.putExtra(Extra.IMAGES, mCoverImageUrls);
-		intent.putExtra("IMAGE_POSITION", position);		// 何番目の書籍が選ばれたかを指定
-		startActivity(intent);
-	}
-
-	// 表紙リスト表示用のアダプタ
+    // 表紙リスト表示用のアダプタ
 	class ItemAdapter extends BaseAdapter {
 
 		private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();

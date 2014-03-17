@@ -76,8 +76,14 @@ public class ImagePagerActivity extends BaseActivity  {
 	private int  mStartPagerPosition;  // 書籍表示開始ページ
 
 	private AdView mBunnerAdView;	// admob バナー広告配信
+	AdRequest mAdRequestBanner;
 	private InterstitialAd mInterstitialAdView;	//admob インタースティシャル広告配信
-	private AdView adView;	// admob バナー広告配信
+	AdRequest mAdRequestInterstitial01;
+	AdRequest mAdRequestInterstitial;
+	boolean mIsBookInterstitialAdBeforeRead = false;	// 1 = 広告配信（読書前）
+	boolean mIsBookInterstitialAdAfterRead = false;	// 2 = 広告配信（読書後）
+	boolean mIsBookBannerAd = false;	// 3 = バナー広告配信
+	
 
 	private static final int PAGE_START_NUM = 2;
 
@@ -149,7 +155,7 @@ public class ImagePagerActivity extends BaseActivity  {
 		.showImageForEmptyUri(R.drawable.ic_empty)
 		.showImageOnFail(R.drawable.ic_error)
 		.resetViewBeforeLoading(true)
-		.cacheInMemory(true)
+		.cacheInMemory(false)
 		.cacheOnDisc(true)
 		///.imageScaleType(ImageScaleType.NONE) // 画面サイズに合わせた画像の拡大縮小処理は PhotoView 側に任せる
 		.imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // Open DL の最大 Bitmap サイズが 2048*2048。元画像が範囲内でも、ここで画像自体を拡大縮小処理すると、上限値オーバーになることが有る。（極端に縦長 or 横長の場合）
@@ -158,38 +164,6 @@ public class ImagePagerActivity extends BaseActivity  {
 		.displayer(new FadeInBitmapDisplayer(3000))	// ３秒掛けてゆっくりフェードインアニメーション表示を行うと雰囲気良い
 		.build();
 
-
-
-
-
-
-	    // ■admob スマートバナー広告配信オブジェクトの作成
-	    adView = new AdView(this);
-	    adView.setAdUnitId("ca-app-pub-8815528739036624/4719045392");
-	    adView.setAdSize(AdSize.SMART_BANNER);
-	    // スマートバナー広告リクエスト
-	    AdRequest adRequestBanner = new AdRequest.Builder()
-	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
-	    .addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
-	    .build();
-
-	    LinearLayout baseLayout = (LinearLayout) findViewById(R.id.ac_image_pager_base);
-	     baseLayout.addView(adView, 0, new LinearLayout.LayoutParams(
-	    		 LinearLayout.LayoutParams.WRAP_CONTENT,
-	    		 LinearLayout.LayoutParams.WRAP_CONTENT));
-		adView.loadAd(adRequestBanner);
-
-
-
-
-
-
-
-
-
-
-
-
 		// 表示領域と 画像読み込みオブジェクト（ImagePagerAdapter）とをアダプターで関連付ける
 		mPager = (asaViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(new ImagePagerAdapter(mBookImageUrls));
@@ -197,51 +171,55 @@ public class ImagePagerActivity extends BaseActivity  {
 		//mPager.setRotationX(33);	// 表示領域を傾けてスターウォーズ風などになる。
 
 
+
+
+		// ■admob スマートバナー広告配信オブジェクトの作成
+		mIsBookBannerAd = booklist.getIsBookAdvertising(mSelectListPosition, 3);	// 3 = バナー広告配信
+		String adUnitBannerId = booklist.getAdmobAdvertisingUnitId("banner");
+		Log.v("getAdmobAdvertisingUnitId", 	"adUnitBannerId=" + adUnitBannerId + " isBookBannerAd=" + mIsBookBannerAd);
+		if (mIsBookBannerAd == true && adUnitBannerId != null) {  // 広告を表示するかしないか
+
+			// 広告リクエスト準備
+			mAdRequestBanner = new AdRequest.Builder()
+			.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
+			.addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
+			.build();
+
+			// 広告配信オブジェクトの作成
+			mBunnerAdView = new AdView(this);
+			mBunnerAdView.setAdUnitId(adUnitBannerId);
+			mBunnerAdView.setAdSize(AdSize.SMART_BANNER);
+
+			// 読み込み開始
+			LinearLayout baseLayout = (LinearLayout) findViewById(R.id.ac_image_pager_base);
+			baseLayout.addView(mBunnerAdView, 0, new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT));
+			mBunnerAdView.loadAd(mAdRequestBanner);
+		} // printBunnerAd
+
+
+
 		// ■admob インタースティシャル広告表示
-		boolean isBookAd = booklist.getIsBookAdvertising(mSelectListPosition, 1);
-		String adUnitId = booklist.getAdmobAdvertisingUnitId("interstitial");
-		Log.v("getAdmobAdvertisingUnitId", 	"adUnitId=" + adUnitId + " isBookAd=" + isBookAd);
-		if (isBookAd == true && adUnitId != null) {  // 広告を表示するかしないか
+		mIsBookInterstitialAdAfterRead = booklist.getIsBookAdvertising(mSelectListPosition, 2);	// 2 = 広告配信（読書後）
+		String adUnitInterstitialId = booklist.getAdmobAdvertisingUnitId("interstitial");
+		Log.v("getAdmobAdvertisingUnitId", 	"adUnitInterstitialId=" + adUnitInterstitialId + " isBookInterstitialAdAfterRead=" + mIsBookInterstitialAdAfterRead);
+		if ( mIsBookInterstitialAdAfterRead == true && adUnitInterstitialId != null) {
+			// 広告リクエスト準備
+			mAdRequestInterstitial = new AdRequest.Builder()
+			.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
+			.addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
+			.build();
 
-			// 広告リクエスト
-			AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // エミュレータ
-				.addTestDevice("AC98C820A50B4AD8A2106EDE96FB87D4") // Galaxy Nexus テスト用携帯電話
-				.build();
-
-			// インタースティシャル広告配信オブジェクトの作成
+			// 広告配信オブジェクトの作成
 			mInterstitialAdView = new InterstitialAd(this);
-			mInterstitialAdView.setAdUnitId(adUnitId);
+			mInterstitialAdView.setAdUnitId(adUnitInterstitialId);
 
-			// インタースティシャルの読み込み開始
-			mInterstitialAdView.loadAd(adRequest);
-			mInterstitialAdView.setAdListener(new AdListener(){	    // リスナー設定
-				public void onAdLoaded(){
-					try {
-						if (mInterstitialAdView.isLoaded()) {
-							mInterstitialAdView.show();
-							Log.v("mInterstitialAdView - isLoaded", 	"show");
-						}
-					} catch (NullPointerException e) {
-						Log.w("mInterstitialAdView - isLoaded", 	"NullPointerException");
-					}
-
-				}
-			 });
-		} // printAd
-
-
-
-
-
-
-
+			// 読み込み開始
+			mInterstitialAdView.loadAd(mAdRequestInterstitial);
+		} // printInterstitialAd
 
 	} // onCreate
-
-
-
-
 
 
 
@@ -253,10 +231,6 @@ public class ImagePagerActivity extends BaseActivity  {
 		private String[] images;
 		private LayoutInflater inflater;
 		private PhotoViewAttacher mAttacher;
-
-		private boolean isInitialAdLoading = false;
-
-
 
 		ImagePagerAdapter(String[] images) {
 			Log.v("ImagePagerAdapter - ImagePagerAdapter", "INFO");
@@ -275,7 +249,7 @@ public class ImagePagerActivity extends BaseActivity  {
 			assert imageLayout != null;
 			final ImageView imageView = (ImageView) imageLayout.findViewById(R.id.pageimage);
 			final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);		// 読み込み中にアニメーション表示する
-///			imageView.setBackgroundColor(Color.BLACK); // admob 広告表示に支障をきたす
+			//	imageView.setBackgroundColor(Color.BLACK); // admob 広告表示に支障をきたす
 
 			// アナウンス系
 			final ImageButton pageRightSwipeGuideImage = (ImageButton) imageLayout.findViewById(R.id.page_right_swipe_guide_image);
@@ -318,7 +292,6 @@ public class ImagePagerActivity extends BaseActivity  {
 			introduceViewToTop.setOnClickListener(IWListner);
 
 			// シークバー
-			// どこまで読み込み中かを表示する
 			final SeekBar pageSeekBar;
 			pageSeekBar = (SeekBar) imageLayout.findViewById(R.id.page_seek_bar);
 			pageSeekBar.setMax(this.getCount() - PAGE_START_NUM + 1);
@@ -349,14 +322,14 @@ public class ImagePagerActivity extends BaseActivity  {
 					Log.v("onStopTrackingTouch()", 	String.valueOf(pageSeekBar.getProgress()));
 					mPager.setCurrentItem(pageSeekBar.getProgress());
 				}
-			});
+			}); // pageSeekBar.setOnSeekBarChangeListener
 
 			// 各ページの表示
 			// position は 0 から、mPager.getCurrentItem() は 0 からカウントスタート
 			//（※現在表示ページの確認に position の値を使うのは不適当。非同期処理ゆえ）
 			///Log.v("instantiateItem position：" + position + "-mPager.currentitem:" + mPager.getCurrentItem(), "INFO");
 			if ( (mOpeingType.equals("LEFT_OPENING") && position == 0 ) ||
-			      (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 1 )  ) {	// -2 ページ目
+					(mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 1 )  ) {	// -2 ページ目
 				if (mOpeingType.equals("LEFT_OPENING") ) {
 					pageRightSwipeGuideImage.setVisibility(View.VISIBLE);
 				} else {
@@ -376,7 +349,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				});
 
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == 1 ) ||
-			           (mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 2 )  ) {	// -1 ページ目
+					(mOpeingType.equals("RIGHT_OPENING") && position == this.getCount() - 2 )  ) {	// -1 ページ目
 				// 書籍奥付け情報の表示
 				bookSummaryInfo.setText(Html.fromHtml(mBookPublicationText));	// 簡易 HTML 文法が使用可能
 				bookSummaryInfoScrollParent.setVisibility(View.VISIBLE);
@@ -394,7 +367,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				});
 
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == this.getCount() - 2 ) ||
-				           (mOpeingType.equals("RIGHT_OPENING") && position == 1 )  ) {	// 最終ページ + 2
+					(mOpeingType.equals("RIGHT_OPENING") && position == 1 )  ) {	// 最終ページ + 2
 				// アクセス解析
 				EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("ReadEnd", getPackageName(), mBookTitleNameText, null).build());
 
@@ -415,7 +388,7 @@ public class ImagePagerActivity extends BaseActivity  {
 				});
 
 			} else if ( (mOpeingType.equals("LEFT_OPENING") && position == this.getCount() - 1 ) ||
-					       (mOpeingType.equals("RIGHT_OPENING") && position == 0 )  ) {	// 最終ページ + 2
+					(mOpeingType.equals("RIGHT_OPENING") && position == 0 )  ) {	// 最終ページ + 2
 				// 書籍情報レビューお願い領域の表示
 				introduceScrollParent.setVisibility(View.VISIBLE);
 				introduceScrollParent.setOnClickListener(new OnClickListener() {
@@ -486,17 +459,16 @@ public class ImagePagerActivity extends BaseActivity  {
 							mAttacher.setOnLongClickListener(new LongClickListener());	// ロングクリックイベントのリスナー設定
 							mAttacher.setOnMatrixChangeListener(new MatrixChangeListener());
 						}
-
-					}
+					} 
 
 					// 読み込みキャンセル時
 					@Override
 					public void onLoadingCancelled(String imageUri, View view) {
 
 					}
+				}); // mImageLoader.loadImage
 
-				});
-			}
+			} // ページごとの処理
 
 			view.addView(imageLayout, 0);	// imageLayout をビューに紐付け
 
@@ -552,6 +524,11 @@ public class ImagePagerActivity extends BaseActivity  {
 						try {
 							String explanationText = mBookExplanationTexts[mPager.getCurrentItem() - PAGE_START_NUM];
 							explanationText = explanationText.replaceAll("\n", "<br>");
+							
+							if (explanationText.equals("")) {
+								isImageExplanation = false;
+							}
+
 							// <a> タグ利用の準備
 							MovementMethod movementmethod = LinkMovementMethod.getInstance(); // LinkMovementMethod のインスタンスを取得
 							imageExplanation.setMovementMethod(movementmethod);// TextView に LinkMovementMethod を登録
@@ -599,31 +576,35 @@ public class ImagePagerActivity extends BaseActivity  {
 
 			@Override
 			public void onMatrixChanged(RectF rect) {
-				// asaViewPager のスワイプ機能を一旦停止させる
-				mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_NONE);
+				try {
+					// asaViewPager のスワイプ機能を一旦停止させる
+					mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_NONE);
 
-				// ビューウィンドウの横幅サイズ (dot) を取得
-				float displaysizeWidth = mPager.getWidth();
+					// ビューウィンドウの横幅サイズ (dot) を取得
+					float displaysizeWidth = mPager.getWidth();
 
-				// RectF(left, top, right, bottom)
-				//float imageHeight = rect.height(); // 画像サイズ縦幅（ズーミング後）
-				float imageWidth = rect.width(); // 画像サイズ横幅（ズーミング後）
+					// RectF(left, top, right, bottom)
+					//float imageHeight = rect.height(); // 画像サイズ縦幅（ズーミング後）
+					float imageWidth = rect.width(); // 画像サイズ横幅（ズーミング後）
 
-				// 右端、左端に近かったら、asaViewPager のスワイプを可にする
-				// 左端の時は rect.left が 0 、右端の時は rect.right が端末の解像度（x dot)で判定できる
-				// （画像を画面サイズ以上に拡大していなかったら、条件は常に成り立つ）
-				if (rect.left > -1) { // 左端
-					if (imageWidth > displaysizeWidth) {
-						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_RIGHT_ONLY);	// 右スワイプで左のページにのみ遷移許可
-					} else {
-						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
+					// 右端、左端に近かったら、asaViewPager のスワイプを可にする
+					// 左端の時は rect.left が 0 、右端の時は rect.right が端末の解像度（x dot)で判定できる
+					// （画像を画面サイズ以上に拡大していなかったら、条件は常に成り立つ）
+					if (rect.left > -1) { // 左端
+						if (imageWidth > displaysizeWidth) {
+							mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_RIGHT_ONLY);	// 右スワイプで左のページにのみ遷移許可
+						} else {
+							mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
+						}
+					} else if (rect.right < displaysizeWidth + 1) { // 右端
+						if (imageWidth > displaysizeWidth) {
+							mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_LEFT_ONLY);	// 左スワイプで左のページにのみ遷移許可
+						} else {
+							mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
+						}
 					}
-				} else if (rect.right < displaysizeWidth + 1) { // 右端
-					if (imageWidth > displaysizeWidth) {
-						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_LEFT_ONLY);	// 左スワイプで左のページにのみ遷移許可
-					} else {
-						mPager.setCanSwipeMode(asaViewPager.CAN_SWIPE_ALL);
-					}
+				} catch (NullPointerException e) {
+					Log.v("MatrixChangeListener - onMatrixChanged", "NullPointerException");
 				}
 			} //onMatrixChanged
 
@@ -649,62 +630,73 @@ public class ImagePagerActivity extends BaseActivity  {
 
 				Intent intent;
 				String caseType = "";
-			      switch(v.getId()){
-			      case R.id.introduce_by_email:
-			        	caseType = "introduce_by_email";
-			        	Uri uri=Uri.parse("mailto:");
-			        	intent=new Intent(Intent.ACTION_SENDTO,uri);
-			        	intent.putExtra(Intent.EXTRA_SUBJECT, mBookTitleNameText);
-			        	intent.putExtra(Intent.EXTRA_TEXT, "『" + mBookTitleNameText + "』" + appUrl + "");
-			        	intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_by_googleplay:
-			        	caseType = "introduce_by_googleplay";
-			        	Uri uri2=Uri.parse(appUrl);
-			        	intent=new Intent(Intent.ACTION_VIEW,uri2);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_by_twitter:
-			        	caseType = "introduce_by_twitter";
-			        	Uri uri3=Uri.parse("http://twitter.com/share?url=" + appUrl + "&text=『" + bookTitleName + "』");
-			        	intent=new Intent(Intent.ACTION_VIEW,uri3);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_by_facebook:
-			        	caseType = "introduce_by_facebook";
-			        	Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=" + appUrl + "&t=『" + bookTitleName + "』");
-			        	intent=new Intent(Intent.ACTION_VIEW,uri4);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_by_Line:
-			        	caseType = "introduce_by_Line";
-			        	Uri uri5=Uri.parse("http://line.naver.jp/msg/text/『" + bookTitleName + "』 " + appUrl + "");
-			        	intent=new Intent(Intent.ACTION_VIEW,uri5);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_by_googleplus:
-			        	caseType = "introduce_by_googleplus";
-			        	Uri uri6=Uri.parse("https://plus.google.com/share?url=" + appUrl + "");
-			        	intent=new Intent(Intent.ACTION_VIEW,uri6);
-			        	startActivity(intent);
-			            break;
-			        case R.id.introduce_view_to_firstpage:
-						if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
-				        	mPager.setCurrentItem(PAGE_START_NUM);
-						} else { // 右開き
-							mPager.setCurrentItem( (getCount() - 2) - PAGE_START_NUM + 1);
-						}
-			            break;
-			        case R.id.introduce_view_to_top:
-			        	finish();
-			            break;
-			     }
+				switch(v.getId()){
+				case R.id.introduce_by_email:
+					caseType = "introduce_by_email";
+					Uri uri=Uri.parse("mailto:");
+					intent=new Intent(Intent.ACTION_SENDTO,uri);
+					intent.putExtra(Intent.EXTRA_SUBJECT, mBookTitleNameText);
+					intent.putExtra(Intent.EXTRA_TEXT, "『" + mBookTitleNameText + "』" + appUrl + "");
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(intent);
+					break;
+				case R.id.introduce_by_googleplay:
+					caseType = "introduce_by_googleplay";
+					Uri uri2=Uri.parse(appUrl);
+					intent=new Intent(Intent.ACTION_VIEW,uri2);
+					startActivity(intent);
+					break;
+				case R.id.introduce_by_twitter:
+					caseType = "introduce_by_twitter";
+					Uri uri3=Uri.parse("http://twitter.com/share?url=" + appUrl + "&text=『" + bookTitleName + "』");
+					intent=new Intent(Intent.ACTION_VIEW,uri3);
+					startActivity(intent);
+					break;
+				case R.id.introduce_by_facebook:
+					caseType = "introduce_by_facebook";
+					Uri uri4=Uri.parse("http://www.facebook.com/sharer.php?u=" + appUrl + "&t=『" + bookTitleName + "』");
+					intent=new Intent(Intent.ACTION_VIEW,uri4);
+					startActivity(intent);
+					break;
+				case R.id.introduce_by_Line:
+					caseType = "introduce_by_Line";
+					Uri uri5=Uri.parse("http://line.naver.jp/msg/text/『" + bookTitleName + "』 " + appUrl + "");
+					intent=new Intent(Intent.ACTION_VIEW,uri5);
+					startActivity(intent);
+					break;
+				case R.id.introduce_by_googleplus:
+					caseType = "introduce_by_googleplus";
+					Uri uri6=Uri.parse("https://plus.google.com/share?url=" + appUrl + "");
+					intent=new Intent(Intent.ACTION_VIEW,uri6);
+					startActivity(intent);
+					break;
+				case R.id.introduce_view_to_firstpage:
+					if (mOpeingType.equals("LEFT_OPENING"))  {	// 左開き
+						mPager.setCurrentItem(PAGE_START_NUM);
+					} else { // 右開き
+						mPager.setCurrentItem( (getCount() - 2) - PAGE_START_NUM + 1);
+					}
+					break;
+				case R.id.introduce_view_to_top:
+					Log.v("ImagePagerActivity - introduce_view_to_top", "mIsBookInterstitialAdAfterRead=" + mIsBookInterstitialAdAfterRead);
+					if (mIsBookInterstitialAdAfterRead == true) {
+							try {
+								if (mInterstitialAdView.isLoaded()) {
+									mInterstitialAdView.show();
+									Log.v("mInterstitialAdView - isLoaded", 	"show");
+								}
+							} catch (NullPointerException e) {
+								Log.w("mInterstitialAdView - isLoaded", 	"NullPointerException");
+							}
+					}
+					finish();
+					break;
+				}
 
-			     // アクセス解析
-			      if (caseType != "") {
-			    	  EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("IntroduceWish", getPackageName(), caseType, null).build());
-			      }
+				// アクセス解析
+				if (caseType != "") {
+					EasyTracker.getInstance(getApplicationContext()).send(MapBuilder.createEvent("IntroduceWish", getPackageName(), caseType, null).build());
+				}
 
 			}
 
@@ -756,22 +748,37 @@ public class ImagePagerActivity extends BaseActivity  {
 		return super.onKeyDown(keyCode, event);
 	}
 
-    @Override
-    protected void onDestroy() {
+	@Override
+	protected void onDestroy() {
 		Log.v("ImagePagerActivity - onDestroy", "INFO");
-		//mBunnerAdView.destroy();
+
+		// 広告関連オブジェクトの開放
+		if (mBunnerAdView != null) {
+			mBunnerAdView.destroy();
+		}
 		mBunnerAdView = null;
 		mInterstitialAdView = null;
-		//mPager.setAdapter(null);
+		mAdRequestBanner = null;
+		mAdRequestInterstitial01 = null;
+		mAdRequestInterstitial = null;
+
+		// viewPager オブジェクトの開放
+		if (mPager != null) {
+			mPager.setAdapter(null);
+		}
 		mPager = null;
-		//mImageLoader.destroy();
+
+		if (mImageLoader != null) {
+			// mImageLoader.destroy();  // ここで ImageLoader を終わらせると２回目以降の閲覧がエラーになる
+		}
 		mImageLoader = null;
 
+		// おまじない
 		finish();
 		System.gc();
 
 		super.onDestroy();
-    }
+	}
 
 
 

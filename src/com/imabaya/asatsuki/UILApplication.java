@@ -60,7 +60,7 @@ public class UILApplication extends Application {
 
 	// Univasal Image Loader の初期設定
 	public static void initImageLoader(Context context) {
-		int memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 8);	// 最大で搭載メモリの 1/3 まで使用する
+		int memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 8);	// 最大で搭載メモリの 1/8 まで使用する
 		Log.v("memoryCacheSize", " " + memoryCacheSize);
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
