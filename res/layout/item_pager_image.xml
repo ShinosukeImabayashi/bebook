@@ -156,7 +156,6 @@
                 android:layout_marginBottom="20dip"
                 android:layout_marginLeft="40dip"
                 android:layout_marginRight="40dip"
-                android:textIsSelectable="true"
                 android:ems="10"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#CCCCFF" />

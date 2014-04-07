@@ -6,18 +6,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.google.android.gms.ads.*;
-import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.imabaya.asatsuki.R;
 
 
 
 public class HelpActivity extends Activity {
-	  private AdView adView;	// admob バナー広告配信
-	  private InterstitialAd interstitial;	//admob インタースティシャル広告配信
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +24,6 @@ public class HelpActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				///throw new IllegalArgumentException("がっ");
-			    displayInterstitial();
 	        	finish();
 			}
 		});
@@ -39,13 +32,12 @@ public class HelpActivity extends Activity {
 		helpBackButton2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			    displayInterstitial();
 	        	finish();
 			}
 		});
 
 
-
+/*
 	    // 広告表示の追加スタイルの設定
 	    Bundle bundle = new Bundle();
 	    bundle.putString("color_bg", "AAAAFF");
@@ -88,14 +80,15 @@ public class HelpActivity extends Activity {
 
 	    // ボタン押下イベントなどのタイミングでインタースティシャル広告の刺し込み表示を実行
 	    displayInterstitial();
+*/
 	} //onCreate
 
-
+/*
 	  // インタースティシャルを表示する準備ができたら、displayInterstitial() を呼び出す。
 	  public void displayInterstitial() {
 	    if (interstitial.isLoaded()) {
 	      interstitial.show();
 	    }
 	  }
-
+*/
 }

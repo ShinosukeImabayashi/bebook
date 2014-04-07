@@ -6,7 +6,7 @@
     <string name="start_announce">設定ファイル読み込み中…</string>
 
    <!-- Introduce -->
-   <string name="introduce_wish_text">この本はいかがでしたか？  気に入って頂けたなら応援をお願いします！</string>
+   <string name="introduce_wish_text">この本はいかがでしたか？\n気に入って頂けたなら、応援をお願いします！</string>
    <string name="introduce_by_email">この本をメールで友達に勧める</string>
    <string name="introduce_by_googleplay">Google play でレビューする</string>
    <string name="introduce_by_twitter">twitter でつぶやく</string>

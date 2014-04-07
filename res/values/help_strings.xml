@@ -4,17 +4,19 @@
 <string name="help_info1">
 \n
 ■本ソフトウェアの使い方\n
+\n
 シンプルな書籍アプリです。\n
 \n
-一覧画面で読みたい書籍を選びます。\n
-書籍閲覧画面では、下の図のとおりです。。\n
+・書籍一覧画面：読みたい書籍を選びます。\n
+・書籍閲覧画面：下図をご参考下さい。\n
 </string>
 
 <string name="help_info2">
- \n
+ \n\n\n
 ■クレジット\n
- 書籍アプリ製作者：Shinosuke Imabayashi\n
- ソフトバージョン：1.00\n
+\n
+ 書籍アプリ製作者：今林伸之助（Shinosuke Imabayashi）\n
+ ソフトバージョン：0.90\n
  サイトURL：http://www.imabaya.com/asatsuki\n
  (書籍の著作者情報については、個別の書籍の奥付けをご確認下さい)\n
 </string>

@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 
 
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +55,12 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		booklist = mUap.getBooklist();
 
 		// 表紙画像 URL リストの取得
-		mCoverImageUrls = booklist.getBookCoverImageUrl("printorder", "asc");
+		try {
+			mCoverImageUrls = booklist.getBookCoverImageUrl("printorder", "asc");
+		} catch (NullPointerException e) {	// アプリを起動状態のまましばらく放置して book 関連のリソースが強制開放された後に復帰するとここでエラーとなるので最初からやり直す
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
+		}
 
 		// 表紙タイトルリストの取得
 		mCoverText = booklist.getBookCoverText();
