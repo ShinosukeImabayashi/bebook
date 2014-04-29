@@ -58,12 +58,21 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 		try {
 			mCoverImageUrls = booklist.getBookCoverImageUrl("printorder", "asc");
 		} catch (NullPointerException e) {	// アプリを起動状態のまましばらく放置して book 関連のリソースが強制開放された後に復帰するとここでエラーとなるので最初からやり直す
+			Log.e("ImageListActivity - getBookCoverImageUrl", 	"NullPointerException");
 			Intent intent = new Intent(this, StartActivity.class);
 			startActivity(intent);
+			finish();
 		}
 
 		// 表紙タイトルリストの取得
-		mCoverText = booklist.getBookCoverText();
+		try {
+			mCoverText = booklist.getBookCoverText();
+		} catch (NullPointerException e) {	// アプリを起動状態のまましばらく放置して book 関連のリソースが強制開放された後に復帰するとここでエラーとなるので最初からやり直す
+			Log.e("ImageListActivity - getBookCoverText", 	"NullPointerException");
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
+			finish();
+		}
 
 		// リスト形式での画像表示に伴う設定項目
 		mDisplayImageOptions = new DisplayImageOptions.Builder()
@@ -78,7 +87,14 @@ public class ImageListActivity extends AbsListViewBaseActivity {
 
 		// リストビューにアダプタを設定
 		listView = (ListView) findViewById(android.R.id.list);
-		((ListView) listView).setAdapter(new ItemAdapter());
+		try {
+			((ListView) listView).setAdapter(new ItemAdapter());
+		} catch (NullPointerException e) {	// アプリを起動状態のまましばらく放置して book 関連のリソースが強制開放された後に復帰するとここでエラーとなるので最初からやり直す
+			Log.e("ImageListActivity - getBookCoverText", 	"NullPointerException");
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
+			finish();
+		}
 
 		// リストのいずれかのアイテムがタップされたときの挙動
 		listView.setOnItemClickListener(new OnItemClickListener() {// 書籍閲覧画面への遷移
