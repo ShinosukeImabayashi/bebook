@@ -306,8 +306,8 @@ containing a value of this type.
  start 
  start 
          */
-        public static final int action_settings=0x7f060021;
-        public static final int app_name=0x7f06001b;
+        public static final int action_settings=0x7f060022;
+        public static final int app_name=0x7f06001c;
         /**   Title for notification shown when GooglePlayServices needs to be
         enabled for a application to work. [CHAR LIMIT=70] 
          */
@@ -331,7 +331,7 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f060014;
-        public static final int book_const_xml_url=0x7f06001c;
+        public static final int book_const_xml_url=0x7f06001d;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -403,64 +403,67 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060013;
-        public static final int crash_dialog_comment_prompt=0x7f06003b;
-        public static final int crash_dialog_ok_toast=0x7f06003c;
-        public static final int crash_dialog_text=0x7f06003a;
-        public static final int crash_dialog_title=0x7f060039;
+        public static final int crash_dialog_comment_prompt=0x7f06003c;
+        public static final int crash_dialog_ok_toast=0x7f06003d;
+        public static final int crash_dialog_text=0x7f06003b;
+        public static final int crash_dialog_title=0x7f06003a;
         /**  Clash Report 
  Clash Report 
  Clash Report 
          */
-        public static final int crash_toast_text=0x7f060038;
+        public static final int crash_toast_text=0x7f060039;
         /**  Content Descriptions 
  Content Descriptions 
  Content Descriptions 
          */
-        public static final int descr_image=0x7f060037;
+        public static final int descr_image=0x7f060038;
         /**  アカウントのトラッキングID 
          */
-        public static final int ga_trackingId=0x7f06001a;
+        public static final int ga_trackingId=0x7f06001b;
         /**  help  
  help  
  help  
          */
-        public static final int help_back=0x7f060036;
-        public static final int help_info1=0x7f06001e;
-        public static final int help_info2=0x7f06001f;
-        public static final int help_opensource_licence=0x7f060020;
-        public static final int introduce_by_Line=0x7f060028;
-        public static final int introduce_by_email=0x7f060024;
-        public static final int introduce_by_facebook=0x7f060027;
-        public static final int introduce_by_googleplay=0x7f060025;
-        public static final int introduce_by_googleplus=0x7f060029;
-        public static final int introduce_by_twitter=0x7f060026;
-        public static final int introduce_view_to_firstpage=0x7f06002a;
-        public static final int introduce_view_to_top=0x7f06002b;
+        public static final int help_back=0x7f060037;
+        public static final int help_info1=0x7f06001f;
+        public static final int help_info2=0x7f060020;
+        public static final int help_opensource_licence=0x7f060021;
+        public static final int introduce_by_Line=0x7f060029;
+        public static final int introduce_by_email=0x7f060025;
+        public static final int introduce_by_facebook=0x7f060028;
+        public static final int introduce_by_googleplay=0x7f060026;
+        public static final int introduce_by_googleplus=0x7f06002a;
+        public static final int introduce_by_twitter=0x7f060027;
+        public static final int introduce_view_to_firstpage=0x7f06002b;
+        public static final int introduce_view_to_top=0x7f06002c;
         /**  Introduce 
  Introduce 
  Introduce 
          */
-        public static final int introduce_wish_text=0x7f060023;
-        public static final int is_debug_mobe=0x7f06001d;
-        public static final int loadimage_error_decoding_error=0x7f060032;
+        public static final int introduce_wish_text=0x7f060024;
+        public static final int is_debug_mobe=0x7f06001e;
+        public static final int loadimage_error_decoding_error=0x7f060033;
         /**  ImagePager  
  ImagePager  
  ImagePager  
          */
-        public static final int loadimage_error_io_error=0x7f060031;
-        public static final int loadimage_error_network_denied=0x7f060033;
-        public static final int loadimage_error_out_of_memory=0x7f060034;
-        public static final int loadimage_error_unknown=0x7f060035;
-        public static final int menu_help=0x7f060030;
-        public static final int menu_item_clear_disc_cache=0x7f06002d;
+        public static final int loadimage_error_io_error=0x7f060032;
+        public static final int loadimage_error_network_denied=0x7f060034;
+        public static final int loadimage_error_out_of_memory=0x7f060035;
+        public static final int loadimage_error_unknown=0x7f060036;
+        /**  Location client code resources (prefix with location_client) 
+         */
+        public static final int location_client_powered_by_google=0x7f06001a;
+        public static final int menu_help=0x7f060031;
+        public static final int menu_item_clear_disc_cache=0x7f06002e;
         /**  Menu Labels 
  Menu Labels 
  Menu Labels 
          */
-        public static final int menu_item_clear_memory_cache=0x7f06002c;
-        public static final int menu_item_pause_on_fling=0x7f06002f;
-        public static final int menu_item_pause_on_scroll=0x7f06002e;
-        public static final int start_announce=0x7f060022;
+        public static final int menu_item_clear_memory_cache=0x7f06002d;
+        public static final int menu_item_pause_on_fling=0x7f060030;
+        public static final int menu_item_pause_on_scroll=0x7f06002f;
+        public static final int start_announce=0x7f060023;
     }
     public static final class style {
         /** 
